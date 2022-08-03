@@ -19,7 +19,7 @@
 # Setting up offers
 
 Go to Utils and create new offer. For example below setup offer with code `OFR003` and criteria as 
-distance should range between `50` to `250`, and weight range between `10` to `150` and call the method inside `prepareOffer`
+distance should range between `50` to `250`, and weight range between `10` to `150`. create a new method to introduce new offer and call the method inside `prepareOffer`
 
     private static void prepareOffer3() {
         NumberRangeOfferCriteria dist50To250 = new NumberRangeOfferCriteria( RANGE,
