@@ -1,11 +1,12 @@
 
 # Setting up code base
 
-1. Have java 8 installed on machine
-2. Have IntelliJ installed
-3. Enable annotation processing. File menu --> Settings --> Build, execution, deployment --> compile --> annotation process and check  enable annotation processing
+1. Have java 8 installed on machine.
+2. Have IntelliJ installed.
+3. Have maven installed.
+4. Enable annotation processing. File menu --> Settings --> Build, execution, deployment --> compile --> annotation process and check  enable annotation processing
    ![img.png](img.png)
-4. Wait for maven project to load, if not automatically done, right click on pom.xml and add as maven project.
+5. Wait for maven project to load, if not automatically done, right click on pom.xml and add as maven project.
 
 # Delivery cost client
 # Assumptions: 
