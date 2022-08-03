@@ -59,7 +59,7 @@ distance should range between `50` to `250`, and weight range between `10` to `1
 
 # Other ways to run
 
-1. Run DeliveryEstimationServiceTest for delivery time estimation and this printing only the results as above and doesn't have assertions in place as of now however, I shall add if time permits.
+1. Run DeliveryEstimationServiceTest for delivery time estimation and this printing only the results as above and doesn't have assertions in place as of now however, I shall add if time permits. Sorted the results by package ID's for easy to read the output
 2. Run PackageOrderImplTest for calculating the charges for each offer code.
 3. `PackageOrderImplTest.testCalcDiscountCategoryAndWeight` simulates support new offer code by category and weight.
 
