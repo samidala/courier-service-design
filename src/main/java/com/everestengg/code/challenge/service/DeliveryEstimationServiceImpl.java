@@ -133,7 +133,7 @@ public class DeliveryEstimationServiceImpl implements DeliveryEstimationService{
                 //current indices that can be planned to package with ith index
                 Set<Integer> currIds = new LinkedHashSet<>();
                 short currentWt = getCurrentDeliverablePackagesTotalWt(inputPackages, maxWt, deliveredPkgIndices, i, currIds);
-                LOGGER.debug("currentIds {}", currIds);
+                LOGGER.trace("currentIds {}", currIds);
                 if (isCurrentAndPrevDelivarablePkgsAreSameSize(deliverablePackageIds, currIds)) { //logic to pick higher weight when there are equal number of packages are present
                     if (currentWt > prevWt) {
                         clearAndAdd(deliverablePackageIds, currIds);
