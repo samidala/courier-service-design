@@ -9,6 +9,8 @@ import com.everestengg.code.challenge.bo.Package;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import static com.everestengg.code.challenge.service.DeliveryEstimationServiceFactory.DeliveryEstimationType.SIMPLE;
@@ -188,6 +190,7 @@ public class DeliveryEstimationServiceTest {
     private List<DeliveryOrder> calcEstimatedDeliveryAndPrint(InputPackage[] inputPackages, DeliveryInput deliveryInput) {
         List<DeliveryOrder> deliveries = getDeliveryEstimationServiceFactory()
                 .calculateEstimatedDelivery(inputPackages, deliveryInput, (short)100);
+        Collections.sort(deliveries, Comparator.comparing(o -> o.getPackageChargeInformation().getPackageId()));
         for (DeliveryOrder deliveryOrder : deliveries){
             System.out.println(deliveryOrder);
         }
