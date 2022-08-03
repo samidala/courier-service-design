@@ -61,6 +61,7 @@ distance should range between `50` to `250`, and weight range between `10` to `1
 3. enter the package details with space separated and press enter after inputting package ID, weight, distance and offer code
 4. enter no of vehicles, max speed and max carriable weight
 5. After successful run, the app displays each package id, discount, charges to be paid and estimated delivery time.
+6. Enable sysout to print which vehicle delivering the order `com/everestengg/code/challenge/service/DeliveryEstimationServiceImpl.java:113`
 
 
 # Other ways to run

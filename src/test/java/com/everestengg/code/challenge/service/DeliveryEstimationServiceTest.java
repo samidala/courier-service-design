@@ -196,4 +196,24 @@ public class DeliveryEstimationServiceTest {
         }
         return deliveries;
     }
+
+    @Test
+    void testCalculateEstimatedDeliveryOfMaxWeightsAndHavingMoreVehicles(){
+        String[] pkgIds = {"PKG1","PKG2","PKG3","PKG4","PKG5","PKG6","pkg7"};
+        short[] wts = {200,200,200,200,200,200,200};
+        short[] dists = {30,125,100,60,95,10,21};
+        String[] offrCodes = {"OFR001","OFFR0008","OFFR003","OFFR002","NA","NA","NA"};
+        InputPackage[] inputPackages = new InputPackage[pkgIds.length];
+        for(int i = 0 ; i < pkgIds.length; i++){
+            inputPackages[i] = new InputPackage(
+                    Package.builder().packageId(pkgIds[i])
+                            .weight(wts[i]).dist(dists[i]).build(), offrCodes[i]);
+
+        }
+        DeliveryInput deliveryInput = DeliveryInput.builder().maxCarriableWt((short) 200)
+                .maxSpeed((short) 70).noOfVehicle((short) 10).build();
+
+        calcEstimatedDeliveryAndPrint(inputPackages, deliveryInput);
+
+    }
 }
