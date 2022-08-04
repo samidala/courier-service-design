@@ -22,7 +22,8 @@
 Assumptions
 1. The offer criteria can be expressed in equals, greater or lesser than to some value
 2. The offer criteria can be string for example, specific category
-3. The offer is expressed with multiple offer criteria's and must match
+3. The offer is expressed with multiple offer criteria's and must match to get the discount.
+4. No discount is provided for invalid offer codes.
 
 Go to Utils and create new offer. For example below setup offer with code `OFR003` and criteria as 
 distance should range between `50` to `250`, and weight range between `10` to `150`. create a new method to introduce new offer and call the method inside `prepareOffer`
