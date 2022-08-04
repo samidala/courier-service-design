@@ -18,12 +18,24 @@
 
 # Setting up offers
 
+# approach
+   1. `Offer` will have 0 or more `OfferCriteria`
+   2. User can configure offer with code and set of `OfferCriteria`
+   3. `OfferCriteria` implementations must override `isMatch` with appropriate implementation
+      1. `NumberOfferCriteria`, `NumberRangeOfferCriteria` are such examples
+   4. `ResultEvalutor` is used for implementing specific cases like, equals, not equals, greater than and range etc..
+   5. `com.everestengg.code.challenge.model.Offer.calcDiscount` returns configured discount value if all the criteria matches
+   6. `com.everestengg.code.challenge.model.OfferCriteria.isMatch` uses `ResultEvalutor` for evaluating results.
+   7. The below show sequence diagram
+      
+      ![PackageOrderImpl_calcCost.svg](PackageOrderImpl_calcCost.svg)
+
 
 Assumptions
-1. The offer criteria can be expressed in equals, greater or lesser than to some value
-2. The offer criteria can be string for example, specific category
-3. The offer is expressed with multiple offer criteria's and must match to get the discount.
-4. No discount is provided for invalid offer codes.
+   1. The offer criteria can be expressed in equals, greater or lesser than to some value
+   2. The offer criteria can be string for example, specific category
+   3. The offer is expressed with multiple offer criteria's and must match to get the discount.
+   4. No discount is provided for invalid offer codes.
 
 Go to Utils and create new offer. For example below setup offer with code `OFR003` and criteria as 
 distance should range between `50` to `250`, and weight range between `10` to `150`. create a new method to introduce new offer and call the method inside `prepareOffer`
@@ -86,7 +98,10 @@ distance should range between `50` to `250`, and weight range between `10` to `1
 # Observations:
 1. There are some differences in floating point decimal values in results.
 2. There is little duplicate code and will see if it can be removed
+3. current implementation does not allow to have offer with Offer criteria of same operator (equals, range) multiple times and can be fixed.
 
+
+   ![uml.png](uml.png)
 
 
 
