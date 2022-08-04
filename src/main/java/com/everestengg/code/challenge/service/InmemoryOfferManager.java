@@ -6,6 +6,9 @@ import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * in-memory implementation of @{@link OfferManager}
+ */
 public final class InmemoryOfferManager implements OfferManager, Serializable,Cloneable {
 
     private static final InmemoryOfferManager INSTANCE = new InmemoryOfferManager();

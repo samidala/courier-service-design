@@ -121,7 +121,7 @@ public class DeliveryEstimationServiceImpl implements DeliveryEstimationService{
      * @param inputPackages packages to be delivered
      * @param maxWt max weight the vehicle allowed to carry
      * @param deliveredPkgIndices package indices that are already delivered
-     * @return
+     * @return set of package indices to be delivered
      */
     private Set<Integer> deliverPackages(InputPackage[] inputPackages, short maxWt, Set<Integer> deliveredPkgIndices) {
         Set<Integer> deliverablePackageIds = new LinkedHashSet<>();
@@ -130,7 +130,7 @@ public class DeliveryEstimationServiceImpl implements DeliveryEstimationService{
         for (int i = 0; i < len; i++) {
             //package is not delivered
             if (!isPackageDelivered(deliveredPkgIndices, i)) {
-                //current indices that can be planned to package with ith index
+                //current package indices that can be planned to package with i th index
                 Set<Integer> currIds = new LinkedHashSet<>();
                 short currentWt = getCurrentDeliverablePackagesTotalWt(inputPackages, maxWt, deliveredPkgIndices, i, currIds);
                 LOGGER.trace("currentIds {}", currIds);
@@ -141,7 +141,7 @@ public class DeliveryEstimationServiceImpl implements DeliveryEstimationService{
                 } else if (isCurrentPkgsAreGreater(deliverablePackageIds, currIds)) { //preference to deliver higher number of packages
                     clearAndAdd(deliverablePackageIds, currIds);
                 }
-                if (isNoOrSinglePackagePicked(deliverablePackageIds) && isAllPackagesDelivered(deliveredPkgIndices, len)) {
+                if (isNoOrSinglePackagePicked(deliverablePackageIds) && !isAllPackagesDelivered(deliveredPkgIndices, len)) {
                     //corner case, when there is no or only one package is picked
                     //pick the maximum weight package if any available
                     for (int k = len-1; k >= 0; k--) {
@@ -173,7 +173,7 @@ public class DeliveryEstimationServiceImpl implements DeliveryEstimationService{
      * @return true if all packages not delivered
      */
     private boolean isAllPackagesDelivered(Set<Integer> deliveredPackageIndices, int totalPackages) {
-        return deliveredPackageIndices.size() != totalPackages;
+        return deliveredPackageIndices.size() == totalPackages;
     }
 
     /**

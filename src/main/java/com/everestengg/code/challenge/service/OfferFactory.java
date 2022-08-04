@@ -1,5 +1,8 @@
 package com.everestengg.code.challenge.service;
 
+/**
+ * Factory class for {@link OfferManager} implementations
+ */
 public class OfferFactory {
     public enum Type{
         IN_MEMORY

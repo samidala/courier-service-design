@@ -6,6 +6,9 @@ import lombok.Builder;
 import lombok.Getter;
 
 
+/**
+ * context holder for package and any other information
+ */
 @AllArgsConstructor
 @Getter
 @Builder

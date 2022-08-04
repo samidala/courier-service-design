@@ -1,5 +1,7 @@
 package com.everestengg.code.challenge.model;
-
+/**
+ * implementation for configuring Number range and value also a Number for offer criteria
+ */
 public class NumberRangeOfferCriteria extends OfferCriteria<Number[],Number>{
 
     public NumberRangeOfferCriteria(Operator operator, Number[] propertyValue,ValueHandler valueHandler) {

@@ -6,7 +6,12 @@ import lombok.Getter;
 import java.util.HashMap;
 import java.util.Map;
 
-
+/**
+ * captures offer criteria for configured value and input value
+ *
+ * @param <ConfigValue> value configured in offer criteria. config value can be single value, array or range
+ * @param <InputValue> value coming from package
+ */
 @Getter
 public abstract class OfferCriteria<ConfigValue, InputValue> {
 
@@ -66,10 +71,25 @@ public abstract class OfferCriteria<ConfigValue, InputValue> {
     }
 
 
+    /**
+     *
+     * @param <T>
+     * @param <V>
+     */
     protected interface ResultEvaluator<T,V>{
 
+        /**
+         *
+         * @param offerCriteria in context
+         * @param value input package propertyvalue
+         * @return true if offer criteria is met
+         */
         boolean evaluate(OfferCriteria<T,V> offerCriteria, V value);
 
+        /**
+         * self registration with offer criteria
+         * @param offerCriteria
+         */
         void register(OfferCriteria<T,V> offerCriteria);
 
     }

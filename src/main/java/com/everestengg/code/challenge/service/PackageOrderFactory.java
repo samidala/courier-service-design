@@ -1,5 +1,8 @@
 package com.everestengg.code.challenge.service;
 
+/**
+ * factory class for @{@link PackageOrderService} implementations
+ */
 public class PackageOrderFactory {
 
     private PackageOrderFactory(){}

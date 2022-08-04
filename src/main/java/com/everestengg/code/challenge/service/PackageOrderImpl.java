@@ -3,6 +3,9 @@ package com.everestengg.code.challenge.service;
 import com.everestengg.code.challenge.bo.InputPackage;
 import com.everestengg.code.challenge.model.PackageChargeInformation;
 
+/**
+ * implementation of @{@link PackageOrderService}
+ */
 public class PackageOrderImpl implements PackageOrderService{
 
     public static final int WEIGHT_MULTIPLIER = 10;

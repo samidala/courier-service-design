@@ -1,6 +1,8 @@
 package com.everestengg.code.challenge.model;
 
-
+/**
+ * implementation for configuring String and value also a String for offer criteria
+ */
 public class StringOfferCriteria extends OfferCriteria<String,String>{
 
     public StringOfferCriteria(Operator operator, String propertyValue, ValueHandler<String> valueHandler) {

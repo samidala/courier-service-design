@@ -22,6 +22,14 @@ public  class Offer<ConfigValue, InputValue> {
         InmemoryOfferManager.getInstance().register(this);
     }
 
+    /**
+     * calculates the discount percentage and returns percentage configured
+     * if no @{@link OfferCriteria} is configured the package is eligible for configured discount
+     * if @{@link OfferCriteria} is configured and all must match to get the discount
+     * @param context @{{@link PackageRequestContext}} holder for package details
+     * @return discountValue configured
+     */
+
     public float calcDiscount(PackageRequestContext context){
         Package pkg = context.getInputPackage().getPackageDetails();
         if(offerCriterias == null || offerCriterias.length == 0){
@@ -35,8 +43,15 @@ public  class Offer<ConfigValue, InputValue> {
         return percentage;
 
     }
-    public  InputValue getValue(Package aPackage, OfferCriteria<ConfigValue,InputValue> tNumberOfferCriteria){
-        return tNumberOfferCriteria.getValueHandler().getValue(aPackage);
+
+    /**
+     *
+     * @param aPackage package in context
+     * @param offerCriteria @{@link OfferCriteria}
+     * @return package property value depending @{@link ValueHandler} implementation
+     */
+    public  InputValue getValue(Package aPackage, OfferCriteria<ConfigValue,InputValue> offerCriteria){
+        return offerCriteria.getValueHandler().getValue(aPackage);
     }
 
 }

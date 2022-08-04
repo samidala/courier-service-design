@@ -70,7 +70,7 @@ public class DeliveryEstimationServiceTest {
     @Test
     void testCalculateEstimatedDeliveryOfDiffWeightsAndMixOfPkgDelivery1(){
         String[] pkgIds = {"PKG1","PKG2","PKG3","PKG4","PKG5","PKG6"};
-        short[] wts = {50,50,175,50,27,26};
+        short[] wts = {50,50,175,50,27,200};
         short[] dists = {30,125,100,60,95,10};
         String[] offrCodes = {"OFR001","OFFR0008","OFFR003","OFFR002","NA","NA"};
         InputPackage[] inputPackages = new InputPackage[pkgIds.length];

@@ -2,7 +2,9 @@ package com.everestengg.code.challenge.bo;
 
 import lombok.*;
 
-
+/**
+ * captures package details
+ */
 @Builder
 @Getter
 @ToString

@@ -6,6 +6,9 @@ import org.slf4j.LoggerFactory;
 
 import static com.everestengg.code.challenge.service.OfferFactory.Type.IN_MEMORY;
 
+/**
+ * helper class to get the discount value
+ */
 public class OfferServiceImpl {
     private static Logger logger = LoggerFactory.getLogger(OfferServiceImpl.class);
     public float calcDiscount(InputPackage inputPackage) {

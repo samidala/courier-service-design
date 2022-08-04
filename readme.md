@@ -54,6 +54,17 @@ distance should range between `50` to `250`, and weight range between `10` to `1
 3. If offer code is invalid, no discount will be considered
 4. User has to input all the needed inputs in appropriate datatype
 
+# Approach
+1. Sort the packages by weight in ascending and distance in descending order
+2. Repeat below step until all the packages are delivered
+   1. Repeat until vehicles are available
+      1. pick the packages to be delivered based on below criteria
+         1. shipment should contain max number of packages
+         2. heavier packages takes precedence if same number of packages in the current trip
+         3. if weights also same then pick the package which are can be delivered fast
+      2. Calculate estimated delivery of current trip
+   2. update the min estimated delivery which is added in subsequent trips.
+
 
 # Running
 
@@ -74,6 +85,7 @@ distance should range between `50` to `250`, and weight range between `10` to `1
 
 # Observations:
 1. There are some differences in floating point decimal values in results.
+2. There is little duplicate code and will see if it can be removed
 
 
 

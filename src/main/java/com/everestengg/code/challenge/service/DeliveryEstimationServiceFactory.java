@@ -1,5 +1,8 @@
 package com.everestengg.code.challenge.service;
 
+/**
+ * factory class to get the {@link DeliveryEstimationService} implementations
+ */
 public class DeliveryEstimationServiceFactory {
 
     private DeliveryEstimationServiceFactory(){}
