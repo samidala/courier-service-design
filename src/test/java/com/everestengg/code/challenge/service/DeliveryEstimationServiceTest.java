@@ -216,4 +216,46 @@ public class DeliveryEstimationServiceTest {
         calcEstimatedDeliveryAndPrint(inputPackages, deliveryInput);
 
     }
+
+    @Test
+    void testCalculateEstimatedDeliveryOfConsequentWts(){
+
+        InputPackage[] inputPackages = new InputPackage[5];
+        String[] pkgIds = {"PKG1","PKG2","PKG3","PKG4","PKG5"};
+        short[] wts = {194,195,196,197,198};
+        short[] dists = {30,125,100,60,95};
+        String[] offrCodes = {"OFR001","OFFR0008","OFFR003","OFR002","NA"};
+        for(int i = 0 ; i < 5; i++){
+            inputPackages[i] = new InputPackage(
+                    Package.builder().packageId(pkgIds[i])
+                            .weight(wts[i]).dist(dists[i]).build(), offrCodes[i]);
+
+        }
+        DeliveryInput deliveryInput = DeliveryInput.builder().maxCarriableWt((short) 200)
+                .maxSpeed((short) 70).noOfVehicle((short) 2).build();
+
+        calcEstimatedDeliveryAndPrint(inputPackages,deliveryInput);
+
+    }
+
+    @Test
+    void testCalculateEstimatedDeliveryOfConsequentWtsWithDuplicate(){
+
+        InputPackage[] inputPackages = new InputPackage[5];
+        String[] pkgIds = {"PKG1","PKG2","PKG3","PKG4","PKG5"};
+        short[] wts = {194,195,196,196,198};
+        short[] dists = {30,125,100,60,95};
+        String[] offrCodes = {"OFR001","OFFR0008","OFFR003","OFR002","NA"};
+        for(int i = 0 ; i < 5; i++){
+            inputPackages[i] = new InputPackage(
+                    Package.builder().packageId(pkgIds[i])
+                            .weight(wts[i]).dist(dists[i]).build(), offrCodes[i]);
+
+        }
+        DeliveryInput deliveryInput = DeliveryInput.builder().maxCarriableWt((short) 200)
+                .maxSpeed((short) 70).noOfVehicle((short) 2).build();
+
+        calcEstimatedDeliveryAndPrint(inputPackages,deliveryInput);
+
+    }
 }
