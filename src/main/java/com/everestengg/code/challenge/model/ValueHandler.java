@@ -1,6 +1,6 @@
 package com.everestengg.code.challenge.model;
 
-import com.everestengg.code.challenge.bo.Package;
+import com.everestengg.code.challenge.vo.Package;
 
 /**
  * used to get the package property value

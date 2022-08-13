@@ -1,4 +1,4 @@
-package com.everestengg.code.challenge.bo;
+package com.everestengg.code.challenge.vo;
 
 import lombok.Builder;
 import lombok.Getter;
@@ -8,7 +8,7 @@ import lombok.Getter;
  */
 @Builder
 @Getter
-public class DeliveryInput {
+public class PackageDeliveryInput {
 
     private short noOfVehicle;
     private short maxSpeed;

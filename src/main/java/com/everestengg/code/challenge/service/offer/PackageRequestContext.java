@@ -1,6 +1,6 @@
-package com.everestengg.code.challenge.service;
+package com.everestengg.code.challenge.service.offer;
 
-import com.everestengg.code.challenge.bo.InputPackage;
+import com.everestengg.code.challenge.vo.InputPackage;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;

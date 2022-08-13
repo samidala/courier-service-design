@@ -1,11 +1,13 @@
 package com.everestengg.code.challenge.service;
 
 
-import com.everestengg.code.challenge.model.DeliveryOrder;
-import com.everestengg.code.challenge.util.Utils;
-import com.everestengg.code.challenge.bo.DeliveryInput;
-import com.everestengg.code.challenge.bo.InputPackage;
-import com.everestengg.code.challenge.bo.Package;
+import com.everestengg.code.challenge.model.PackageDeliveryTimeEstimationInfo;
+import com.everestengg.code.challenge.repo.StaticOfferRepository;
+import com.everestengg.code.challenge.service.delivery.time.estimation.PackageDeliveryTimeEstimationService;
+import com.everestengg.code.challenge.service.delivery.time.estimation.PackageDeliveryTimeEstimationServiceFactory;
+import com.everestengg.code.challenge.vo.PackageDeliveryInput;
+import com.everestengg.code.challenge.vo.InputPackage;
+import com.everestengg.code.challenge.vo.Package;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
@@ -13,17 +15,17 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-import static com.everestengg.code.challenge.service.DeliveryEstimationServiceFactory.DeliveryEstimationType.SIMPLE;
+import static com.everestengg.code.challenge.service.delivery.time.estimation.PackageDeliveryTimeEstimationServiceFactory.PackageDeliveryTimeEstimationType.SIMPLE;
 
-public class DeliveryEstimationServiceTest {
+public class PackageDeliveryTimeEstimationServiceTest {
 
     @BeforeAll
     public static void init(){
-        Utils.prepareOffers();
+        StaticOfferRepository.prepareOffers();
     }
 
-    private DeliveryEstimationService getDeliveryEstimationServiceFactory(){
-        return DeliveryEstimationServiceFactory.getDeliveryEstimationService(SIMPLE);
+    private PackageDeliveryTimeEstimationService getDeliveryEstimationServiceFactory(){
+        return PackageDeliveryTimeEstimationServiceFactory.getDeliveryEstimationService(SIMPLE);
     }
     @Test
     void testCalculateEstimatedDeliveryOfDiffWeights(){
@@ -39,10 +41,10 @@ public class DeliveryEstimationServiceTest {
                             .weight(wts[i]).dist(dists[i]).build(), offrCodes[i]);
 
         }
-        DeliveryInput deliveryInput = DeliveryInput.builder().maxCarriableWt((short) 200)
+        PackageDeliveryInput packageDeliveryInput = PackageDeliveryInput.builder().maxCarriableWt((short) 200)
                 .maxSpeed((short) 70).noOfVehicle((short) 2).build();
 
-        calcEstimatedDeliveryAndPrint(inputPackages,deliveryInput);
+        calcEstimatedDeliveryAndPrint(inputPackages, packageDeliveryInput);
 
     }
 
@@ -60,10 +62,10 @@ public class DeliveryEstimationServiceTest {
                             .weight(wts[i]).dist(dists[i]).build(), offrCodes[i]);
 
         }
-        DeliveryInput deliveryInput = DeliveryInput.builder().maxCarriableWt((short) 200)
+        PackageDeliveryInput packageDeliveryInput = PackageDeliveryInput.builder().maxCarriableWt((short) 200)
                 .maxSpeed((short) 70).noOfVehicle((short) 2).build();
 
-        calcEstimatedDeliveryAndPrint(inputPackages, deliveryInput);
+        calcEstimatedDeliveryAndPrint(inputPackages, packageDeliveryInput);
 
     }
 
@@ -80,10 +82,10 @@ public class DeliveryEstimationServiceTest {
                             .weight(wts[i]).dist(dists[i]).build(), offrCodes[i]);
 
         }
-        DeliveryInput deliveryInput = DeliveryInput.builder().maxCarriableWt((short) 200)
+        PackageDeliveryInput packageDeliveryInput = PackageDeliveryInput.builder().maxCarriableWt((short) 200)
                 .maxSpeed((short) 70).noOfVehicle((short) 2).build();
 
-        calcEstimatedDeliveryAndPrint(inputPackages, deliveryInput);
+        calcEstimatedDeliveryAndPrint(inputPackages, packageDeliveryInput);
 
     }
 
@@ -100,10 +102,10 @@ public class DeliveryEstimationServiceTest {
                             .weight(wts[i]).dist(dists[i]).build(), offrCodes[i]);
 
         }
-        DeliveryInput deliveryInput = DeliveryInput.builder().maxCarriableWt((short) 200)
+        PackageDeliveryInput packageDeliveryInput = PackageDeliveryInput.builder().maxCarriableWt((short) 200)
                 .maxSpeed((short) 70).noOfVehicle((short) 2).build();
 
-        calcEstimatedDeliveryAndPrint(inputPackages, deliveryInput);
+        calcEstimatedDeliveryAndPrint(inputPackages, packageDeliveryInput);
 
     }
 
@@ -120,10 +122,10 @@ public class DeliveryEstimationServiceTest {
                             .weight(wts[i]).dist(dists[i]).build(), offrCodes[i]);
 
         }
-        DeliveryInput deliveryInput = DeliveryInput.builder().maxCarriableWt((short) 200)
+        PackageDeliveryInput packageDeliveryInput = PackageDeliveryInput.builder().maxCarriableWt((short) 200)
                 .maxSpeed((short) 70).noOfVehicle((short) 2).build();
 
-        calcEstimatedDeliveryAndPrint(inputPackages, deliveryInput);
+        calcEstimatedDeliveryAndPrint(inputPackages, packageDeliveryInput);
 
     }
 
@@ -140,10 +142,10 @@ public class DeliveryEstimationServiceTest {
                             .weight(wts[i]).dist(dists[i]).build(), offrCodes[i]);
 
         }
-        DeliveryInput deliveryInput = DeliveryInput.builder().maxCarriableWt((short) 200)
+        PackageDeliveryInput packageDeliveryInput = PackageDeliveryInput.builder().maxCarriableWt((short) 200)
                 .maxSpeed((short) 70).noOfVehicle((short) 2).build();
 
-        calcEstimatedDeliveryAndPrint(inputPackages, deliveryInput);
+        calcEstimatedDeliveryAndPrint(inputPackages, packageDeliveryInput);
 
     }
 
@@ -160,10 +162,10 @@ public class DeliveryEstimationServiceTest {
                             .weight(wts[i]).dist(dists[i]).build(), offrCodes[i]);
 
         }
-        DeliveryInput deliveryInput = DeliveryInput.builder().maxCarriableWt((short) 200)
+        PackageDeliveryInput packageDeliveryInput = PackageDeliveryInput.builder().maxCarriableWt((short) 200)
                 .maxSpeed((short) 70).noOfVehicle((short) 2).build();
 
-        calcEstimatedDeliveryAndPrint(inputPackages, deliveryInput);
+        calcEstimatedDeliveryAndPrint(inputPackages, packageDeliveryInput);
 
     }
 
@@ -180,19 +182,19 @@ public class DeliveryEstimationServiceTest {
                             .weight(wts[i]).dist(dists[i]).build(), offrCodes[i]);
 
         }
-        DeliveryInput deliveryInput = DeliveryInput.builder().maxCarriableWt((short) 200)
+        PackageDeliveryInput packageDeliveryInput = PackageDeliveryInput.builder().maxCarriableWt((short) 200)
                 .maxSpeed((short) 70).noOfVehicle((short) 2).build();
 
-        calcEstimatedDeliveryAndPrint(inputPackages, deliveryInput);
+        calcEstimatedDeliveryAndPrint(inputPackages, packageDeliveryInput);
 
     }
 
-    private List<DeliveryOrder> calcEstimatedDeliveryAndPrint(InputPackage[] inputPackages, DeliveryInput deliveryInput) {
-        List<DeliveryOrder> deliveries = getDeliveryEstimationServiceFactory()
-                .calculateEstimatedDelivery(inputPackages, deliveryInput, (short)100);
-        Collections.sort(deliveries, Comparator.comparing(o -> o.getPackageChargeInformation().getPackageId()));
-        for (DeliveryOrder deliveryOrder : deliveries){
-            System.out.println(deliveryOrder);
+    private List<PackageDeliveryTimeEstimationInfo> calcEstimatedDeliveryAndPrint(InputPackage[] inputPackages, PackageDeliveryInput packageDeliveryInput) {
+        List<PackageDeliveryTimeEstimationInfo> deliveries = getDeliveryEstimationServiceFactory()
+                .calculateEstimatedDelivery(inputPackages, packageDeliveryInput, (short)100);
+        Collections.sort(deliveries, Comparator.comparing(o -> o.getPackageDeliveryCostEstimateInfo().getPackageId()));
+        for (PackageDeliveryTimeEstimationInfo packageDeliveryTimeEstimationInfo : deliveries){
+            System.out.println(packageDeliveryTimeEstimationInfo);
         }
         return deliveries;
     }
@@ -210,10 +212,10 @@ public class DeliveryEstimationServiceTest {
                             .weight(wts[i]).dist(dists[i]).build(), offrCodes[i]);
 
         }
-        DeliveryInput deliveryInput = DeliveryInput.builder().maxCarriableWt((short) 200)
+        PackageDeliveryInput packageDeliveryInput = PackageDeliveryInput.builder().maxCarriableWt((short) 200)
                 .maxSpeed((short) 70).noOfVehicle((short) 10).build();
 
-        calcEstimatedDeliveryAndPrint(inputPackages, deliveryInput);
+        calcEstimatedDeliveryAndPrint(inputPackages, packageDeliveryInput);
 
     }
 
@@ -231,10 +233,10 @@ public class DeliveryEstimationServiceTest {
                             .weight(wts[i]).dist(dists[i]).build(), offrCodes[i]);
 
         }
-        DeliveryInput deliveryInput = DeliveryInput.builder().maxCarriableWt((short) 200)
+        PackageDeliveryInput packageDeliveryInput = PackageDeliveryInput.builder().maxCarriableWt((short) 200)
                 .maxSpeed((short) 70).noOfVehicle((short) 2).build();
 
-        calcEstimatedDeliveryAndPrint(inputPackages,deliveryInput);
+        calcEstimatedDeliveryAndPrint(inputPackages, packageDeliveryInput);
 
     }
 
@@ -252,10 +254,10 @@ public class DeliveryEstimationServiceTest {
                             .weight(wts[i]).dist(dists[i]).build(), offrCodes[i]);
 
         }
-        DeliveryInput deliveryInput = DeliveryInput.builder().maxCarriableWt((short) 200)
+        PackageDeliveryInput packageDeliveryInput = PackageDeliveryInput.builder().maxCarriableWt((short) 200)
                 .maxSpeed((short) 70).noOfVehicle((short) 2).build();
 
-        calcEstimatedDeliveryAndPrint(inputPackages,deliveryInput);
+        calcEstimatedDeliveryAndPrint(inputPackages, packageDeliveryInput);
 
     }
 }

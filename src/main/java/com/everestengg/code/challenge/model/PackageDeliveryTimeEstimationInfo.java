@@ -8,11 +8,11 @@ import lombok.Getter;
  */
 @Getter
 @Builder
-public class DeliveryOrder{
-    private PackageChargeInformation packageChargeInformation;
+public class PackageDeliveryTimeEstimationInfo {
+    private PackageDeliveryCostEstimateInfo packageDeliveryCostEstimateInfo;
     private float estimatedDeliveryTime;
     public String toString() {
-        return packageChargeInformation.toString()+" "+estimatedDeliveryTime;
+        return packageDeliveryCostEstimateInfo.toString()+" "+estimatedDeliveryTime;
     }
 
 }

@@ -1,34 +1,17 @@
-package com.everestengg.code.challenge.util;
+package com.everestengg.code.challenge.repo;
 
-import com.everestengg.code.challenge.bo.InputPackage;
-import com.everestengg.code.challenge.bo.Package;
-import com.everestengg.code.challenge.model.*;
+import com.everestengg.code.challenge.model.NumberOfferCriteria;
+import com.everestengg.code.challenge.model.NumberRangeOfferCriteria;
+import com.everestengg.code.challenge.model.Offer;
+import com.everestengg.code.challenge.model.OfferCriteria;
+import com.everestengg.code.challenge.model.StringOfferCriteria;
+import com.everestengg.code.challenge.vo.Package;
 
-import java.util.Scanner;
+import static com.everestengg.code.challenge.model.OfferCriteria.Operator.EQ;
+import static com.everestengg.code.challenge.model.OfferCriteria.Operator.LT;
+import static com.everestengg.code.challenge.model.OfferCriteria.Operator.RANGE;
 
-import static com.everestengg.code.challenge.model.OfferCriteria.Operator.*;
-
-public class Utils {
-
-    private Utils(){
-
-    }
-    public static void readPackages(Scanner scanner, short noOfPackages, InputPackage[] inputPackages) {
-        System.out.println("enter packageId, weight, distance and offer code");
-        for(int i = 1; i <= noOfPackages; i++){
-            String packageId = scanner.next();
-            short weight = scanner.nextShort();
-            short dist = scanner.nextShort();
-            String offerCode = scanner.next();
-            inputPackages[i-1] = new InputPackage(Package.builder()
-                    .packageId(packageId)
-                    .weight(weight)
-                    .dist(dist)
-                    .build(),
-                    offerCode);
-            //System.out.println("\n");
-        }
-    }
+public class StaticOfferRepository {
 
     public static void prepareOffers() {
         //OFFR1

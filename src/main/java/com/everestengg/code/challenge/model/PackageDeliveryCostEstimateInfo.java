@@ -8,7 +8,7 @@ import lombok.Getter;
  */
 @Builder
 @Getter
-public class PackageChargeInformation {
+public class PackageDeliveryCostEstimateInfo {
     private String packageId;
     private double totalDiscount;
     private double totalCost;

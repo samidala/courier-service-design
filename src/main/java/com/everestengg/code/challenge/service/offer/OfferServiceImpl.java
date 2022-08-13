@@ -1,10 +1,10 @@
-package com.everestengg.code.challenge.service;
+package com.everestengg.code.challenge.service.offer;
 
-import com.everestengg.code.challenge.bo.InputPackage;
+import com.everestengg.code.challenge.vo.InputPackage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import static com.everestengg.code.challenge.service.OfferFactory.Type.IN_MEMORY;
+import static com.everestengg.code.challenge.service.offer.OfferFactory.Type.IN_MEMORY;
 
 /**
  * helper class to get the discount value

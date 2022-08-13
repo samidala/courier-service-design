@@ -1,8 +1,8 @@
 package com.everestengg.code.challenge.model;
 
-import com.everestengg.code.challenge.bo.Package;
-import com.everestengg.code.challenge.service.InmemoryOfferManager;
-import com.everestengg.code.challenge.service.PackageRequestContext;
+import com.everestengg.code.challenge.vo.Package;
+import com.everestengg.code.challenge.service.offer.InmemoryOfferManager;
+import com.everestengg.code.challenge.service.offer.PackageRequestContext;
 import lombok.Getter;
 
 @Getter

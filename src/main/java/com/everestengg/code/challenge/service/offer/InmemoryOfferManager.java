@@ -1,4 +1,4 @@
-package com.everestengg.code.challenge.service;
+package com.everestengg.code.challenge.service.offer;
 
 import com.everestengg.code.challenge.model.Offer;
 

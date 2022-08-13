@@ -1,4 +1,4 @@
-package com.everestengg.code.challenge.service;
+package com.everestengg.code.challenge.service.offer;
 
 /**
  * Factory class for {@link OfferManager} implementations
