@@ -1,12 +1,6 @@
 package com.everestengg.code.challenge.util;
 
 import com.everestengg.code.challenge.vo.InputPackage;
-import com.everestengg.code.challenge.vo.Package;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-
-import java.util.Scanner;
 
 public class ValidationUtils {
 
