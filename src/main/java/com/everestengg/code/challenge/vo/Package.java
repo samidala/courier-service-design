@@ -18,10 +18,10 @@ public class Package {
         return !StringUtils.isEmpty(this.packageId);
     }
     public boolean isValidWeight(){
-        return weight > 0 && weight < 1000;
+        return weight > 0 ;
     }
     public boolean isValidDistance(){
-        return dist > 0 && dist < 1000;
+        return dist > 0;
     }
 
 }

@@ -74,14 +74,14 @@ public class IoUtils {
     }
     private static boolean isValidDistance(InputPackage inputPackage){
         if(!inputPackage.getPackageDetails().isValidDistance()){
-            System.err.println("Invalid distance, the value should be between 1 to 1000");
+            System.err.println("Invalid distance, the value should be greater than 1 and less than equal to "+Short.MAX_VALUE);
             return false;
         }
         return true;
     }
     private static boolean isValidWeight(InputPackage inputPackage){
         if(!inputPackage.getPackageDetails().isValidWeight()){
-            System.err.println("Invalid weight, the value should be between 1 to 1000");
+            System.err.println("Invalid weight, the value should be greater than 1 and less than equal to "+Short.MAX_VALUE);
             return false;
         }
         return true;

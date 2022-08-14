@@ -1,9 +1,16 @@
 package com.everestengg.code.challenge.exceptions;
 
 public class InvalidValueException extends RuntimeException {
-    private final String val;
-    public InvalidValueException(String val,Exception e){
+    private final String message;
+    public InvalidValueException(String message, Exception e){
         super(e);
-        this.val = val;
+        this.message = message;
+    }
+    public InvalidValueException(String message){
+        this.message = message;
+    }
+
+    public String getMessage() {
+        return message;
     }
 }

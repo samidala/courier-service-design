@@ -7,10 +7,11 @@ import lombok.Getter;
  * captures information of package, charges, discounts and estimated delivery time
  */
 @Getter
-@Builder
+@Builder(toBuilder = true)
 public class PackageDeliveryTimeEstimationInfo {
     private PackageDeliveryCostEstimateInfo packageDeliveryCostEstimateInfo;
-    private float estimatedDeliveryTime;
+    private double estimatedDeliveryTime;
+
     public String toString() {
         return packageDeliveryCostEstimateInfo.toString()+" "+estimatedDeliveryTime;
     }
