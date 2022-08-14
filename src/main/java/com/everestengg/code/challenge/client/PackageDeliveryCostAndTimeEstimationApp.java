@@ -3,7 +3,7 @@ package com.everestengg.code.challenge.client;
 import com.everestengg.code.challenge.io.IoUtils;
 import com.everestengg.code.challenge.vo.PackageDeliveryInput;
 import com.everestengg.code.challenge.vo.InputPackage;
-import com.everestengg.code.challenge.model.PackageDeliveryTimeEstimationInfo;
+import com.everestengg.code.challenge.model.PackageDeliveryCostAndTimeEstimationInfo;
 import com.everestengg.code.challenge.service.delivery.time.estimation.PackageDeliveryTimeEstimationServiceFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,7 +34,7 @@ public class PackageDeliveryCostAndTimeEstimationApp {
             // read delivery information
             PackageDeliveryInput packageDeliveryInput = readDeliveryInput(scanner);
             //calculate discount for each and print
-            List<PackageDeliveryTimeEstimationInfo> result = PackageDeliveryTimeEstimationServiceFactory
+            List<PackageDeliveryCostAndTimeEstimationInfo> result = PackageDeliveryTimeEstimationServiceFactory
                     .getDeliveryEstimationService(SIMPLE).calculateEstimatedDelivery(inputPackages, packageDeliveryInput,
                             baseDeliveryCost);
             printDelivery(result);
@@ -47,9 +47,9 @@ public class PackageDeliveryCostAndTimeEstimationApp {
     private static void readPackages(Scanner scanner, short noOfPackages, InputPackage[] inputPackages) {
         IoUtils.readPackages(scanner, noOfPackages, inputPackages);
     }
-    private static void printDelivery(List<PackageDeliveryTimeEstimationInfo> packageDeliveryTimeEstimationInfo) {
-        for (PackageDeliveryTimeEstimationInfo packageDeliveryTimeEstimationInfo1 : packageDeliveryTimeEstimationInfo) {
-            System.out.println(packageDeliveryTimeEstimationInfo1);
+    private static void printDelivery(List<PackageDeliveryCostAndTimeEstimationInfo> packageDeliveryCostAndTimeEstimationInfo) {
+        for (PackageDeliveryCostAndTimeEstimationInfo packageDeliveryCostAndTimeEstimationInfo1 : packageDeliveryCostAndTimeEstimationInfo) {
+            System.out.println(packageDeliveryCostAndTimeEstimationInfo1);
         }
     }
 

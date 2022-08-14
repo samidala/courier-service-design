@@ -8,7 +8,7 @@ import lombok.Getter;
  */
 @Getter
 @Builder(toBuilder = true)
-public class PackageDeliveryTimeEstimationInfo {
+public class PackageDeliveryCostAndTimeEstimationInfo {
     private PackageDeliveryCostEstimateInfo packageDeliveryCostEstimateInfo;
     private double estimatedDeliveryTime;
 

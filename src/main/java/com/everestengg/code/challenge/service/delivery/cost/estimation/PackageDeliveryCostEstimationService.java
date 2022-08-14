@@ -4,7 +4,11 @@ import com.everestengg.code.challenge.model.PackageDeliveryCostEstimateInfo;
 import com.everestengg.code.challenge.vo.InputPackage;
 import com.everestengg.code.challenge.vo.Response;
 
+import java.util.List;
+
 public interface PackageDeliveryCostEstimationService {
+    List<PackageDeliveryCostEstimationImpl.InputPackageValidator> getInputPackageValidatorList();
+
     /**
      *
      * @param inputPackage packages to be delivered

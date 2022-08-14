@@ -2,7 +2,7 @@ package com.everestengg.code.challenge.service.delivery.time.estimation;
 
 import com.everestengg.code.challenge.vo.PackageDeliveryInput;
 import com.everestengg.code.challenge.vo.InputPackage;
-import com.everestengg.code.challenge.model.PackageDeliveryTimeEstimationInfo;
+import com.everestengg.code.challenge.model.PackageDeliveryCostAndTimeEstimationInfo;
 
 import java.util.List;
 
@@ -14,6 +14,7 @@ public interface PackageDeliveryTimeEstimationService {
       * @param baseDeliveryCost base delivery cost
       * @return list of packages to be delivered and time calculated for each package
       */
-     List<PackageDeliveryTimeEstimationInfo> calculateEstimatedDelivery(InputPackage[] inputPackages, PackageDeliveryInput packageDeliveryInput,
-                                                                        short baseDeliveryCost);
+     List<PackageDeliveryCostAndTimeEstimationInfo> calculateEstimatedDelivery(InputPackage[] inputPackages,
+                                                                               PackageDeliveryInput packageDeliveryInput,
+                                                                               short baseDeliveryCost);
 }

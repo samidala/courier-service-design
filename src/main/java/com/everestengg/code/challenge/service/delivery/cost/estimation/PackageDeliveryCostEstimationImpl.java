@@ -9,6 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -36,6 +37,11 @@ public class PackageDeliveryCostEstimationImpl implements PackageDeliveryCostEst
     public PackageDeliveryCostEstimationImpl(int weightMultiplier, int distanceMultiplier) {
         this.weightMultiplier = weightMultiplier;
         this.distanceMultiplier = distanceMultiplier;
+    }
+
+    @Override
+    public List<InputPackageValidator> getInputPackageValidatorList() {
+        return Collections.unmodifiableList(inputPackageValidatorList);
     }
 
     /**
@@ -67,7 +73,7 @@ public class PackageDeliveryCostEstimationImpl implements PackageDeliveryCostEst
     }
 
 
-    private interface InputPackageValidator{
+    public interface InputPackageValidator{
         boolean validate(InputPackage inputPackage) throws InvalidValueException;
     }
 
