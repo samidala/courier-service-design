@@ -10,12 +10,12 @@ import static com.everestengg.code.challenge.service.offer.OfferFactory.Type.IN_
  * helper class to get the discount value
  */
 public class OfferServiceImpl {
-    private static Logger logger = LoggerFactory.getLogger(OfferServiceImpl.class);
+    private static Logger LOGGER = LoggerFactory.getLogger(OfferServiceImpl.class);
     public float getDiscountValue(InputPackage inputPackage) {
         String offerCode = inputPackage.getOfferCode();
         float discount = OfferFactory.getOfferManager(IN_MEMORY).getOffer(offerCode).calcDiscount(
                 PackageRequestContext.builder().inputPackage(inputPackage).build());
-        logger.debug("discount {}",discount);
+        LOGGER.debug("discount {}",discount);
         return discount;
     }
 
