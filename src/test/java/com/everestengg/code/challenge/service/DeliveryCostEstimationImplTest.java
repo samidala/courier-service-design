@@ -116,12 +116,13 @@ public class DeliveryCostEstimationImplTest {
         Assertions.assertEquals(700, packageDeliveryCostEstimateInfo.getCostAfterDiscount());
     }
 
-   /* @Test
+    @Test
     void testCalcDiscountCategoryAndWeight() {
         //Not a perfect implementation however have done this for showcasing the design can be extendable to new offer
         // codes on different criteria like category.
         PackageDeliveryCostEstimationImpl packageOrderImpl = new PackageDeliveryCostEstimationImpl();
-        Package pkg = Package.builder().packageId("electronics").weight((short) 80).dist((short) 100).build();
+        Package pkg = Package.builder().packageId("electronics").category("electronics")
+                .weight((short) 80).dist((short) 100).build();
         InputPackage inputPackage = new InputPackage(pkg, "OFR004");
         PackageDeliveryCostEstimateInfo packageDeliveryCostEstimateInfo = packageOrderImpl
                 .calcCost(inputPackage, 100).getResult();
@@ -129,7 +130,7 @@ public class DeliveryCostEstimationImplTest {
         Assertions.assertEquals("electronics", packageDeliveryCostEstimateInfo.getPackageId());
         Assertions.assertEquals(700, packageDeliveryCostEstimateInfo.getTotalDiscount());
         Assertions.assertEquals(700, packageDeliveryCostEstimateInfo.getCostAfterDiscount());
-    }*/
+    }
 
     @Test
     void testNegativeDistance() {

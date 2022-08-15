@@ -46,9 +46,9 @@ public class OfferCriteria {
 
     public  boolean isMatch(String inputVal){
         if(isEquals()){
-            return Double.valueOf(inputVal).equals(Double.valueOf(propertyValue));
+            return inputVal.equals(propertyValue);
         }else if(isNotEquals()){
-            return !Double.valueOf(inputVal).equals(Double.valueOf(propertyValue));
+            return !inputVal.equals(propertyValue);
         }else if(isGreaterThan()){
             return Double.valueOf(inputVal).compareTo(Double.valueOf(propertyValue)) > 0;
         }else if(isLessThan()){

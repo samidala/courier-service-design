@@ -17,6 +17,8 @@ public class Package {
     private short weight ;
     private short dist ;
 
+    private String category;
+
     public boolean isValidPackageId() {
         return !StringUtils.isEmpty(this.packageId);
     }

@@ -3,6 +3,7 @@ package com.everestengg.code.challenge.repo.offer;
 import com.everestengg.code.challenge.domain.offer.Offer;
 import com.everestengg.code.challenge.domain.offer.OfferCriteria;
 
+import static com.everestengg.code.challenge.domain.offer.OfferCriteria.Operator.EQ;
 import static com.everestengg.code.challenge.domain.offer.OfferCriteria.Operator.LT;
 import static com.everestengg.code.challenge.domain.offer.OfferCriteria.Operator.RANGE;
 
@@ -15,6 +16,8 @@ public class StaticOfferRepository {
         prepareOffer2();
         //OFFR3
         prepareOffer3();
+        prepareOffer4();
+
     }
 
     private static void prepareOffer3() {
@@ -40,5 +43,16 @@ public class StaticOfferRepository {
         OfferCriteria weightOfferCriteria = OfferCriteria.builder().operator(RANGE)
                 .property("weight").propertyValue("70|200").build();
         new Offer("OFR001",10, distOfferCriteria,weightOfferCriteria);
+    }
+
+    private static void prepareOffer4() {
+        OfferCriteria catOfferCriteria =  OfferCriteria.builder().operator(EQ)
+                .propertyValue("electronics").property("category").build();
+
+        OfferCriteria weightOfferCriteria =  OfferCriteria.builder().operator(RANGE)
+                .propertyValue("70|200").property("weight").build();
+
+        OfferCriteria[] offerCriterias = new OfferCriteria[]{catOfferCriteria,weightOfferCriteria};
+        new Offer("OFR004",50,offerCriterias);
     }
 }
