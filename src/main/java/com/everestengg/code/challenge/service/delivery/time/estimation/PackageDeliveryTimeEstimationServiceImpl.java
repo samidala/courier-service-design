@@ -5,8 +5,8 @@ import com.everestengg.code.challenge.service.delivery.cost.estimation.PackageDe
 import com.everestengg.code.challenge.service.delivery.cost.estimation.PackageDeliveryCostEstimationServiceFactory;
 import com.everestengg.code.challenge.vo.PackageDeliveryInput;
 import com.everestengg.code.challenge.vo.InputPackage;
-import com.everestengg.code.challenge.model.PackageDeliveryCostAndTimeEstimationInfo;
-import com.everestengg.code.challenge.model.PackageDeliveryCostEstimateInfo;
+import com.everestengg.code.challenge.model.courier.PackageDeliveryCostAndTimeEstimationInfo;
+import com.everestengg.code.challenge.model.courier.PackageDeliveryCostEstimateInfo;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;

@@ -2,15 +2,13 @@ package com.everestengg.code.challenge.service;
 
 
 import com.everestengg.code.challenge.exceptions.InvalidValueException;
-import com.everestengg.code.challenge.model.PackageDeliveryCostAndTimeEstimationInfo;
+import com.everestengg.code.challenge.model.courier.PackageDeliveryCostAndTimeEstimationInfo;
 import com.everestengg.code.challenge.repo.StaticOfferRepository;
-import com.everestengg.code.challenge.service.delivery.cost.estimation.PackageDeliveryCostEstimationImpl;
 import com.everestengg.code.challenge.service.delivery.time.estimation.PackageDeliveryTimeEstimationService;
 import com.everestengg.code.challenge.service.delivery.time.estimation.PackageDeliveryTimeEstimationServiceFactory;
 import com.everestengg.code.challenge.vo.InputPackage;
 import com.everestengg.code.challenge.vo.Package;
 import com.everestengg.code.challenge.vo.PackageDeliveryInput;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 

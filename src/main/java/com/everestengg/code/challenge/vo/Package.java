@@ -1,6 +1,9 @@
 package com.everestengg.code.challenge.vo;
 
-import lombok.*;
+
+import lombok.Builder;
+import lombok.Getter;
+import lombok.ToString;
 import org.apache.commons.lang.StringUtils;
 
 /**

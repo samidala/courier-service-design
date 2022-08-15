@@ -1,5 +1,6 @@
 package com.everestengg.code.challenge.io;
 
+import com.everestengg.code.challenge.repo.CsvOfferRepository;
 import com.everestengg.code.challenge.util.ValidationUtils;
 import com.everestengg.code.challenge.vo.InputPackage;
 import com.everestengg.code.challenge.vo.Package;
@@ -7,6 +8,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 
+import java.io.IOException;
 import java.util.Scanner;
 
 public class IoUtils {
@@ -85,5 +87,26 @@ public class IoUtils {
         return readValue(scanner, "invalid number of packages, enter 1 to ");
     }
 
+    public static void readCsv(Scanner scanner){
+        System.out.println("Read CSV file ? press Y and enter to read files else press N");
+        String readOffers = scanner.nextLine();
+        if(!"Y".equals(readOffers)){
+            return;
+        }
+        try {
+            System.out.println("input csv file name for offer and offer criteria mapping inorder, space separated");
+            String offerFileName = scanner.next();
+            String offerCriteriaName = scanner.next();
+            new CsvOfferRepository().prepareOffers(offerFileName,offerCriteriaName);
+            System.out.println("offers loaded successfully");
+        }catch (IOException e){
+            System.err.println("Error while reading files and exiting app");
+            System.exit(0);
+        }catch (Exception e){
+            System.err.println("Error while reading files and processing.. exiting app");
+            System.exit(0);
+        }
+
+    }
 
 }

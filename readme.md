@@ -24,8 +24,8 @@
    3. `OfferCriteria` implementations must override `isMatch` with appropriate implementation
       1. `NumberOfferCriteria`, `NumberRangeOfferCriteria` are such examples
    4. `ResultEvalutor` is used for implementing specific cases like, equals, not equals, greater than and range etc..
-   5. `com.everestengg.code.challenge.model.Offer.calcDiscount` returns configured discount value if all the criteria matches
-   6. `com.everestengg.code.challenge.model.OfferCriteria.isMatch` uses `ResultEvalutor` for evaluating results.
+   5. `com.everestengg.code.challenge.model.offer.Offer.calcDiscount` returns configured discount value if all the criteria matches
+   6. `com.everestengg.code.challenge.model.offer.OfferCriteria.isMatch` uses `ResultEvalutor` for evaluating results.
    7. The below show sequence diagram
       
       ![PackageOrderImpl_calcCost.svg](PackageOrderImpl_calcCost.svg)

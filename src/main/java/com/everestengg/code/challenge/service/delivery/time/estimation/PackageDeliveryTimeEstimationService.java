@@ -2,7 +2,7 @@ package com.everestengg.code.challenge.service.delivery.time.estimation;
 
 import com.everestengg.code.challenge.vo.PackageDeliveryInput;
 import com.everestengg.code.challenge.vo.InputPackage;
-import com.everestengg.code.challenge.model.PackageDeliveryCostAndTimeEstimationInfo;
+import com.everestengg.code.challenge.model.courier.PackageDeliveryCostAndTimeEstimationInfo;
 
 import java.util.List;
 

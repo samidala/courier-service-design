@@ -1,21 +1,28 @@
-package com.everestengg.code.challenge.model;
+package com.everestengg.code.challenge.model.offer;
 
+import com.everestengg.code.challenge.exceptions.InvalidValueException;
 import com.everestengg.code.challenge.vo.Package;
 import com.everestengg.code.challenge.service.offer.InmemoryOfferManager;
 import com.everestengg.code.challenge.service.offer.PackageRequestContext;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Getter;
+import lombok.ToString;
+import org.apache.commons.lang.StringUtils;
+
+import java.util.Map;
 
 @Getter
-public  class Offer<ConfigValue, InputValue> {
+@ToString
+public  class Offer {
 
     private final String offerId;
-    private final OfferCriteria<ConfigValue, InputValue>[] offerCriterias;
+    private final OfferCriteria[] offerCriterias;
     private final float percentage;
 
-    public static Offer<Object,Object> NA = new Offer("NA",0);
+    public static Offer NA = new Offer("NA",0);
 
 
-    public Offer(String offerId,int percentage,OfferCriteria<ConfigValue, InputValue>...  offerCriterias){
+    public Offer(String offerId,int percentage,OfferCriteria...  offerCriterias){
         this.offerId = offerId;
         this.percentage = percentage;
         this.offerCriterias = offerCriterias;
@@ -35,7 +42,7 @@ public  class Offer<ConfigValue, InputValue> {
         if(offerCriterias == null || offerCriterias.length == 0){
             return percentage;
         }
-        for(OfferCriteria<ConfigValue,InputValue> offerCriteria : offerCriterias){
+        for(OfferCriteria offerCriteria : offerCriterias){
             if(!offerCriteria.isMatch(getValue(pkg,offerCriteria))){
                 return 0;
             }
@@ -48,10 +55,21 @@ public  class Offer<ConfigValue, InputValue> {
      *
      * @param aPackage package in context
      * @param offerCriteria @{@link OfferCriteria}
-     * @return package property value depending @{@link ValueHandler} implementation
+     * @return property value
      */
-    public  InputValue getValue(Package aPackage, OfferCriteria<ConfigValue,InputValue> offerCriteria){
-        return offerCriteria.getValueHandler().getValue(aPackage);
+    public  String getValue(Package aPackage, OfferCriteria offerCriteria) throws InvalidValueException{
+        String value = "";
+        try {
+            value =  new ObjectMapper().convertValue(aPackage,Map.class).get(offerCriteria.getProperty()).toString();
+            System.out.println("value "+value);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
+        if(StringUtils.isEmpty(value)){
+            throw new InvalidValueException("invalid value");
+        }
+        return value;
     }
 
 }

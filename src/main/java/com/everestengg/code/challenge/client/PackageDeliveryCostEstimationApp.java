@@ -1,6 +1,6 @@
 package com.everestengg.code.challenge.client;
 
-import com.everestengg.code.challenge.model.PackageDeliveryCostEstimateInfo;
+import com.everestengg.code.challenge.model.courier.PackageDeliveryCostEstimateInfo;
 import com.everestengg.code.challenge.repo.StaticOfferRepository;
 import com.everestengg.code.challenge.service.delivery.cost.estimation.PackageDeliveryCostEstimationServiceFactory;
 import com.everestengg.code.challenge.io.IoUtils;

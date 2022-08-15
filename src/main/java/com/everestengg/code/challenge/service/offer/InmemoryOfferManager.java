@@ -1,6 +1,6 @@
 package com.everestengg.code.challenge.service.offer;
 
-import com.everestengg.code.challenge.model.Offer;
+import com.everestengg.code.challenge.model.offer.Offer;
 
 import java.io.Serializable;
 import java.util.HashMap;
@@ -17,10 +17,10 @@ public final class InmemoryOfferManager implements OfferManager, Serializable,Cl
     private InmemoryOfferManager(){
 
     }
-    public <ConfigValue, InputValue> void register(Offer<ConfigValue, InputValue> offer){
+    public  void register(Offer offer){
         offerCache.put(offer.getOfferId(),offer);
     }
-    public <ConfigValue, InputValue> Offer<ConfigValue, InputValue> getOffer(String offerCode) throws IllegalArgumentException{
+    public  Offer getOffer(String offerCode) throws IllegalArgumentException{
         return offerCache.getOrDefault(offerCode,Offer.NA);
 
     }

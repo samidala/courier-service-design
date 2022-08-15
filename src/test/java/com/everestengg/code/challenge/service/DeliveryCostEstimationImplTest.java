@@ -1,7 +1,7 @@
 package com.everestengg.code.challenge.service;
 
 import com.everestengg.code.challenge.exceptions.InvalidValueException;
-import com.everestengg.code.challenge.model.PackageDeliveryCostEstimateInfo;
+import com.everestengg.code.challenge.model.courier.PackageDeliveryCostEstimateInfo;
 import com.everestengg.code.challenge.repo.StaticOfferRepository;
 import com.everestengg.code.challenge.service.delivery.cost.estimation.PackageDeliveryCostEstimationImpl;
 import com.everestengg.code.challenge.vo.InputPackage;
@@ -22,6 +22,9 @@ public class DeliveryCostEstimationImplTest {
 
     @Test
     void testCalcDiscountOfr001() {
+        String one = "212";
+        String two = "122";
+        System.out.println(one.compareTo(two));
         PackageDeliveryCostEstimationImpl packageOrderImpl = new PackageDeliveryCostEstimationImpl();
         Package pkg = Package.builder().packageId("P1").weight((short) 5).dist((short) 5).build();
         InputPackage inputPackage = new InputPackage(pkg, "OFR001");
@@ -113,7 +116,7 @@ public class DeliveryCostEstimationImplTest {
         Assertions.assertEquals(700, packageDeliveryCostEstimateInfo.getCostAfterDiscount());
     }
 
-    @Test
+   /* @Test
     void testCalcDiscountCategoryAndWeight() {
         //Not a perfect implementation however have done this for showcasing the design can be extendable to new offer
         // codes on different criteria like category.
@@ -126,7 +129,7 @@ public class DeliveryCostEstimationImplTest {
         Assertions.assertEquals("electronics", packageDeliveryCostEstimateInfo.getPackageId());
         Assertions.assertEquals(700, packageDeliveryCostEstimateInfo.getTotalDiscount());
         Assertions.assertEquals(700, packageDeliveryCostEstimateInfo.getCostAfterDiscount());
-    }
+    }*/
 
     @Test
     void testNegativeDistance() {

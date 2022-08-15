@@ -1,6 +1,6 @@
 package com.everestengg.code.challenge.service.delivery.cost.estimation;
 
-import com.everestengg.code.challenge.model.PackageDeliveryCostEstimateInfo;
+import com.everestengg.code.challenge.model.courier.PackageDeliveryCostEstimateInfo;
 import com.everestengg.code.challenge.vo.InputPackage;
 import com.everestengg.code.challenge.vo.Response;
 

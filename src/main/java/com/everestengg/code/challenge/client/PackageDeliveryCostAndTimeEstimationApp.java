@@ -3,7 +3,7 @@ package com.everestengg.code.challenge.client;
 import com.everestengg.code.challenge.io.IoUtils;
 import com.everestengg.code.challenge.vo.PackageDeliveryInput;
 import com.everestengg.code.challenge.vo.InputPackage;
-import com.everestengg.code.challenge.model.PackageDeliveryCostAndTimeEstimationInfo;
+import com.everestengg.code.challenge.model.courier.PackageDeliveryCostAndTimeEstimationInfo;
 import com.everestengg.code.challenge.service.delivery.time.estimation.PackageDeliveryTimeEstimationServiceFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
