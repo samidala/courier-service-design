@@ -15,7 +15,7 @@ public class CsvReader {
     private static final Logger LOGGER = LoggerFactory.getLogger(CsvReader.class);
 
     @SneakyThrows
-    public static <T >List<T> read(String fileName,Class clazz) throws CsvParseException{
+    public  <T >List<T> read(String fileName,Class<T> clazz) throws CsvParseException{
         try(FileReader reader = new FileReader(fileName)){
             return new CsvToBeanBuilder<T>(reader).withType(clazz).build().parse();
         }catch (IOException e){

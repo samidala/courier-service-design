@@ -4,6 +4,8 @@ package com.everestengg.code.challenge.model.csv;
 import com.everestengg.code.challenge.domain.offer.OfferCriteria;
 import com.everestengg.code.challenge.domain.offer.OfferCriteria.Operator;
 import com.opencsv.bean.CsvBindByName;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -15,6 +17,8 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
+@Builder
+@AllArgsConstructor
 public class CsvOfferCriteria {
 
     @CsvBindByName(column = "offerCriteriaId")

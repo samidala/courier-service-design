@@ -20,15 +20,30 @@ import java.util.stream.Collectors;
 public class CsvOfferRepository {
     private static final Logger LOGGER = LoggerFactory.getLogger(CsvOfferRepository.class);
 
-    public Response<List<Offer>> prepareOffers(String offerFilePath, String offerCriteriaFilePath) throws IOException {
+    private CsvReader csvReader;
+    public CsvOfferRepository(){
+        csvReader = new CsvReader();
+    }
 
-        List<CsvOffer> csvOffers = CsvReader.read(offerFilePath,CsvOffer.class);
+    public void setCsvReader(CsvReader csvReader) {
+        this.csvReader = csvReader;
+    }
+
+    public Response<List<Offer>> prepareOffers(String offerFilePath, String offerCriteriaFilePath) throws IOException {
+        List<CsvOffer> csvOffers = csvReader.read(offerFilePath,CsvOffer.class);
         LOGGER.debug("csv offers {} ",csvOffers);
-        List<CsvOfferCriteria> offerCriteriaList = CsvReader.read(offerCriteriaFilePath,CsvOfferCriteria.class);
-        LOGGER.debug("offerCriteriaList {} ",offerCriteriaList);
+        List<CsvOfferCriteria> csvOfferCriteriaList = csvReader.read(offerCriteriaFilePath,CsvOfferCriteria.class);
+        LOGGER.debug("csvOfferCriteriaList {} ",csvOfferCriteriaList);
+
+
+        List<Offer> offerList = transformToOffer(csvOffers, csvOfferCriteriaList);
+        LOGGER.trace("offers {} ",offerList);
+        return Response.<List<Offer>>builder().result(offerList).build();
+    }
+
+    private List<Offer> transformToOffer(List<CsvOffer> csvOffers, List<CsvOfferCriteria> offerCriteriaList) {
         Map<Integer, CsvOfferCriteria> offerCriteriaMap = offerCriteriaList.stream().
                 collect(Collectors.toMap(CsvOfferCriteria::getOfferCriteriaId, Function.identity()));
-
         List<Offer> offerList = new ArrayList<>(csvOffers.size());
         for(CsvOffer csvOffer : csvOffers){
             OfferCriteria[] offerCriterias = null;
@@ -44,15 +59,6 @@ public class CsvOfferRepository {
             offerList.add(offer);
             LOGGER.debug("loaded offer is {}",offer);
         }
-
-        LOGGER.trace("offers {} ",offerList);
-
-        return Response.<List<Offer>>builder().result(offerList).build();
-    }
-
-    public static void main(String[] args) throws IOException {
-        CsvOfferRepository csvOfferRepository = new CsvOfferRepository();
-        csvOfferRepository.prepareOffers("D:\\interview\\courier-service-design\\src\\main\\resources\\offers.csv",
-                "D:\\interview\\courier-service-design\\src\\main\\resources\\offercriterias.csv");
+        return offerList;
     }
 }
