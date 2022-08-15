@@ -1,8 +1,8 @@
 package com.everestengg.code.challenge.model.csv;
 
 
-import com.everestengg.code.challenge.model.offer.OfferCriteria;
-import com.everestengg.code.challenge.model.offer.OfferCriteria.Operator;
+import com.everestengg.code.challenge.domain.offer.OfferCriteria;
+import com.everestengg.code.challenge.domain.offer.OfferCriteria.Operator;
 import com.opencsv.bean.CsvBindByName;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

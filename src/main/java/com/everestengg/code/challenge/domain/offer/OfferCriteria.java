@@ -1,4 +1,4 @@
-package com.everestengg.code.challenge.model.offer;
+package com.everestengg.code.challenge.domain.offer;
 
 
 import lombok.AllArgsConstructor;

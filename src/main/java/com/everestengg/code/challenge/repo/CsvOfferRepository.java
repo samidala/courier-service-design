@@ -2,8 +2,8 @@ package com.everestengg.code.challenge.repo;
 
 import com.everestengg.code.challenge.model.csv.CsvOffer;
 import com.everestengg.code.challenge.model.csv.CsvOfferCriteria;
-import com.everestengg.code.challenge.model.offer.Offer;
-import com.everestengg.code.challenge.model.offer.OfferCriteria;
+import com.everestengg.code.challenge.domain.offer.Offer;
+import com.everestengg.code.challenge.domain.offer.OfferCriteria;
 import com.everestengg.code.challenge.util.CsvReader;
 import com.everestengg.code.challenge.vo.Response;
 import org.apache.commons.lang.StringUtils;

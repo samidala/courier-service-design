@@ -1,4 +1,4 @@
-package com.everestengg.code.challenge.model.offer;
+package com.everestengg.code.challenge.domain.offer;
 
 import com.everestengg.code.challenge.exceptions.InvalidValueException;
 import com.everestengg.code.challenge.vo.Package;

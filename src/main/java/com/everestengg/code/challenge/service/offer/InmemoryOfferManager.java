@@ -1,6 +1,6 @@
 package com.everestengg.code.challenge.service.offer;
 
-import com.everestengg.code.challenge.model.offer.Offer;
+import com.everestengg.code.challenge.domain.offer.Offer;
 
 import java.io.Serializable;
 import java.util.HashMap;

@@ -1,10 +1,10 @@
 package com.everestengg.code.challenge.repo;
 
-import com.everestengg.code.challenge.model.offer.Offer;
-import com.everestengg.code.challenge.model.offer.OfferCriteria;
+import com.everestengg.code.challenge.domain.offer.Offer;
+import com.everestengg.code.challenge.domain.offer.OfferCriteria;
 
-import static com.everestengg.code.challenge.model.offer.OfferCriteria.Operator.LT;
-import static com.everestengg.code.challenge.model.offer.OfferCriteria.Operator.RANGE;
+import static com.everestengg.code.challenge.domain.offer.OfferCriteria.Operator.LT;
+import static com.everestengg.code.challenge.domain.offer.OfferCriteria.Operator.RANGE;
 
 public class StaticOfferRepository {
 

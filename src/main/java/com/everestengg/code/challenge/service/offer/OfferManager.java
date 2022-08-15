@@ -1,7 +1,7 @@
 package com.everestengg.code.challenge.service.offer;
 
 import com.everestengg.code.challenge.exceptions.OfferNotFoundException;
-import com.everestengg.code.challenge.model.offer.Offer;
+import com.everestengg.code.challenge.domain.offer.Offer;
 
 /**
  * OfferManager is specification for offer registration and getting the offer details by offer code
