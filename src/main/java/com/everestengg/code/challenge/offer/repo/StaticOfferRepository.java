@@ -1,4 +1,4 @@
-package com.everestengg.code.challenge.repo;
+package com.everestengg.code.challenge.offer.repo;
 
 import com.everestengg.code.challenge.domain.offer.Offer;
 import com.everestengg.code.challenge.domain.offer.OfferCriteria;

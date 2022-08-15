@@ -11,7 +11,7 @@ import org.slf4j.LoggerFactory;
 import java.util.List;
 import java.util.Scanner;
 
-import static com.everestengg.code.challenge.repo.StaticOfferRepository.prepareOffers;
+import static com.everestengg.code.challenge.offer.repo.StaticOfferRepository.prepareOffers;
 
 
 public class PackageDeliveryCostAndTimeEstimationApp {

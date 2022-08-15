@@ -1,4 +1,4 @@
-package com.everestengg.code.challenge.repo;
+package com.everestengg.code.challenge.offer.repo;
 
 import com.everestengg.code.challenge.model.csv.CsvOffer;
 import com.everestengg.code.challenge.model.csv.CsvOfferCriteria;

@@ -3,7 +3,7 @@ package com.everestengg.code.challenge.service;
 
 import com.everestengg.code.challenge.exceptions.InvalidValueException;
 import com.everestengg.code.challenge.model.courier.PackageDeliveryCostAndTimeEstimationInfo;
-import com.everestengg.code.challenge.repo.StaticOfferRepository;
+import com.everestengg.code.challenge.offer.repo.StaticOfferRepository;
 import com.everestengg.code.challenge.service.delivery.helper.PackageDeliveryCostAndTimeEstimationServiceHelper;
 import com.everestengg.code.challenge.vo.InputPackage;
 import com.everestengg.code.challenge.vo.Package;
