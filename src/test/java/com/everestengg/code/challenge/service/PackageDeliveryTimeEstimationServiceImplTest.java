@@ -4,7 +4,8 @@ package com.everestengg.code.challenge.service;
 import com.everestengg.code.challenge.exceptions.InvalidValueException;
 import com.everestengg.code.challenge.model.courier.PackageDeliveryCostAndTimeEstimationInfo;
 import com.everestengg.code.challenge.offer.repo.StaticOfferRepository;
-import com.everestengg.code.challenge.service.delivery.helper.PackageDeliveryCostAndTimeEstimationServiceHelper;
+import com.everestengg.code.challenge.service.delivery.time.estimation.PackageDeliveryTimeEstimationService;
+import com.everestengg.code.challenge.service.delivery.time.estimation.PackageDeliveryTimeEstimationServiceFactory;
 import com.everestengg.code.challenge.vo.InputPackage;
 import com.everestengg.code.challenge.vo.Package;
 import com.everestengg.code.challenge.vo.PackageDeliveryInput;
@@ -23,8 +24,10 @@ public class PackageDeliveryTimeEstimationServiceImplTest {
         StaticOfferRepository.prepareOffers();
     }
 
-    private PackageDeliveryCostAndTimeEstimationServiceHelper getDeliveryCostAndTimeEstimationServiceHelper(){
-        return new PackageDeliveryCostAndTimeEstimationServiceHelper();
+    private PackageDeliveryTimeEstimationService getDeliveryTimeEstimationService(){
+        return  PackageDeliveryTimeEstimationServiceFactory
+                .getDeliveryEstimationService(PackageDeliveryTimeEstimationServiceFactory
+                        .PackageDeliveryTimeEstimationType.SIMPLE);
     }
     @Test
     void testCalculateEstimatedDeliveryOfDiffWeights(){
@@ -57,7 +60,7 @@ public class PackageDeliveryTimeEstimationServiceImplTest {
                               double[] expectedDeliveryTimes) {
         for(int i = 0 ; i < packageDeliveryCostAndTimeEstimationInfos.size(); i++){
             PackageDeliveryCostAndTimeEstimationInfo item = packageDeliveryCostAndTimeEstimationInfos.get(i);
-            assertEquals(pkgIds[i],item.getPackageDeliveryCostEstimateInfo().getPackageId());
+            assertEquals(pkgIds[i],item.getPackageId());
             assertEquals(expectedDeliveryTimes[i],item.getEstimatedDeliveryTime());
         }
     }
@@ -223,7 +226,7 @@ public class PackageDeliveryTimeEstimationServiceImplTest {
     }
 
     private List<PackageDeliveryCostAndTimeEstimationInfo> calcEstimatedDeliveryAndPrint(InputPackage[] inputPackages, PackageDeliveryInput packageDeliveryInput) {
-        List<PackageDeliveryCostAndTimeEstimationInfo> deliveries = getDeliveryCostAndTimeEstimationServiceHelper()
+        List<PackageDeliveryCostAndTimeEstimationInfo> deliveries = getDeliveryTimeEstimationService()
                 .calculateEstimatedDelivery(inputPackages, packageDeliveryInput, (short)100);
         for (PackageDeliveryCostAndTimeEstimationInfo packageDeliveryCostAndTimeEstimationInfo : deliveries){
             System.out.println(packageDeliveryCostAndTimeEstimationInfo);
@@ -309,7 +312,7 @@ public class PackageDeliveryTimeEstimationServiceImplTest {
         InvalidValueException thrown = assertThrows(
                 InvalidValueException.class,
                 () -> {
-                    getDeliveryCostAndTimeEstimationServiceHelper()
+                    getDeliveryTimeEstimationService()
                             .calculateEstimatedDelivery(inputPackages, packageDeliveryInput, (short)100);
                 });
         assertEquals("invalid value for number of vehicles -2", thrown.getMessage());
@@ -323,7 +326,7 @@ public class PackageDeliveryTimeEstimationServiceImplTest {
         InvalidValueException thrown = assertThrows(
                 InvalidValueException.class,
                 () -> {
-                    getDeliveryCostAndTimeEstimationServiceHelper()
+                    getDeliveryTimeEstimationService()
                             .calculateEstimatedDelivery(inputPackages, packageDeliveryInput, (short)100);
                 });
         assertEquals("invalid value for max speed -70", thrown.getMessage());
@@ -337,7 +340,7 @@ public class PackageDeliveryTimeEstimationServiceImplTest {
         InvalidValueException thrown = assertThrows(
                 InvalidValueException.class,
                 () -> {
-                    getDeliveryCostAndTimeEstimationServiceHelper()
+                    getDeliveryTimeEstimationService()
                             .calculateEstimatedDelivery(inputPackages, packageDeliveryInput, (short)100);
                 });
         assertEquals("invalid value for max carriable weight -19", thrown.getMessage());

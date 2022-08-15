@@ -30,7 +30,7 @@ public class PackageDeliveryCostAndTimeEstimationServiceHelper {
         Arrays.stream(inputPackages).forEach(item -> validatorList.forEach(e-> e.validate(item)));
 
         List<PackageDeliveryCostAndTimeEstimationInfo> packageDeliveryCostAndTimeEstimationInfoList =
-                getDeliveryEstimationService().calculateEstimatedDelivery(inputPackages,
+                getDeliveryTimeEstimationService().calculateEstimatedDelivery(inputPackages,
                                 packageDeliveryInput, baseDeliveryCost);
 
         return calculatePackageDeliveryCostEstimation(inputPackages,packageDeliveryCostAndTimeEstimationInfoList,
@@ -43,7 +43,7 @@ public class PackageDeliveryCostAndTimeEstimationServiceHelper {
                 .getPackageDeliveryCostEstimationService(SIMPLE);
     }
 
-    private PackageDeliveryTimeEstimationService getDeliveryEstimationService() {
+    private PackageDeliveryTimeEstimationService getDeliveryTimeEstimationService() {
         return PackageDeliveryTimeEstimationServiceFactory
                 .getDeliveryEstimationService(PackageDeliveryTimeEstimationServiceFactory
                         .PackageDeliveryTimeEstimationType.SIMPLE);

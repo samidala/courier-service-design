@@ -2,6 +2,7 @@ package com.everestengg.code.challenge.service.delivery.time.estimation;
 
 import com.everestengg.code.challenge.exceptions.InvalidValueException;
 import com.everestengg.code.challenge.model.courier.PackageDeliveryCostAndTimeEstimationInfo;
+import com.everestengg.code.challenge.model.courier.PackageDeliveryCostEstimateInfo;
 import com.everestengg.code.challenge.vo.InputPackage;
 import com.everestengg.code.challenge.vo.PackageDeliveryInput;
 import lombok.AllArgsConstructor;
@@ -17,8 +18,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.PriorityQueue;
 import java.util.Set;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 public class PackageDeliveryTimeEstimationServiceImpl implements PackageDeliveryTimeEstimationService {
 
@@ -73,7 +77,29 @@ public class PackageDeliveryTimeEstimationServiceImpl implements PackageDelivery
         }
         LOGGER.debug("after delivery pq {}",pq);
         pq.clear();
-        return packageDeliveryCostAndTimeEstimationInfo;
+        return arrangeAsInInputOrder(inputPackages, packageDeliveryCostAndTimeEstimationInfo);
+    }
+
+    /**
+     *
+     * @param inputPackages input packages
+     * @param packageDeliveryCostAndTimeEstimationInfo package delivery and cost information
+     * @return
+     */
+    private List<PackageDeliveryCostAndTimeEstimationInfo> arrangeAsInInputOrder(InputPackage[] inputPackages,
+                                                                   List<PackageDeliveryCostAndTimeEstimationInfo>
+                                                                           packageDeliveryCostAndTimeEstimationInfo) {
+        Map<String, PackageDeliveryCostAndTimeEstimationInfo> result =  packageDeliveryCostAndTimeEstimationInfo.stream()
+                .collect(Collectors.toMap(PackageDeliveryCostAndTimeEstimationInfo::getPackageId, Function.identity()));
+
+        List<PackageDeliveryCostAndTimeEstimationInfo> packageDeliveryCostAndTimeEstimationInfos = new ArrayList<>(inputPackages.length);
+        for(InputPackage inputPackage : inputPackages){
+            packageDeliveryCostAndTimeEstimationInfos.add(result.get(
+                            inputPackage.getPackageDetails().getPackageId()).toBuilder()
+                    .packageId(inputPackage.getPackageDetails().getPackageId()).build());
+
+        }
+        return packageDeliveryCostAndTimeEstimationInfos;
     }
 
     private int calculatePackageDeliveryTimeAndDeliver(PackageDeliveryInput packageDeliveryInput,

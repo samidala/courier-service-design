@@ -15,7 +15,7 @@ public class PackageDeliveryCostAndTimeEstimationInfo {
     private double estimatedDeliveryTime;
 
     public String toString() {
-        return packageDeliveryCostEstimateInfo +" "+estimatedDeliveryTime;
+        return (packageDeliveryCostEstimateInfo != null ? packageDeliveryCostEstimateInfo : "")  +" "+estimatedDeliveryTime;
     }
 
 }
