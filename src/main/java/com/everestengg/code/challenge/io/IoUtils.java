@@ -7,11 +7,15 @@ import com.everestengg.code.challenge.vo.Package;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.Scanner;
 
 public class IoUtils {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(IoUtils.class);
 
     private IoUtils(){
 
@@ -88,10 +92,10 @@ public class IoUtils {
     }
 
     public static void readCsv(Scanner scanner){
-        System.out.println("Read CSV file ? press Y and enter to read files else press N");
+        System.out.println("Read CSV file ? press Y and enter to read files else enter any key and enter");
         String readOffers = scanner.nextLine();
         if(!"Y".equals(readOffers)){
-            System.out.println("returning");
+            LOGGER.info("input is Not Y and hence returning");
             return;
         }
         try {
@@ -101,9 +105,11 @@ public class IoUtils {
             new CsvOfferRepository().prepareOffers(offerFileName,offerCriteriaName);
             System.out.println("offers loaded successfully");
         }catch (IOException e){
+            LOGGER.error("error while reading csv",e);
             System.err.println("Error while reading files and exiting app. Please provide path, error "+e.getMessage());
             System.exit(0);
         }catch (Exception e){
+            LOGGER.error("error while reading and processing csv",e);
             System.err.println("Error while reading files and processing.. exiting app");
             System.exit(0);
         }
