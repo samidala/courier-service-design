@@ -2,8 +2,6 @@ package com.everestengg.code.challenge.service.delivery.time.estimation;
 
 import com.everestengg.code.challenge.exceptions.InvalidValueException;
 import com.everestengg.code.challenge.model.courier.PackageDeliveryCostAndTimeEstimationInfo;
-import com.everestengg.code.challenge.service.delivery.cost.estimation.PackageDeliveryCostEstimationImpl;
-import com.everestengg.code.challenge.service.delivery.cost.estimation.PackageDeliveryCostEstimationServiceFactory;
 import com.everestengg.code.challenge.vo.InputPackage;
 import com.everestengg.code.challenge.vo.PackageDeliveryInput;
 import lombok.AllArgsConstructor;
@@ -21,8 +19,6 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.PriorityQueue;
 import java.util.Set;
-
-import static com.everestengg.code.challenge.service.delivery.cost.estimation.PackageDeliveryCostEstimationServiceFactory.PackageServiceType.SIMPLE;
 
 public class PackageDeliveryTimeEstimationServiceImpl implements PackageDeliveryTimeEstimationService {
 
@@ -60,10 +56,6 @@ public class PackageDeliveryTimeEstimationServiceImpl implements PackageDelivery
                                                                                      PackageDeliveryInput packageDeliveryInput,
                                                                                      short baseDeliveryCost) {
 
-        List<PackageDeliveryCostEstimationImpl.InputPackageValidator> validatorList =
-                PackageDeliveryCostEstimationServiceFactory
-                .getPackageOrderService(SIMPLE).getInputPackageValidatorList();
-        Arrays.stream(inputPackages).forEach( item -> validatorList.forEach( e-> e.validate(item)));
         validators.forEach( e-> e.validate(packageDeliveryInput));
         PriorityQueue<VehicleAvailability> pq = createPriorityQueue(packageDeliveryInput);
         initPriorityQueue(packageDeliveryInput, pq);

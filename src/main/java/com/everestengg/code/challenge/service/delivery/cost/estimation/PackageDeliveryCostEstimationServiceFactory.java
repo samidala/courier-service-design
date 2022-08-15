@@ -9,7 +9,8 @@ public class PackageDeliveryCostEstimationServiceFactory {
     public enum PackageServiceType{
         SIMPLE;
     }
-    public static PackageDeliveryCostEstimationService getPackageOrderService(PackageServiceType packageServiceType){
+    public static PackageDeliveryCostEstimationService getPackageDeliveryCostEstimationService(
+            PackageServiceType packageServiceType){
         PackageDeliveryCostEstimationService packageDeliveryCostEstimationService;
         switch (packageServiceType){
             case SIMPLE:

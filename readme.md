@@ -93,8 +93,9 @@ distance should range between `50` to `250`, and weight range between `10` to `1
 3. `PackageOrderImplTest.testCalcDiscountCategoryAndWeight` simulates support new offer code by category and weight.
 
 
-# Observations:
-1. Helper class can be added to combine the results for cost estimation and time estimation
+# improvements:
+1. Method naming conventions can be made better.
+2. 
 
 
    ![uml.png](uml.png)

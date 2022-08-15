@@ -39,7 +39,7 @@ public class PackageDeliveryCostEstimationApp {
     private static void process(short baseDeliveryCost, InputPackage[] inputPackages) {
         for (InputPackage inputPackage : inputPackages){
             PackageDeliveryCostEstimateInfo packageDeliveryCostEstimateInfo = PackageDeliveryCostEstimationServiceFactory
-                    .getPackageOrderService(SIMPLE).calcCost(inputPackage, baseDeliveryCost).getResult();
+                    .getPackageDeliveryCostEstimationService(SIMPLE).calcCost(inputPackage, baseDeliveryCost).getResult();
             packageDeliveryCostEstimateInfo.print();
         }
     }
