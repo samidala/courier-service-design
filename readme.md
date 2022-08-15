@@ -11,22 +11,18 @@
 # Delivery cost client
 # Assumptions: 
 
-1. Considered only positive inputs and no negative cases handled for inputs and hence the app will fail if any wrong inputs provided
-2. The agenda of the project is concentrate on design aspect and write code that can be extendable to different offer codes
-3. If offer code is invalid, no discount will be considered
-4. User has to input all the needed inputs in appropriate datatype
+1. The agenda of the project is concentrate on design aspect and write code that can be extendable to different offer codes
+2. If offer code is invalid, no discount will be considered
+3. User has to input all the needed inputs in appropriate datatype else application would show error and exit.
 
 # Setting up offers
 
 # approach
    1. `Offer` will have 0 or more `OfferCriteria`
    2. User can configure offer with code and set of `OfferCriteria`
-   3. `OfferCriteria` implementations must override `isMatch` with appropriate implementation
-      1. `NumberOfferCriteria`, `NumberRangeOfferCriteria` are such examples
-   4. `ResultEvalutor` is used for implementing specific cases like, equals, not equals, greater than and range etc..
-   5. `com.everestengg.code.challenge.model.offer.Offer.calcDiscount` returns configured discount value if all the criteria matches
-   6. `com.everestengg.code.challenge.model.offer.OfferCriteria.isMatch` uses `ResultEvalutor` for evaluating results.
-   7. The below show sequence diagram
+   3. `OfferCriteria`'s `isMatch` responsible for validating if offer criteria is met
+   4. `com.everestengg.code.challenge.model.offer.Offer.calcDiscount` returns configured discount value if all the criteria matches
+   5. The below show sequence diagram
       
       ![PackageOrderImpl_calcCost.svg](PackageOrderImpl_calcCost.svg)
 
@@ -68,14 +64,16 @@ distance should range between `50` to `250`, and weight range between `10` to `1
 
 # Approach
 1. Sort the packages by weight in ascending and distance in descending order
-2. Repeat below step until all the packages are delivered
+2. Build the PriorityQueue with available vehicles and waitTime as 0
+3. Repeat below step until all the packages are delivered
    1. Repeat until vehicles are available
       1. pick the packages to be delivered based on below criteria
          1. shipment should contain max number of packages
          2. heavier packages takes precedence if same number of packages in the current trip
          3. if weights also same then pick the package which are can be delivered fast
       2. Calculate estimated delivery of current trip
-   2. update the min estimated delivery which is added in subsequent trips.
+      3. pool the vehicle from priority queue
+   2. Add the vehicle back to the priority queue with updated wait time with current trip time * 2 and current wait time 
 
 
 # Running
@@ -96,9 +94,7 @@ distance should range between `50` to `250`, and weight range between `10` to `1
 
 
 # Observations:
-1. There are some differences in floating point decimal values in results.
-2. There is little duplicate code and will see if it can be removed
-3. current implementation does not allow to have offer with Offer criteria of same operator (equals, range) multiple times and can be fixed.
+1. Helper class can be added to combine the results for cost estimation and time estimation
 
 
    ![uml.png](uml.png)

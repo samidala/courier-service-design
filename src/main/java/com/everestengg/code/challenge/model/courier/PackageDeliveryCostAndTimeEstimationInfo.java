@@ -10,10 +10,12 @@ import lombok.Getter;
 @Builder(toBuilder = true)
 public class PackageDeliveryCostAndTimeEstimationInfo {
     private PackageDeliveryCostEstimateInfo packageDeliveryCostEstimateInfo;
+
+    private String packageId;
     private double estimatedDeliveryTime;
 
     public String toString() {
-        return packageDeliveryCostEstimateInfo.toString()+" "+estimatedDeliveryTime;
+        return packageDeliveryCostEstimateInfo +" "+estimatedDeliveryTime;
     }
 
 }

@@ -1,18 +1,17 @@
 package com.everestengg.code.challenge.client;
 
 import com.everestengg.code.challenge.io.IoUtils;
-import com.everestengg.code.challenge.vo.PackageDeliveryInput;
-import com.everestengg.code.challenge.vo.InputPackage;
 import com.everestengg.code.challenge.model.courier.PackageDeliveryCostAndTimeEstimationInfo;
-import com.everestengg.code.challenge.service.delivery.time.estimation.PackageDeliveryTimeEstimationServiceFactory;
+import com.everestengg.code.challenge.service.delivery.helper.PackageDeliveryCostAndTimeEstimationServiceHelper;
+import com.everestengg.code.challenge.vo.InputPackage;
+import com.everestengg.code.challenge.vo.PackageDeliveryInput;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.*;
-
+import java.util.List;
+import java.util.Scanner;
 
 import static com.everestengg.code.challenge.repo.StaticOfferRepository.prepareOffers;
-import static com.everestengg.code.challenge.service.delivery.time.estimation.PackageDeliveryTimeEstimationServiceFactory.PackageDeliveryTimeEstimationType.SIMPLE;
 
 
 public class PackageDeliveryCostAndTimeEstimationApp {
@@ -20,6 +19,7 @@ public class PackageDeliveryCostAndTimeEstimationApp {
     public static void main(String[] args) {
         prepareOffers();
         try(Scanner scanner = new Scanner(System.in)) {
+            IoUtils.readCsv(scanner);
             /**
              * Read base delivery cost and no of packages
              */
@@ -34,9 +34,8 @@ public class PackageDeliveryCostAndTimeEstimationApp {
             // read delivery information
             PackageDeliveryInput packageDeliveryInput = readDeliveryInput(scanner);
             //calculate discount for each and print
-            List<PackageDeliveryCostAndTimeEstimationInfo> result = PackageDeliveryTimeEstimationServiceFactory
-                    .getDeliveryEstimationService(SIMPLE).calculateEstimatedDelivery(inputPackages, packageDeliveryInput,
-                            baseDeliveryCost);
+            List<PackageDeliveryCostAndTimeEstimationInfo> result = new PackageDeliveryCostAndTimeEstimationServiceHelper()
+                    .calculateEstimatedDelivery(inputPackages, packageDeliveryInput, baseDeliveryCost);
             printDelivery(result);
         }catch (Exception e){
             logger.error("app crashed.. error ",e);

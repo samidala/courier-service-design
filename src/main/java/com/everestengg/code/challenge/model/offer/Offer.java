@@ -8,6 +8,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Getter;
 import lombok.ToString;
 import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Map;
 
@@ -15,6 +17,7 @@ import java.util.Map;
 @ToString
 public  class Offer {
 
+    private  static  final Logger LOGGER = LoggerFactory.getLogger(Offer.class);
     private final String offerId;
     private final OfferCriteria[] offerCriterias;
     private final float percentage;
@@ -61,13 +64,13 @@ public  class Offer {
         String value = "";
         try {
             value =  new ObjectMapper().convertValue(aPackage,Map.class).get(offerCriteria.getProperty()).toString();
-            System.out.println("value "+value);
+            LOGGER.trace("value {}",value);
         } catch (Exception e) {
-            e.printStackTrace();
+            LOGGER.error("error getting value from package ",e);
             throw new RuntimeException(e);
         }
         if(StringUtils.isEmpty(value)){
-            throw new InvalidValueException("invalid value");
+            throw new InvalidValueException("value can not null");
         }
         return value;
     }

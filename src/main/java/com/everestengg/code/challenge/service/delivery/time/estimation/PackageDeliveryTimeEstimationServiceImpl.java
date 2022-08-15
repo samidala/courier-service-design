@@ -1,12 +1,11 @@
 package com.everestengg.code.challenge.service.delivery.time.estimation;
 
 import com.everestengg.code.challenge.exceptions.InvalidValueException;
+import com.everestengg.code.challenge.model.courier.PackageDeliveryCostAndTimeEstimationInfo;
 import com.everestengg.code.challenge.service.delivery.cost.estimation.PackageDeliveryCostEstimationImpl;
 import com.everestengg.code.challenge.service.delivery.cost.estimation.PackageDeliveryCostEstimationServiceFactory;
-import com.everestengg.code.challenge.vo.PackageDeliveryInput;
 import com.everestengg.code.challenge.vo.InputPackage;
-import com.everestengg.code.challenge.model.courier.PackageDeliveryCostAndTimeEstimationInfo;
-import com.everestengg.code.challenge.model.courier.PackageDeliveryCostEstimateInfo;
+import com.everestengg.code.challenge.vo.PackageDeliveryInput;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -14,29 +13,23 @@ import lombok.ToString;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-
 import java.math.RoundingMode;
-
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.PriorityQueue;
 import java.util.Set;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
 import static com.everestengg.code.challenge.service.delivery.cost.estimation.PackageDeliveryCostEstimationServiceFactory.PackageServiceType.SIMPLE;
 
 public class PackageDeliveryTimeEstimationServiceImpl implements PackageDeliveryTimeEstimationService {
 
     private static Logger LOGGER = LoggerFactory.getLogger(PackageDeliveryTimeEstimationServiceImpl.class);
-    private final DecimalFormat df;
+    private static final DecimalFormat df = new DecimalFormat("0.00");
 
     public PackageDeliveryTimeEstimationServiceImpl(){
-        df = new DecimalFormat("0.00");
         df.setRoundingMode(RoundingMode.FLOOR);
         validators.add(this::validateNoOfVehicles);
         validators.add(this::validateMaxCarriableWt);
@@ -50,32 +43,9 @@ public class PackageDeliveryTimeEstimationServiceImpl implements PackageDelivery
     @ToString
     private static class VehicleAvailability{
         private final short vehicleNo;
-        private final double deliveryTime;
-    }
-    private interface PackageDeliveryInputValidator{
-        boolean validate(PackageDeliveryInput packageDeliveryInput) throws InvalidValueException;
+        private final double waitTime;
     }
 
-    private boolean validateMaxCarriableWt(PackageDeliveryInput packageDeliveryInput){
-        if(!packageDeliveryInput.isValidMaxCarriableWt()){
-            throw new InvalidValueException("invalid value for max carriable weight "+packageDeliveryInput.getMaxCarriableWt());
-        }
-        return true;
-    }
-
-    private boolean validateNoOfVehicles(PackageDeliveryInput packageDeliveryInput){
-        if(!packageDeliveryInput.isNoOfVehicleValid()){
-            throw new InvalidValueException("invalid value for number of vehicles "+packageDeliveryInput.getNoOfVehicle());
-        }
-        return true;
-    }
-
-    private boolean validateMaxSpeed(PackageDeliveryInput packageDeliveryInput){
-        if(!packageDeliveryInput.isValidMaxSpeed()){
-            throw new InvalidValueException("invalid value for max speed "+packageDeliveryInput.getMaxSpeed());
-        }
-        return true;
-    }
 
     List<PackageDeliveryInputValidator> validators = new ArrayList<>();
     /**
@@ -106,15 +76,15 @@ public class PackageDeliveryTimeEstimationServiceImpl implements PackageDelivery
 
         Set<Integer> deliveredPkgIndices = new LinkedHashSet<>(len); //used to hold the visited packages and avoid revisiting
         while (remainingPackages > 0) { //repeat loop until all the packages are delivered
-            remainingPackages = calculatePackageDeliveryTimeAndDeliver(packageDeliveryInput, baseDeliveryCost, pq,
+            remainingPackages = calculatePackageDeliveryTimeAndDeliver(packageDeliveryInput, pq,
                     copy, packageDeliveryCostAndTimeEstimationInfo, remainingPackages, deliveredPkgIndices);
         }
         LOGGER.debug("after delivery pq {}",pq);
         pq.clear();
-        return copyDeliveryTimeAndCostEstimation(inputPackages, packageDeliveryCostAndTimeEstimationInfo);
+        return packageDeliveryCostAndTimeEstimationInfo;
     }
 
-    private int calculatePackageDeliveryTimeAndDeliver(PackageDeliveryInput packageDeliveryInput, short baseDeliveryCost,
+    private int calculatePackageDeliveryTimeAndDeliver(PackageDeliveryInput packageDeliveryInput,
                                                        PriorityQueue<VehicleAvailability> pq,
                                                        InputPackage[] copy,
                                                        List<PackageDeliveryCostAndTimeEstimationInfo> packageDeliveryCostAndTimeEstimationInfo,
@@ -130,16 +100,16 @@ public class PackageDeliveryTimeEstimationServiceImpl implements PackageDelivery
             currentTripEstimatedDelivery = getCurrentTripEstimatedDelivery(copy, packageDeliveryInput.getMaxSpeed(),
                     deliverablePackageIds);
             VehicleAvailability vehicleAvailability = pq.poll();
-            packageDeliveryCostAndTimeEstimationInfo.addAll(updatePackageDeliveryCostEstimationAndDeliveryEstimation(copy,
-                    packageDeliveryInput.getMaxSpeed(),
-                    deliverablePackageIds, baseDeliveryCost,vehicleAvailability));
+            packageDeliveryCostAndTimeEstimationInfo.addAll(updatePackageDeliveryDeliveryEstimation(copy,
+                    packageDeliveryInput.getMaxSpeed(), deliverablePackageIds,vehicleAvailability));
             LOGGER.debug("currentTripEstimatedDelivery {} ",currentTripEstimatedDelivery);
             deliveredPkgIndices.addAll(deliverablePackageIds);//update delivered packages indices
             remainingPackages -= deliverablePackageIds.size();
-            VehicleAvailability item = VehicleAvailability.builder().vehicleNo(vehicleAvailability.getVehicleNo())
-                    .deliveryTime(vehicleAvailability.getDeliveryTime() + (currentTripEstimatedDelivery * 2)).build();
-            LOGGER.info("item {}",item);
-            pq.offer(item);
+            VehicleAvailability vehicleAvailabilityUpdatedWaitTime =
+                    VehicleAvailability.builder().vehicleNo(vehicleAvailability.getVehicleNo())
+                    .waitTime(vehicleAvailability.getWaitTime() + (currentTripEstimatedDelivery * 2)).build();
+            LOGGER.debug("vehicleAvailabilityUpdatedWaitTime {}",vehicleAvailabilityUpdatedWaitTime);
+            pq.offer(vehicleAvailabilityUpdatedWaitTime);
             availableVehicles--;
         }
         return remainingPackages;
@@ -152,7 +122,7 @@ public class PackageDeliveryTimeEstimationServiceImpl implements PackageDelivery
      */
     private PriorityQueue<VehicleAvailability> createPriorityQueue(PackageDeliveryInput packageDeliveryInput) {
         return new PriorityQueue<>(packageDeliveryInput.getNoOfVehicle(),
-                (o1, o2) -> (int) (Math.ceil(o1.getDeliveryTime()) - Math.ceil(o2.getDeliveryTime())));
+                (o1, o2) -> (int) (Math.ceil(o1.getWaitTime()) - Math.ceil(o2.getWaitTime())));
     }
 
     /**
@@ -162,29 +132,10 @@ public class PackageDeliveryTimeEstimationServiceImpl implements PackageDelivery
      */
     private void initPriorityQueue(PackageDeliveryInput packageDeliveryInput, PriorityQueue<VehicleAvailability> pq) {
         for(int i = 1; i <= packageDeliveryInput.getNoOfVehicle(); i++){
-            pq.offer(VehicleAvailability.builder().vehicleNo((short) i).deliveryTime(0).build());
+            pq.offer(VehicleAvailability.builder().vehicleNo((short) i).waitTime(0).build());
         }
     }
 
-    /**
-     *
-     * @param inputPackages packages to be delivered
-     * @param packageDeliveryCostAndTimeEstimationInfo calculated @{@link PackageDeliveryCostAndTimeEstimationInfo}
-     * @return package delivery order @{@link PackageDeliveryCostAndTimeEstimationInfo}
-     */
-    private List<PackageDeliveryCostAndTimeEstimationInfo> copyDeliveryTimeAndCostEstimation(InputPackage[] inputPackages,
-                                                                                             List<PackageDeliveryCostAndTimeEstimationInfo>
-                                                                                                     packageDeliveryCostAndTimeEstimationInfo) {
-        Map<String, PackageDeliveryCostAndTimeEstimationInfo> result =  packageDeliveryCostAndTimeEstimationInfo.stream()
-                .collect(Collectors.toMap(k -> k.getPackageDeliveryCostEstimateInfo().getPackageId() ,
-                        Function.identity()));
-
-        List<PackageDeliveryCostAndTimeEstimationInfo> packageDeliveryCostAndTimeEstimationInfos = new ArrayList<>(inputPackages.length);
-        for(InputPackage inputPackage : inputPackages){
-            packageDeliveryCostAndTimeEstimationInfos.add(result.get(inputPackage.getPackageDetails().getPackageId()));
-        }
-        return packageDeliveryCostAndTimeEstimationInfos;
-    }
 
     /**
      * sorts packages by weight and then distance in ascending order
@@ -223,26 +174,22 @@ public class PackageDeliveryTimeEstimationServiceImpl implements PackageDelivery
      * @param inputPackages packages to be delivered
      * @param maxSpeed max speed vehicle can travel
      * @param deliverablePkgIndices packages planned for delivery in current trip
-     * @param baseDeliveryCost what is the base delivery cost
      * @param vehicleAvailability available vehicle for current @{@link InputPackage}'s delivery
      * @return list of packages to be delivered in current trip
      */
     private List<PackageDeliveryCostAndTimeEstimationInfo>
-                    updatePackageDeliveryCostEstimationAndDeliveryEstimation(InputPackage[] inputPackages, short maxSpeed,
-                                                             Set<Integer> deliverablePkgIndices,
-                                                             short baseDeliveryCost,
-                                                             VehicleAvailability vehicleAvailability) {
+    updatePackageDeliveryDeliveryEstimation(InputPackage[] inputPackages, short maxSpeed,
+                                            Set<Integer> deliverablePkgIndices,
+                                            VehicleAvailability vehicleAvailability) {
         List<PackageDeliveryCostAndTimeEstimationInfo> packageDeliveryCostAndTimeEstimationInfo = new ArrayList<>(deliverablePkgIndices.size());
         LOGGER.debug("vehicle availability {}",vehicleAvailability);
         for(int index : deliverablePkgIndices){
-            double estimatedDeliveryPerPackage = getRoundedValue((vehicleAvailability.getDeliveryTime()) +
+            double estimatedDeliveryPerPackage = getRoundedValue((vehicleAvailability.getWaitTime()) +
                     ( (double) inputPackages[index].getPackageDetails().getDist() / maxSpeed));
-            PackageDeliveryCostEstimateInfo packageDeliveryCostEstimateInfo = PackageDeliveryCostEstimationServiceFactory
-                    .getPackageOrderService(SIMPLE)
-                    .calcCost(inputPackages[index], baseDeliveryCost).getResult();
             packageDeliveryCostAndTimeEstimationInfo.add(PackageDeliveryCostAndTimeEstimationInfo.builder()
-                    .packageDeliveryCostEstimateInfo(packageDeliveryCostEstimateInfo)
-                    .estimatedDeliveryTime(estimatedDeliveryPerPackage).build());
+                    .estimatedDeliveryTime(estimatedDeliveryPerPackage)
+                    .packageId(inputPackages[index].getPackageDetails().getPackageId())
+                    .build());
 
             LOGGER.debug("vehicle {} delivering {} delivery time {}",vehicleAvailability.getVehicleNo(),inputPackages[index],
                     estimatedDeliveryPerPackage);
@@ -407,6 +354,29 @@ public class PackageDeliveryTimeEstimationServiceImpl implements PackageDelivery
         }
         return getRoundedValue((maxDist / maxSpeed)) ;
     }
+    private interface PackageDeliveryInputValidator{
+        boolean validate(PackageDeliveryInput packageDeliveryInput) throws InvalidValueException;
+    }
 
+    private boolean validateMaxCarriableWt(PackageDeliveryInput packageDeliveryInput){
+        if(!packageDeliveryInput.isValidMaxCarriableWt()){
+            throw new InvalidValueException("invalid value for max carriable weight "+packageDeliveryInput.getMaxCarriableWt());
+        }
+        return true;
+    }
+
+    private boolean validateNoOfVehicles(PackageDeliveryInput packageDeliveryInput){
+        if(!packageDeliveryInput.isNoOfVehicleValid()){
+            throw new InvalidValueException("invalid value for number of vehicles "+packageDeliveryInput.getNoOfVehicle());
+        }
+        return true;
+    }
+
+    private boolean validateMaxSpeed(PackageDeliveryInput packageDeliveryInput){
+        if(!packageDeliveryInput.isValidMaxSpeed()){
+            throw new InvalidValueException("invalid value for max speed "+packageDeliveryInput.getMaxSpeed());
+        }
+        return true;
+    }
 
 }

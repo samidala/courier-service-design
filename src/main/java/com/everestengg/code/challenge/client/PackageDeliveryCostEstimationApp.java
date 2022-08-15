@@ -17,6 +17,8 @@ public class PackageDeliveryCostEstimationApp {
     public static void main(String[] args) {
         prepareOffers();
         try(Scanner scanner = new Scanner(System.in)) {
+            IoUtils.readCsv(scanner);
+            System.out.println("Enter base delivery cost and number of packages");
             short baseDeliveryCost = IoUtils.readBaseCost(scanner);
             short noOfPackages = IoUtils.readNoOfPackages(scanner);
             InputPackage[] inputPackages = new InputPackage[noOfPackages];

@@ -91,6 +91,7 @@ public class IoUtils {
         System.out.println("Read CSV file ? press Y and enter to read files else press N");
         String readOffers = scanner.nextLine();
         if(!"Y".equals(readOffers)){
+            System.out.println("returning");
             return;
         }
         try {
@@ -100,7 +101,7 @@ public class IoUtils {
             new CsvOfferRepository().prepareOffers(offerFileName,offerCriteriaName);
             System.out.println("offers loaded successfully");
         }catch (IOException e){
-            System.err.println("Error while reading files and exiting app");
+            System.err.println("Error while reading files and exiting app. Please provide path, error "+e.getMessage());
             System.exit(0);
         }catch (Exception e){
             System.err.println("Error while reading files and processing.. exiting app");
