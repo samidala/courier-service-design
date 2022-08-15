@@ -1,6 +1,6 @@
 package com.everestengg.code.challenge.io;
 
-import com.everestengg.code.challenge.offer.repo.CsvOfferRepository;
+import com.everestengg.code.challenge.repo.offer.CsvOfferRepository;
 import com.everestengg.code.challenge.util.ValidationUtils;
 import com.everestengg.code.challenge.vo.InputPackage;
 import com.everestengg.code.challenge.vo.Package;
