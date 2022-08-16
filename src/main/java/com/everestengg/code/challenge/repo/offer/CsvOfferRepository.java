@@ -42,7 +42,10 @@ public class CsvOfferRepository {
         assert offerFilePath !=null : "offer filepath can't be empty";
         List<CsvOffer> csvOffers = csvReader.read(offerFilePath,CsvOffer.class);
         LOGGER.debug("csv offers {} ",csvOffers);
-        List<CsvOfferCriteria> csvOfferCriteriaList = csvReader.read(offerCriteriaFilePath,CsvOfferCriteria.class);
+        List<CsvOfferCriteria> csvOfferCriteriaList = new ArrayList<>();
+        if(offerCriteriaFilePath != null) {
+            csvOfferCriteriaList = csvReader.read(offerCriteriaFilePath,CsvOfferCriteria.class);
+        }
         LOGGER.debug("csvOfferCriteriaList {} ",csvOfferCriteriaList);
 
 

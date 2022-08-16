@@ -99,10 +99,15 @@ public class IoUtils {
             return;
         }
         try {
-            System.out.println("input complete path with csv file names for offer and offer criteria mapping inorder, space separated");
+            System.out.println("input complete path with csv file name for offer defination");
             String offerFileName = scanner.next();
-            String offerCriteriaName = scanner.next();
-            new CsvOfferRepository().prepareOffers(offerFileName,offerCriteriaName);
+            System.out.println("input complete path with csv file name for offer criteria defination, " +
+                    "if no offer criteria need, please enter NA");
+
+            String offerCriteriaFileName = scanner.next();
+
+            new CsvOfferRepository().prepareOffers(offerFileName,
+                    offerCriteriaFileName.equals("NA") ? null : offerCriteriaFileName);
             System.out.println("offers loaded successfully");
         }catch (IOException e){
             LOGGER.error("error while reading csv",e);
