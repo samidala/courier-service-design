@@ -37,12 +37,12 @@ Assumptions
 Go to Utils and create new offer. For example below setup offer with code `OFR003` and criteria as 
 distance should range between `50` to `250`, and weight range between `10` to `150`. create a new method to introduce new offer and call the method inside `prepareOffer`
 
-    private static void prepareOffer3() {
-        NumberRangeOfferCriteria dist50To250 = new NumberRangeOfferCriteria( RANGE,
-        new Number[]{50, 250}, Package::getDist);
-        NumberRangeOfferCriteria weight10To150 = new NumberRangeOfferCriteria(RANGE,
-        new Number[]{10,150}, Package::getWeight);
-        new Offer<Number,Number>("OFR003",5,new OfferCriteria[]{dist50To250,weight10To150});
+     private static void prepareOffer3() {
+        OfferCriteria dist50To250 = OfferCriteria.builder()
+                .property("dist").valueHandler(distanceValueHandler).propertyValues(Arrays.asList("50","250")).build();
+        OfferCriteria weight10To150 = OfferCriteria.builder()
+                .property("weight").valueHandler(weightValueHandler).propertyValues(Arrays.asList("10","150")).build();
+        new Offer("OFR003",5, dist50To250,weight10To150);
     }
 
 # Running
