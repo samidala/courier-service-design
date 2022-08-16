@@ -141,9 +141,7 @@ public class DeliveryCostEstimationImplTest {
 
         InvalidValueException thrown = assertThrows(
                 InvalidValueException.class,
-                () -> {
-                    packageOrderImpl.calcCost(inputPackage, 100);
-                });
+                () -> packageOrderImpl.calcCost(inputPackage, 100));
         assertEquals("invalid distance -10", thrown.getMessage());
     }
 

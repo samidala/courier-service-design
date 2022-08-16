@@ -1,7 +1,8 @@
 package com.everestengg.code.challenge.repo.offer;
 
 import com.everestengg.code.challenge.domain.offer.Offer;
-import com.everestengg.code.challenge.domain.offer.OfferCriteria;
+import com.everestengg.code.challenge.exceptions.InvalidOfferCriteriaDefinationException;
+import com.everestengg.code.challenge.exceptions.InvalidOfferDefinationException;
 import com.everestengg.code.challenge.model.csv.CsvOffer;
 import com.everestengg.code.challenge.model.csv.CsvOfferCriteria;
 import com.everestengg.code.challenge.util.CsvReader;
@@ -13,11 +14,13 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 
 @ExtendWith(MockitoExtension.class)
@@ -26,7 +29,7 @@ public class CsvOfferRepositoryTest {
     @Mock
     private CsvReader csvReaderMock;
     @Test
-    void testLoadOffers() throws IOException {
+    void testLoadOffersSuccess() throws IOException {
         CsvOfferRepository csvOfferRepository = new CsvOfferRepository();
         csvOfferRepository.setCsvReader(csvReaderMock);
                 List<CsvOffer> csvOfferList = new ArrayList<>();
@@ -48,6 +51,127 @@ public class CsvOfferRepositoryTest {
         assertOfferCriteria(result, 2,  "50|250", "10|150");
     }
 
+    @Test
+    void testLoadOffersFailureOnEmptyOfferCode() {
+        CsvOfferRepository csvOfferRepository = new CsvOfferRepository();
+        csvOfferRepository.setCsvReader(csvReaderMock);
+        List<CsvOffer> csvOfferList = new ArrayList<>();
+        csvOfferList.add(CsvOffer.builder().percentage(10).offerCriteriaIds("1|2").build());
+        Mockito.lenient().when(csvReaderMock.read("offers.csv",CsvOffer.class)).thenReturn(csvOfferList);
+        List<CsvOfferCriteria> csvOfferCriteriaList = new ArrayList<>();
+
+        Mockito.lenient().when(csvReaderMock.read("offercriterias.csv",CsvOfferCriteria.class))
+                .thenReturn(csvOfferCriteriaList);
+
+        InvalidOfferDefinationException thrown = assertThrows(
+                InvalidOfferDefinationException.class,
+                () -> csvOfferRepository.prepareOffers("offers.csv",
+                        "offercriterias.csv"));
+        assertEquals("offer ID should not be null or empty", thrown.getMessage());
+    }
+
+    @Test
+    void testLoadOffersFailureOnEmptyPercentage() {
+        CsvOfferRepository csvOfferRepository = new CsvOfferRepository();
+        csvOfferRepository.setCsvReader(csvReaderMock);
+        List<CsvOffer> csvOfferList = new ArrayList<>();
+        csvOfferList.add(CsvOffer.builder().offerId("OFR001").offerCriteriaIds("1|2").build());
+        Mockito.lenient().when(csvReaderMock.read("offers.csv",CsvOffer.class)).thenReturn(csvOfferList);
+        List<CsvOfferCriteria> csvOfferCriteriaList = new ArrayList<>();
+
+        Mockito.lenient().when(csvReaderMock.read("offercriterias.csv",CsvOfferCriteria.class))
+                .thenReturn(csvOfferCriteriaList);
+
+        InvalidOfferDefinationException thrown = assertThrows(
+                InvalidOfferDefinationException.class,
+                () -> csvOfferRepository.prepareOffers("offers.csv",
+                        "offercriterias.csv"));
+        assertEquals("invalid percentage value", thrown.getMessage());
+    }
+
+    @Test
+    void testLoadOffersFailureOnInvalidOfferCriteriaId() {
+        CsvOfferRepository csvOfferRepository = new CsvOfferRepository();
+        csvOfferRepository.setCsvReader(csvReaderMock);
+        List<CsvOffer> csvOfferList = new ArrayList<>();
+        csvOfferList.add(CsvOffer.builder().offerId("OFR001").percentage(10).offerCriteriaIds("1|2").build());
+
+
+        Mockito.lenient().when(csvReaderMock.read("offers.csv",CsvOffer.class)).thenReturn(csvOfferList);
+        List<CsvOfferCriteria> csvOfferCriteriaList = new ArrayList<>();
+        csvOfferCriteriaList.add(CsvOfferCriteria.builder()
+                .property("dist").propertyValue("0|200").build());
+        Mockito.lenient().when(csvReaderMock.read("offercriterias.csv",CsvOfferCriteria.class))
+                .thenReturn(csvOfferCriteriaList);
+
+        InvalidOfferCriteriaDefinationException thrown = assertThrows(
+                InvalidOfferCriteriaDefinationException.class,
+                () -> csvOfferRepository.prepareOffers("offers.csv",
+                        "offercriterias.csv"));
+        assertEquals("Invalid offer criteria ID", thrown.getMessage());
+    }
+
+    @Test
+    void testLoadOffersFailureOnInvalidOfferCriteriaEmptyProperty() {
+        CsvOfferRepository csvOfferRepository = new CsvOfferRepository();
+        csvOfferRepository.setCsvReader(csvReaderMock);
+        List<CsvOffer> csvOfferList = new ArrayList<>();
+        csvOfferList.add(CsvOffer.builder().offerId("OFR001").percentage(10).offerCriteriaIds("1|2").build());
+
+
+        Mockito.lenient().when(csvReaderMock.read("offers.csv",CsvOffer.class)).thenReturn(csvOfferList);
+        List<CsvOfferCriteria> csvOfferCriteriaList = new ArrayList<>();
+        csvOfferCriteriaList.add(CsvOfferCriteria.builder().offerCriteriaId(1).propertyValue("0|200").build());
+        Mockito.lenient().when(csvReaderMock.read("offercriterias.csv",CsvOfferCriteria.class))
+                .thenReturn(csvOfferCriteriaList);
+
+        InvalidOfferCriteriaDefinationException thrown = assertThrows(
+                InvalidOfferCriteriaDefinationException.class,
+                () -> csvOfferRepository.prepareOffers("offers.csv",
+                        "offercriterias.csv"));
+        assertEquals("invalid value for property", thrown.getMessage());
+    }
+    @Test
+    void testLoadOffersFailureOnInvalidOfferCriteriaInvalidProperty() {
+        CsvOfferRepository csvOfferRepository = new CsvOfferRepository();
+        csvOfferRepository.setCsvReader(csvReaderMock);
+        List<CsvOffer> csvOfferList = new ArrayList<>();
+        csvOfferList.add(CsvOffer.builder().offerId("OFR001").percentage(10).offerCriteriaIds("1|2").build());
+
+
+        Mockito.lenient().when(csvReaderMock.read("offers.csv",CsvOffer.class)).thenReturn(csvOfferList);
+        List<CsvOfferCriteria> csvOfferCriteriaList = new ArrayList<>();
+        csvOfferCriteriaList.add(CsvOfferCriteria.builder().offerCriteriaId(1).property("NA").propertyValue("0|200").build());
+        Mockito.lenient().when(csvReaderMock.read("offercriterias.csv",CsvOfferCriteria.class))
+                .thenReturn(csvOfferCriteriaList);
+
+        InvalidOfferCriteriaDefinationException thrown = assertThrows(
+                InvalidOfferCriteriaDefinationException.class,
+                () -> csvOfferRepository.prepareOffers("offers.csv",
+                        "offercriterias.csv"));
+        assertEquals("invalid value for property, no value handler defined NA", thrown.getMessage());
+    }
+
+    @Test
+    void testLoadOffersFailureOnInvalidOfferCriteriaInvalidPropertyValue() {
+        CsvOfferRepository csvOfferRepository = new CsvOfferRepository();
+        csvOfferRepository.setCsvReader(csvReaderMock);
+        List<CsvOffer> csvOfferList = new ArrayList<>();
+        csvOfferList.add(CsvOffer.builder().offerId("OFR001").percentage(10).offerCriteriaIds("1|2").build());
+
+
+        Mockito.lenient().when(csvReaderMock.read("offers.csv",CsvOffer.class)).thenReturn(csvOfferList);
+        List<CsvOfferCriteria> csvOfferCriteriaList = new ArrayList<>();
+        csvOfferCriteriaList.add(CsvOfferCriteria.builder().offerCriteriaId(1).property("dist").build());
+        Mockito.lenient().when(csvReaderMock.read("offercriterias.csv",CsvOfferCriteria.class))
+                .thenReturn(csvOfferCriteriaList);
+
+        InvalidOfferCriteriaDefinationException thrown = assertThrows(
+                InvalidOfferCriteriaDefinationException.class,
+                () -> csvOfferRepository.prepareOffers("offers.csv",
+                        "offercriterias.csv"));
+        assertEquals("invalid value for property value", thrown.getMessage());
+    }
     private void assertOfferCriteria(Response<List<Offer>> result, int index,
                                      String offerCriteria1expected, String offerCriteria2Expected) {
         Assertions.assertEquals("dist", result.getResult().get(index).getOfferCriterias()[0].getProperty());
