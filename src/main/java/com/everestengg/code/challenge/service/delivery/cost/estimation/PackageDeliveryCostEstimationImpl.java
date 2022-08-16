@@ -51,8 +51,7 @@ public class PackageDeliveryCostEstimationImpl implements PackageDeliveryCostEst
      * @return PackageChargeInformation
      */
     public Response<PackageDeliveryCostEstimateInfo> calcCost(InputPackage inputPackage, float baseDeliveryCost){
-        assert inputPackage!= null : "input package should not be null";
-        assert inputPackage.getPackageDetails() != null : "package should not be null";
+        assertNotNull(inputPackage);
         isValidBaseDeliveryCost(baseDeliveryCost);
         inputPackageValidatorList.forEach(e-> e.validate(inputPackage));
         isValidOfferCode(inputPackage);
@@ -72,6 +71,11 @@ public class PackageDeliveryCostEstimationImpl implements PackageDeliveryCostEst
                         .totalCost(totalCost)
                         .totalDiscount(totalDiscount).costAfterDiscount(costAfterDiscount).build())
                 .build();
+    }
+
+    private void assertNotNull(InputPackage inputPackage) {
+        assert inputPackage != null : "input package should not be null";
+        assert inputPackage.getPackageDetails() != null : "package should not be null";
     }
 
 
