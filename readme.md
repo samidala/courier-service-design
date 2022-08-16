@@ -113,8 +113,7 @@ distance should range between `50` to `250`, and weight range between `10` to `1
    4. There should be value handler (`ValueHandler`) defined for each property get value from package.
    
 # improvements:
-1. Method naming conventions can be made better.
-2. Add Junits for CSV reading
+1. Enhance the app to support offers based on multiple categories, for example offer applicable for beauty care, electronics or apparel categories
 
 
    ![uml.png](uml.png)
