@@ -8,7 +8,6 @@ import com.everestengg.code.challenge.model.csv.CsvOfferCriteria;
 import com.everestengg.code.challenge.util.CsvReader;
 import com.everestengg.code.challenge.vo.Response;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -56,6 +55,39 @@ public class CsvOfferRepositoryTest {
         assertOfferCriteria(result, 0,"0|200", "70|200");
         assertOfferCriteria(result, 1,  "50|150", "100|250");
         assertOfferCriteria(result, 2,  "50|250", "10|150");
+    }
+
+    @Test
+    void testLoadOffersSuccessWithNoOfferCriteria() throws IOException {
+        List<CsvOffer> csvOfferList = new ArrayList<>();
+        csvOfferList.add(CsvOffer.builder().offerId("OFR004").percentage(50).build());
+        Mockito.lenient().when(csvReaderMock.read("offers.csv",CsvOffer.class)).thenReturn(csvOfferList);
+        List<CsvOfferCriteria> csvOfferCriteriaList = new ArrayList<>();
+
+        addCsvOfferCriterias(csvOfferCriteriaList);
+        Mockito.lenient().when(csvReaderMock.read("offercriterias.csv",CsvOfferCriteria.class))
+                .thenReturn(csvOfferCriteriaList);
+
+        Response<List<Offer>> result = csvOfferRepository.prepareOffers("offers.csv",
+                "offercriterias.csv");
+        Assertions.assertEquals(1, result.getResult().size());
+        Assertions.assertEquals("OFR004", result.getResult().get(0).getOfferId());
+        Assertions.assertNull(result.getResult().get(0).getOfferCriterias());
+    }
+    @Test
+    void testLoadOffersSuccessWithNoOfferCriteriaAndOfferCriteriaFileNull() throws IOException {
+        List<CsvOffer> csvOfferList = new ArrayList<>();
+        csvOfferList.add(CsvOffer.builder().offerId("OFR004").percentage(50).build());
+        Mockito.lenient().when(csvReaderMock.read("offers.csv",CsvOffer.class)).thenReturn(csvOfferList);
+        List<CsvOfferCriteria> csvOfferCriteriaList = new ArrayList<>();
+
+        Mockito.lenient().when(csvReaderMock.read("offercriterias.csv",CsvOfferCriteria.class))
+                .thenReturn(csvOfferCriteriaList);
+
+        Response<List<Offer>> result = csvOfferRepository.prepareOffers("offers.csv", null);
+        Assertions.assertEquals(1, result.getResult().size());
+        Assertions.assertEquals("OFR004", result.getResult().get(0).getOfferId());
+        Assertions.assertNull(result.getResult().get(0).getOfferCriterias());
     }
 
     @Test
@@ -178,14 +210,6 @@ public class CsvOfferRepositoryTest {
         assertEquals("offer filepath can't be empty", thrown.getMessage());
     }
 
-    @Test
-    void testNullOfferCriteriaFileCsv() {
-
-        AssertionError thrown = assertThrows(
-                AssertionError.class,
-                () -> csvOfferRepository.prepareOffers("offers.csv", null));
-        assertEquals("offer criteria filepath can't be empty", thrown.getMessage());
-    }
     @Test
     void testLoadOffersFailureOnInvalidOfferCriteriaInvalidPropertyValueSetOnlyPipe() {
         List<CsvOffer> csvOfferList = new ArrayList<>();

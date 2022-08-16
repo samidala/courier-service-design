@@ -40,8 +40,6 @@ public class CsvOfferRepository {
 
     public Response<List<Offer>> prepareOffers(String offerFilePath, String offerCriteriaFilePath) throws IOException {
         assert offerFilePath !=null : "offer filepath can't be empty";
-        assert offerCriteriaFilePath !=null : "offer criteria filepath can't be empty";
-
         List<CsvOffer> csvOffers = csvReader.read(offerFilePath,CsvOffer.class);
         LOGGER.debug("csv offers {} ",csvOffers);
         List<CsvOfferCriteria> csvOfferCriteriaList = csvReader.read(offerCriteriaFilePath,CsvOfferCriteria.class);
