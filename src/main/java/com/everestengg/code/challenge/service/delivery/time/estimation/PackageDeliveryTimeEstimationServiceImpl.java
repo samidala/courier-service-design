@@ -2,9 +2,8 @@ package com.everestengg.code.challenge.service.delivery.time.estimation;
 
 import com.everestengg.code.challenge.exceptions.InvalidValueException;
 import com.everestengg.code.challenge.model.courier.PackageDeliveryCostAndTimeEstimationInfo;
-import com.everestengg.code.challenge.model.courier.PackageDeliveryCostEstimateInfo;
 import com.everestengg.code.challenge.vo.InputPackage;
-import com.everestengg.code.challenge.vo.PackageDeliveryInput;
+import com.everestengg.code.challenge.vo.VehicleInformation;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -51,18 +50,19 @@ public class PackageDeliveryTimeEstimationServiceImpl implements PackageDelivery
     /**
      *
      * @param inputPackages packages to be delivered
-     * @param packageDeliveryInput captures information like number of available vehicles, max speed, carriable weight
+     * @param vehicleInformation captures information like number of available vehicles, max speed, carriable weight
      * @param baseDeliveryCost base delivery cost
      * @return
      */
     @Override
     public List<PackageDeliveryCostAndTimeEstimationInfo> calculateEstimatedDelivery(InputPackage[] inputPackages,
-                                                                                     PackageDeliveryInput packageDeliveryInput,
+                                                                                     VehicleInformation vehicleInformation,
                                                                                      short baseDeliveryCost) {
-        assertNotNull(inputPackages,packageDeliveryInput,baseDeliveryCost);
-        validators.forEach( e-> e.validate(packageDeliveryInput));
-        PriorityQueue<VehicleAvailability> pq = createPriorityQueue(packageDeliveryInput);
-        initPriorityQueue(packageDeliveryInput, pq);
+        assertNotNull(inputPackages, vehicleInformation,baseDeliveryCost);
+        validators.forEach( e-> e.validate(vehicleInformation));
+        validatePackageWtsAgainstAllowedWts(inputPackages, vehicleInformation);
+        PriorityQueue<VehicleAvailability> pq = createPriorityQueue(vehicleInformation);
+        initPriorityQueue(vehicleInformation, pq);
         InputPackage[] copy = Arrays.copyOf(inputPackages,inputPackages.length);
         int len = inputPackages.length;
 
@@ -72,7 +72,7 @@ public class PackageDeliveryTimeEstimationServiceImpl implements PackageDelivery
 
         Set<Integer> deliveredPkgIndices = new LinkedHashSet<>(len); //used to hold the visited packages and avoid revisiting
         while (remainingPackages > 0) { //repeat loop until all the packages are delivered
-            remainingPackages = calculatePackageDeliveryTimeAndDeliver(packageDeliveryInput, pq,
+            remainingPackages = calculatePackageDeliveryTimeAndDeliver(vehicleInformation, pq,
                     copy, packageDeliveryCostAndTimeEstimationInfo, remainingPackages, deliveredPkgIndices);
         }
         LOGGER.debug("after delivery pq {}",pq);
@@ -80,11 +80,34 @@ public class PackageDeliveryTimeEstimationServiceImpl implements PackageDelivery
         return arrangeAsInInputOrder(inputPackages, packageDeliveryCostAndTimeEstimationInfo);
     }
 
+    /**
+     * Validates package weights against max carriable weight
+     * @param inputPackages @{@link com.everestengg.code.challenge.vo.Package} to be delivered
+     * @param vehicleInformation @{@link VehicleInformation} vehicle information
+     * @throws InvalidValueException
+     */
+    private void validatePackageWtsAgainstAllowedWts(InputPackage[] inputPackages,
+                                                     VehicleInformation vehicleInformation) throws InvalidValueException{
+        for(InputPackage inputPackage : inputPackages){
+            if(inputPackage.getPackageDetails().getWeight() > vehicleInformation.getMaxCarriableWt()){
+                throw new InvalidValueException(String.format(
+                        "package weight is %s more than deliverable weight %s",
+                        inputPackage.getPackageDetails().getWeight(), vehicleInformation.getMaxCarriableWt()));
+            }
+        }
+    }
+
+    /**
+     *
+     * @param inputPackages packages to be delivered
+     * @param vehicleInformation vehicles used for delivery
+     * @param baseDeliveryCost base delivery cost
+     */
     private void assertNotNull(InputPackage[] inputPackages,
-                               PackageDeliveryInput packageDeliveryInput,
+                               VehicleInformation vehicleInformation,
                                short baseDeliveryCost){
         assert inputPackages != null : "input packages should not be null";
-        assert packageDeliveryInput != null : "package delivery input should not be null";
+        assert vehicleInformation != null : "package delivery input should not be null";
         Arrays.stream(inputPackages).forEach( item -> {
             assert item != null : "package should not be null";
         });
@@ -114,24 +137,24 @@ public class PackageDeliveryTimeEstimationServiceImpl implements PackageDelivery
         return packageDeliveryCostAndTimeEstimationInfos;
     }
 
-    private int calculatePackageDeliveryTimeAndDeliver(PackageDeliveryInput packageDeliveryInput,
+    private int calculatePackageDeliveryTimeAndDeliver(VehicleInformation vehicleInformation,
                                                        PriorityQueue<VehicleAvailability> pq,
                                                        InputPackage[] copy,
                                                        List<PackageDeliveryCostAndTimeEstimationInfo> packageDeliveryCostAndTimeEstimationInfo,
                                                        int remainingPackages, Set<Integer> deliveredPkgIndices) {
-        short availableVehicles = packageDeliveryInput.getNoOfVehicle();
+        short availableVehicles = vehicleInformation.getNoOfVehicle();
         double currentTripEstimatedDelivery = 0;
         //repeat the loop until vehicles are available and packages are present for delivery
         while(availableVehicles >  0 && remainingPackages > 0) {
             //visited package indices and used to choose which packages to be delivered
-            Set<Integer> deliverablePackageIds = deliverPackages(copy, packageDeliveryInput.getMaxCarriableWt(),
+            Set<Integer> deliverablePackageIds = deliverPackages(copy, vehicleInformation.getMaxCarriableWt(),
                     deliveredPkgIndices);
 
-            currentTripEstimatedDelivery = getCurrentTripEstimatedDelivery(copy, packageDeliveryInput.getMaxSpeed(),
+            currentTripEstimatedDelivery = getCurrentTripEstimatedDelivery(copy, vehicleInformation.getMaxSpeed(),
                     deliverablePackageIds);
             VehicleAvailability vehicleAvailability = pq.poll();
             packageDeliveryCostAndTimeEstimationInfo.addAll(updatePackageDeliveryDeliveryEstimation(copy,
-                    packageDeliveryInput.getMaxSpeed(), deliverablePackageIds,vehicleAvailability));
+                    vehicleInformation.getMaxSpeed(), deliverablePackageIds,vehicleAvailability));
             LOGGER.debug("currentTripEstimatedDelivery {} ",currentTripEstimatedDelivery);
             deliveredPkgIndices.addAll(deliverablePackageIds);//update delivered packages indices
             remainingPackages -= deliverablePackageIds.size();
@@ -147,21 +170,21 @@ public class PackageDeliveryTimeEstimationServiceImpl implements PackageDelivery
 
     /**
      * creates priority queue
-     * @param packageDeliveryInput packages delivery input
+     * @param vehicleInformation packages delivery input
      * @return @{@link PriorityQueue}
      */
-    private PriorityQueue<VehicleAvailability> createPriorityQueue(PackageDeliveryInput packageDeliveryInput) {
-        return new PriorityQueue<>(packageDeliveryInput.getNoOfVehicle(),
+    private PriorityQueue<VehicleAvailability> createPriorityQueue(VehicleInformation vehicleInformation) {
+        return new PriorityQueue<>(vehicleInformation.getNoOfVehicle(),
                 (o1, o2) -> (int) (Math.ceil(o1.getWaitTime()) - Math.ceil(o2.getWaitTime())));
     }
 
     /**
      * initializes priority queue with available vehicles and deliverytime as 0
-     * @param packageDeliveryInput @{@link PackageDeliveryInput}
+     * @param vehicleInformation @{@link VehicleInformation}
      * @param pq priority queue
      */
-    private void initPriorityQueue(PackageDeliveryInput packageDeliveryInput, PriorityQueue<VehicleAvailability> pq) {
-        for(int i = 1; i <= packageDeliveryInput.getNoOfVehicle(); i++){
+    private void initPriorityQueue(VehicleInformation vehicleInformation, PriorityQueue<VehicleAvailability> pq) {
+        for(int i = 1; i <= vehicleInformation.getNoOfVehicle(); i++){
             pq.offer(VehicleAvailability.builder().vehicleNo((short) i).waitTime(0).build());
         }
     }
@@ -385,26 +408,26 @@ public class PackageDeliveryTimeEstimationServiceImpl implements PackageDelivery
         return getRoundedValue((maxDist / maxSpeed)) ;
     }
     private interface PackageDeliveryInputValidator{
-        boolean validate(PackageDeliveryInput packageDeliveryInput) throws InvalidValueException;
+        boolean validate(VehicleInformation vehicleInformation) throws InvalidValueException;
     }
 
-    private boolean validateMaxCarriableWt(PackageDeliveryInput packageDeliveryInput){
-        if(!packageDeliveryInput.isValidMaxCarriableWt()){
-            throw new InvalidValueException("invalid value for max carriable weight "+packageDeliveryInput.getMaxCarriableWt());
+    private boolean validateMaxCarriableWt(VehicleInformation vehicleInformation){
+        if(!vehicleInformation.isValidMaxCarriableWt()){
+            throw new InvalidValueException("invalid value for max carriable weight "+ vehicleInformation.getMaxCarriableWt());
         }
         return true;
     }
 
-    private boolean validateNoOfVehicles(PackageDeliveryInput packageDeliveryInput){
-        if(!packageDeliveryInput.isNoOfVehicleValid()){
-            throw new InvalidValueException("invalid value for number of vehicles "+packageDeliveryInput.getNoOfVehicle());
+    private boolean validateNoOfVehicles(VehicleInformation vehicleInformation){
+        if(!vehicleInformation.isNoOfVehicleValid()){
+            throw new InvalidValueException("invalid value for number of vehicles "+ vehicleInformation.getNoOfVehicle());
         }
         return true;
     }
 
-    private boolean validateMaxSpeed(PackageDeliveryInput packageDeliveryInput){
-        if(!packageDeliveryInput.isValidMaxSpeed()){
-            throw new InvalidValueException("invalid value for max speed "+packageDeliveryInput.getMaxSpeed());
+    private boolean validateMaxSpeed(VehicleInformation vehicleInformation){
+        if(!vehicleInformation.isValidMaxSpeed()){
+            throw new InvalidValueException("invalid value for max speed "+ vehicleInformation.getMaxSpeed());
         }
         return true;
     }

@@ -8,7 +8,7 @@ import lombok.Getter;
  */
 @Builder
 @Getter
-public class PackageDeliveryInput {
+public class VehicleInformation {
 
     private short noOfVehicle;
     private short maxSpeed;

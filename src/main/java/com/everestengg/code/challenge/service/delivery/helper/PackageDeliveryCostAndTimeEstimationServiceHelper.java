@@ -8,7 +8,7 @@ import com.everestengg.code.challenge.service.delivery.cost.estimation.PackageDe
 import com.everestengg.code.challenge.service.delivery.time.estimation.PackageDeliveryTimeEstimationService;
 import com.everestengg.code.challenge.service.delivery.time.estimation.PackageDeliveryTimeEstimationServiceFactory;
 import com.everestengg.code.challenge.vo.InputPackage;
-import com.everestengg.code.challenge.vo.PackageDeliveryInput;
+import com.everestengg.code.challenge.vo.VehicleInformation;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -22,7 +22,7 @@ import static com.everestengg.code.challenge.service.delivery.cost.estimation.Pa
 public class PackageDeliveryCostAndTimeEstimationServiceHelper {
 
     public List<PackageDeliveryCostAndTimeEstimationInfo> calculateEstimatedDelivery(InputPackage[] inputPackages,
-                                                                                     PackageDeliveryInput packageDeliveryInput,
+                                                                                     VehicleInformation vehicleInformation,
                                                                                      short baseDeliveryCost){
 
         List<PackageDeliveryCostEstimationImpl.InputPackageValidator> validatorList =
@@ -31,7 +31,7 @@ public class PackageDeliveryCostAndTimeEstimationServiceHelper {
 
         List<PackageDeliveryCostAndTimeEstimationInfo> packageDeliveryCostAndTimeEstimationInfoList =
                 getDeliveryTimeEstimationService().calculateEstimatedDelivery(inputPackages,
-                                packageDeliveryInput, baseDeliveryCost);
+                        vehicleInformation, baseDeliveryCost);
 
         return calculatePackageDeliveryCostEstimation(inputPackages,packageDeliveryCostAndTimeEstimationInfoList,
                 baseDeliveryCost);

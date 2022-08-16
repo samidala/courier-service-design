@@ -7,7 +7,7 @@ import com.everestengg.code.challenge.repo.offer.StaticOfferRepository;
 import com.everestengg.code.challenge.service.delivery.helper.PackageDeliveryCostAndTimeEstimationServiceHelper;
 import com.everestengg.code.challenge.vo.InputPackage;
 import com.everestengg.code.challenge.vo.Package;
-import com.everestengg.code.challenge.vo.PackageDeliveryInput;
+import com.everestengg.code.challenge.vo.VehicleInformation;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
@@ -40,11 +40,11 @@ public class PackageDeliveryCostAndTimeEstimationServiceHelperTest {
                             .weight(wts[i]).dist(dists[i]).build(), offrCodes[i]);
 
         }
-        PackageDeliveryInput packageDeliveryInput = PackageDeliveryInput.builder().maxCarriableWt((short) 200)
+        VehicleInformation vehicleInformation = VehicleInformation.builder().maxCarriableWt((short) 200)
                 .maxSpeed((short) 70).noOfVehicle((short) 2).build();
 
         List<PackageDeliveryCostAndTimeEstimationInfo> packageDeliveryCostAndTimeEstimationInfos =
-                calcEstimatedDeliveryAndPrint(inputPackages, packageDeliveryInput);
+                calcEstimatedDeliveryAndPrint(inputPackages, vehicleInformation);
 
         assertEquals(5,packageDeliveryCostAndTimeEstimationInfos.size());
 
@@ -77,11 +77,11 @@ public class PackageDeliveryCostAndTimeEstimationServiceHelperTest {
                             .weight(wts[i]).dist(dists[i]).build(), offrCodes[i]);
 
         }
-        PackageDeliveryInput packageDeliveryInput = PackageDeliveryInput.builder().maxCarriableWt((short) 200)
+        VehicleInformation vehicleInformation = VehicleInformation.builder().maxCarriableWt((short) 200)
                 .maxSpeed((short) 70).noOfVehicle((short) 2).build();
 
         List<PackageDeliveryCostAndTimeEstimationInfo> packageDeliveryCostAndTimeEstimationInfos =
-                calcEstimatedDeliveryAndPrint(inputPackages, packageDeliveryInput);
+                calcEstimatedDeliveryAndPrint(inputPackages, vehicleInformation);
         double[] expectedDeliveryTimes = {0.42,1.78,1.42,0.85,1.35,2.98};
         double[] expectedCosts = {750,1225,2350,900,845,410};
         assertValues(pkgIds, packageDeliveryCostAndTimeEstimationInfos, expectedDeliveryTimes, expectedCosts);
@@ -101,11 +101,11 @@ public class PackageDeliveryCostAndTimeEstimationServiceHelperTest {
                             .weight(wts[i]).dist(dists[i]).build(), offrCodes[i]);
 
         }
-        PackageDeliveryInput packageDeliveryInput = PackageDeliveryInput.builder().maxCarriableWt((short) 200)
+        VehicleInformation vehicleInformation = VehicleInformation.builder().maxCarriableWt((short) 200)
                 .maxSpeed((short) 70).noOfVehicle((short) 2).build();
 
         List<PackageDeliveryCostAndTimeEstimationInfo> packageDeliveryCostAndTimeEstimationInfos =
-                calcEstimatedDeliveryAndPrint(inputPackages, packageDeliveryInput);
+                calcEstimatedDeliveryAndPrint(inputPackages, vehicleInformation);
         double[] expectedDeliveryTimes = {0.42,1.78,1.7,0.85,1.35,0.14};
         double[] expectedCosts = {750,1225,2350,900,845,2150};
         assertValues(pkgIds, packageDeliveryCostAndTimeEstimationInfos, expectedDeliveryTimes, expectedCosts);
@@ -125,11 +125,11 @@ public class PackageDeliveryCostAndTimeEstimationServiceHelperTest {
                             .weight(wts[i]).dist(dists[i]).build(), offrCodes[i]);
 
         }
-        PackageDeliveryInput packageDeliveryInput = PackageDeliveryInput.builder().maxCarriableWt((short) 200)
+        VehicleInformation vehicleInformation = VehicleInformation.builder().maxCarriableWt((short) 200)
                 .maxSpeed((short) 70).noOfVehicle((short) 2).build();
 
         List<PackageDeliveryCostAndTimeEstimationInfo> packageDeliveryCostAndTimeEstimationInfos =
-                calcEstimatedDeliveryAndPrint(inputPackages, packageDeliveryInput);
+                calcEstimatedDeliveryAndPrint(inputPackages, vehicleInformation);
         double[] expectedDeliveryTimes = {0.42,1.78,1.42,0.85,1.35,0.14};
         double[] expectedCosts = {750,1225,2350,900,825,400};
         assertValues(pkgIds, packageDeliveryCostAndTimeEstimationInfos, expectedDeliveryTimes, expectedCosts);
@@ -149,11 +149,11 @@ public class PackageDeliveryCostAndTimeEstimationServiceHelperTest {
                             .weight(wts[i]).dist(dists[i]).build(), offrCodes[i]);
 
         }
-        PackageDeliveryInput packageDeliveryInput = PackageDeliveryInput.builder().maxCarriableWt((short) 200)
+        VehicleInformation vehicleInformation = VehicleInformation.builder().maxCarriableWt((short) 200)
                 .maxSpeed((short) 70).noOfVehicle((short) 2).build();
 
         List<PackageDeliveryCostAndTimeEstimationInfo> packageDeliveryCostAndTimeEstimationInfos =
-                calcEstimatedDeliveryAndPrint(inputPackages, packageDeliveryInput);
+                calcEstimatedDeliveryAndPrint(inputPackages, vehicleInformation);
         double[] expectedDeliveryTimes = {0.42,1.78,2.02,0.85,1.35,0.14,0.3};
         double[] expectedCosts = {750,1225,2350,900,825,400,2105};
         assertValues(pkgIds, packageDeliveryCostAndTimeEstimationInfos, expectedDeliveryTimes, expectedCosts);
@@ -173,11 +173,11 @@ public class PackageDeliveryCostAndTimeEstimationServiceHelperTest {
                             .weight(wts[i]).dist(dists[i]).build(), offrCodes[i]);
 
         }
-        PackageDeliveryInput packageDeliveryInput = PackageDeliveryInput.builder().maxCarriableWt((short) 200)
+        VehicleInformation vehicleInformation = VehicleInformation.builder().maxCarriableWt((short) 200)
                 .maxSpeed((short) 70).noOfVehicle((short) 2).build();
 
         List<PackageDeliveryCostAndTimeEstimationInfo> packageDeliveryCostAndTimeEstimationInfos =
-                calcEstimatedDeliveryAndPrint(inputPackages, packageDeliveryInput);
+                calcEstimatedDeliveryAndPrint(inputPackages, vehicleInformation);
         double[] expectedDeliveryTimes = {0.7,5.6,3.72,1.45,2.47,0.14,0.3};
         double[] expectedCosts = {2025,2725,2600,2400,2575,2150,2205};
         assertValues(pkgIds, packageDeliveryCostAndTimeEstimationInfos, expectedDeliveryTimes, expectedCosts);
@@ -197,11 +197,11 @@ public class PackageDeliveryCostAndTimeEstimationServiceHelperTest {
                             .weight(wts[i]).dist(dists[i]).build(), offrCodes[i]);
 
         }
-        PackageDeliveryInput packageDeliveryInput = PackageDeliveryInput.builder().maxCarriableWt((short) 200)
+        VehicleInformation vehicleInformation = VehicleInformation.builder().maxCarriableWt((short) 200)
                 .maxSpeed((short) 70).noOfVehicle((short) 2).build();
 
         List<PackageDeliveryCostAndTimeEstimationInfo> packageDeliveryCostAndTimeEstimationInfos =
-                calcEstimatedDeliveryAndPrint(inputPackages, packageDeliveryInput);
+                calcEstimatedDeliveryAndPrint(inputPackages, vehicleInformation);
         double[] expectedDeliveryTimes = {4,3.48,5.84,0.85,1.95,3.44,0.3};
         double[] expectedCosts = {2016,2725,2590,2400,2575,2140,2205};
         assertValues(pkgIds, packageDeliveryCostAndTimeEstimationInfos, expectedDeliveryTimes, expectedCosts);
@@ -220,20 +220,20 @@ public class PackageDeliveryCostAndTimeEstimationServiceHelperTest {
                             .weight(wts[i]).dist(dists[i]).build(), offrCodes[i]);
 
         }
-        PackageDeliveryInput packageDeliveryInput = PackageDeliveryInput.builder().maxCarriableWt((short) 200)
+        VehicleInformation vehicleInformation = VehicleInformation.builder().maxCarriableWt((short) 200)
                 .maxSpeed((short) 70).noOfVehicle((short) 2).build();
 
         List<PackageDeliveryCostAndTimeEstimationInfo> packageDeliveryCostAndTimeEstimationInfos =
-                calcEstimatedDeliveryAndPrint(inputPackages, packageDeliveryInput);
+                calcEstimatedDeliveryAndPrint(inputPackages, vehicleInformation);
         double[] expectedDeliveryTimes = {3.72,4.62,1.42,4.99,1.95,0.14,0.3};
         double[] expectedCosts = {2016,2725,2590,2390,2575,160,2205};
         assertValues(pkgIds, packageDeliveryCostAndTimeEstimationInfos, expectedDeliveryTimes, expectedCosts);
 
     }
 
-    private List<PackageDeliveryCostAndTimeEstimationInfo> calcEstimatedDeliveryAndPrint(InputPackage[] inputPackages, PackageDeliveryInput packageDeliveryInput) {
+    private List<PackageDeliveryCostAndTimeEstimationInfo> calcEstimatedDeliveryAndPrint(InputPackage[] inputPackages, VehicleInformation vehicleInformation) {
         List<PackageDeliveryCostAndTimeEstimationInfo> deliveries = getDeliveryCostAndTimeEstimationServiceHelper()
-                .calculateEstimatedDelivery(inputPackages, packageDeliveryInput, (short)100);
+                .calculateEstimatedDelivery(inputPackages, vehicleInformation, (short)100);
         //Collections.sort(deliveries, Comparator.comparing(o -> o.getPackageDeliveryCostEstimateInfo().getPackageId()));
         for (PackageDeliveryCostAndTimeEstimationInfo packageDeliveryCostAndTimeEstimationInfo : deliveries){
             System.out.println(packageDeliveryCostAndTimeEstimationInfo);
@@ -254,11 +254,11 @@ public class PackageDeliveryCostAndTimeEstimationServiceHelperTest {
                             .weight(wts[i]).dist(dists[i]).build(), offrCodes[i]);
 
         }
-        PackageDeliveryInput packageDeliveryInput = PackageDeliveryInput.builder().maxCarriableWt((short) 200)
+        VehicleInformation vehicleInformation = VehicleInformation.builder().maxCarriableWt((short) 200)
                 .maxSpeed((short) 70).noOfVehicle((short) 10).build();
 
         List<PackageDeliveryCostAndTimeEstimationInfo> packageDeliveryCostAndTimeEstimationInfos =
-                calcEstimatedDeliveryAndPrint(inputPackages, packageDeliveryInput);
+                calcEstimatedDeliveryAndPrint(inputPackages, vehicleInformation);
         double[] expectedDeliveryTimes = {0.42,1.78,1.42,0.85,1.35,0.14,0.3};
         double[] expectedCosts = {2025,2725,2600,2400,2575,2150,2205};
         assertValues(pkgIds, packageDeliveryCostAndTimeEstimationInfos, expectedDeliveryTimes, expectedCosts);
@@ -279,11 +279,11 @@ public class PackageDeliveryCostAndTimeEstimationServiceHelperTest {
                             .weight(wts[i]).dist(dists[i]).build(), offrCodes[i]);
 
         }
-        PackageDeliveryInput packageDeliveryInput = PackageDeliveryInput.builder().maxCarriableWt((short) 200)
+        VehicleInformation vehicleInformation = VehicleInformation.builder().maxCarriableWt((short) 200)
                 .maxSpeed((short) 70).noOfVehicle((short) 2).build();
 
         List<PackageDeliveryCostAndTimeEstimationInfo> packageDeliveryCostAndTimeEstimationInfos =
-                calcEstimatedDeliveryAndPrint(inputPackages, packageDeliveryInput);
+                calcEstimatedDeliveryAndPrint(inputPackages, vehicleInformation);
         double[] expectedDeliveryTimes = {4.96,4.48,3.12,0.85,1.35};
         double[] expectedCosts = {1971,2675,2560,2204.10009765625,2555};
         assertValues(pkgIds, packageDeliveryCostAndTimeEstimationInfos, expectedDeliveryTimes, expectedCosts);
@@ -304,11 +304,11 @@ public class PackageDeliveryCostAndTimeEstimationServiceHelperTest {
                             .weight(wts[i]).dist(dists[i]).build(), offrCodes[i]);
 
         }
-        PackageDeliveryInput packageDeliveryInput = PackageDeliveryInput.builder().maxCarriableWt((short) 200)
+        VehicleInformation vehicleInformation = VehicleInformation.builder().maxCarriableWt((short) 200)
                 .maxSpeed((short) 70).noOfVehicle((short) 2).build();
 
         List<PackageDeliveryCostAndTimeEstimationInfo> packageDeliveryCostAndTimeEstimationInfos =
-                calcEstimatedDeliveryAndPrint(inputPackages, packageDeliveryInput);
+                calcEstimatedDeliveryAndPrint(inputPackages, vehicleInformation);
         double[] expectedDeliveryTimes = {4.96,4.48,3.12,0.85,1.35};
         double[] expectedCosts = {1971,2675,2560,2194.800048828125,2555};
         assertValues(pkgIds, packageDeliveryCostAndTimeEstimationInfos, expectedDeliveryTimes, expectedCosts);
@@ -317,13 +317,13 @@ public class PackageDeliveryCostAndTimeEstimationServiceHelperTest {
     @Test
     void testNegativeAvailableVehicles() {
         InputPackage[] inputPackages = getDummyInputPackages();
-        PackageDeliveryInput packageDeliveryInput = PackageDeliveryInput.builder().maxCarriableWt((short) 200)
+        VehicleInformation vehicleInformation = VehicleInformation.builder().maxCarriableWt((short) 200)
                 .maxSpeed((short) 70).noOfVehicle((short) -2).build();
         InvalidValueException thrown = assertThrows(
                 InvalidValueException.class,
                 () -> {
                     getDeliveryCostAndTimeEstimationServiceHelper()
-                            .calculateEstimatedDelivery(inputPackages, packageDeliveryInput, (short)100);
+                            .calculateEstimatedDelivery(inputPackages, vehicleInformation, (short)100);
                 });
         assertEquals("invalid value for number of vehicles -2", thrown.getMessage());
     }
@@ -331,13 +331,13 @@ public class PackageDeliveryCostAndTimeEstimationServiceHelperTest {
     @Test
     void testNegativeMaxSpeed() {
         InputPackage[] inputPackages = getDummyInputPackages();
-        PackageDeliveryInput packageDeliveryInput = PackageDeliveryInput.builder().maxCarriableWt((short) 200)
+        VehicleInformation vehicleInformation = VehicleInformation.builder().maxCarriableWt((short) 200)
                 .maxSpeed((short) -70).noOfVehicle((short) 2).build();
         InvalidValueException thrown = assertThrows(
                 InvalidValueException.class,
                 () -> {
                     getDeliveryCostAndTimeEstimationServiceHelper()
-                            .calculateEstimatedDelivery(inputPackages, packageDeliveryInput, (short)100);
+                            .calculateEstimatedDelivery(inputPackages, vehicleInformation, (short)100);
                 });
         assertEquals("invalid value for max speed -70", thrown.getMessage());
     }
@@ -345,13 +345,13 @@ public class PackageDeliveryCostAndTimeEstimationServiceHelperTest {
     @Test
     void testNegativeCarriableMaxWt() {
         InputPackage[] inputPackages = getDummyInputPackages();
-        PackageDeliveryInput packageDeliveryInput = PackageDeliveryInput.builder().maxCarriableWt((short) -19)
+        VehicleInformation vehicleInformation = VehicleInformation.builder().maxCarriableWt((short) -19)
                 .maxSpeed((short) 70).noOfVehicle((short) 2).build();
         InvalidValueException thrown = assertThrows(
                 InvalidValueException.class,
                 () -> {
                     getDeliveryCostAndTimeEstimationServiceHelper()
-                            .calculateEstimatedDelivery(inputPackages, packageDeliveryInput, (short)100);
+                            .calculateEstimatedDelivery(inputPackages, vehicleInformation, (short)100);
                 });
         assertEquals("invalid value for max carriable weight -19", thrown.getMessage());
     }

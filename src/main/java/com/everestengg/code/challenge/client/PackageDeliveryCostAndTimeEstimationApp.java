@@ -4,7 +4,7 @@ import com.everestengg.code.challenge.io.IoUtils;
 import com.everestengg.code.challenge.model.courier.PackageDeliveryCostAndTimeEstimationInfo;
 import com.everestengg.code.challenge.service.delivery.helper.PackageDeliveryCostAndTimeEstimationServiceHelper;
 import com.everestengg.code.challenge.vo.InputPackage;
-import com.everestengg.code.challenge.vo.PackageDeliveryInput;
+import com.everestengg.code.challenge.vo.VehicleInformation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -32,10 +32,10 @@ public class PackageDeliveryCostAndTimeEstimationApp {
             readPackages(scanner, noOfPackages, inputPackages);
 
             // read delivery information
-            PackageDeliveryInput packageDeliveryInput = readDeliveryInput(scanner);
+            VehicleInformation vehicleInformation = readDeliveryInput(scanner);
             //calculate discount for each and print
             List<PackageDeliveryCostAndTimeEstimationInfo> result = new PackageDeliveryCostAndTimeEstimationServiceHelper()
-                    .calculateEstimatedDelivery(inputPackages, packageDeliveryInput, baseDeliveryCost);
+                    .calculateEstimatedDelivery(inputPackages, vehicleInformation, baseDeliveryCost);
             printDelivery(result);
         }catch (Exception e){
             logger.error("app crashed.. error ",e);
@@ -53,9 +53,9 @@ public class PackageDeliveryCostAndTimeEstimationApp {
     }
 
 
-    private static PackageDeliveryInput readDeliveryInput(Scanner scanner) {
+    private static VehicleInformation readDeliveryInput(Scanner scanner) {
         System.out.println("enter no of vehicles, max speed and max carriable weight");
-        PackageDeliveryInput pkgDeliveryInput =  PackageDeliveryInput.builder().noOfVehicle(scanner.nextShort())
+        VehicleInformation pkgDeliveryInput =  VehicleInformation.builder().noOfVehicle(scanner.nextShort())
                 .maxSpeed(scanner.nextShort())
                 .maxCarriableWt(scanner.nextShort()).build();
         if(!pkgDeliveryInput.isNoOfVehicleValid()){
