@@ -133,6 +133,29 @@ public class DeliveryCostEstimationImplTest {
     }
 
     @Test
+    void testNullInputPackage() {
+
+        PackageDeliveryCostEstimationImpl packageOrderImpl = new PackageDeliveryCostEstimationImpl();
+        Package pkg = Package.builder().packageId("P3").weight((short) 10).dist((short) -10).build();
+        InputPackage inputPackage = new InputPackage(pkg, "OFROO003");
+
+        AssertionError thrown = assertThrows(
+                AssertionError.class,
+                () -> packageOrderImpl.calcCost(null, 100));
+        assertEquals("input package should not be null", thrown.getMessage());
+    }
+    @Test
+    void testNullPackage() {
+
+        PackageDeliveryCostEstimationImpl packageOrderImpl = new PackageDeliveryCostEstimationImpl();
+        InputPackage inputPackage = new InputPackage(null, "OFROO003");
+
+        AssertionError thrown = assertThrows(
+                AssertionError.class,
+                () -> packageOrderImpl.calcCost(inputPackage, 100));
+        assertEquals("package should not be null", thrown.getMessage());
+    }
+    @Test
     void testNegativeDistance() {
 
         PackageDeliveryCostEstimationImpl packageOrderImpl = new PackageDeliveryCostEstimationImpl();
