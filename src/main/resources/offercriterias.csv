@@ -1,7 +1,7 @@
-offerCriteriaId,property,operator,value
-1,dist,LT,200
-2,weight,RANGE,70|200
-3,dist,RANGE,50|150
-4,weight,RANGE,100|250
-5,dist,RANGE,50|250
-6,weight,RANGE,10|150
+offerCriteriaId,property,value
+1,dist,0|200
+2,weight,70|200
+3,dist,50|150
+4,weight,100|250
+5,dist,50|250
+6,weight,10|150

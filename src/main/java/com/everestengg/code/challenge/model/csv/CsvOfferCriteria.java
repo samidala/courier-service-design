@@ -2,13 +2,16 @@ package com.everestengg.code.challenge.model.csv;
 
 
 import com.everestengg.code.challenge.domain.offer.OfferCriteria;
-import com.everestengg.code.challenge.domain.offer.OfferCriteria.Operator;
 import com.opencsv.bean.CsvBindByName;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.util.Arrays;
+
+import static com.everestengg.code.challenge.domain.offer.OfferCriteria.getPackageValueHandlerMap;
 
 /**
  * captures offer criteria for configured value and input value
@@ -26,15 +29,16 @@ public class CsvOfferCriteria {
 
     @CsvBindByName(column = "property")
     private String property;
-    @CsvBindByName(column = "operator")
-    private  String operator;
 
     @CsvBindByName(column = "value")
     private  String propertyValue;
 
     public OfferCriteria toOfferCriteria(){
-        return OfferCriteria.builder().operator(Operator.valueOf(operator))
-                .property(property).propertyValue(propertyValue).build();
+        return OfferCriteria.builder()
+                .property(property).
+                propertyValues(Arrays.asList(propertyValue.split("\\|")))
+                .valueHandler(getPackageValueHandlerMap().get(property))
+                .build();
     }
 
 

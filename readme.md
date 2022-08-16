@@ -93,9 +93,26 @@ distance should range between `50` to `250`, and weight range between `10` to `1
 3. `PackageOrderImplTest.testCalcDiscountCategoryAndWeight` simulates support new offer code by category and weight.
 
 
+# Setting up offers from CSV file
+
+1. Setting up offers
+   1. It has the following properties
+      1. offerId
+      2. discountPercentage
+      3. offerCriteriaIds, The offer criteria's are separated with `|`
+      4. Example: `OFR001,10,1|2` Here, OFR001 is offer code, 10 is discount percentage and `1|2` are offer criteria ID's
+2. Setting up offer criteria used in `1.3` above
+   1. It has the following properties
+      1. offerCriteriaId, used in above `1.3` point
+      2. property
+      3. value
+   2. value are separated with `|`
+   3. example: 1,dist,0|200, here `1` is offer criteria ID, `dist` is the `property`, `0|200` is value range for the offer criteria
+   4. There should be value handler (`ValueHandler`) defined for each property get value from package.
+   
 # improvements:
 1. Method naming conventions can be made better.
-2. 
+2. Add Junits for CSV reading
 
 
    ![uml.png](uml.png)

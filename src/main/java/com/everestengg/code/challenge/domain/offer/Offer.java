@@ -22,6 +22,7 @@ public  class Offer {
     private final OfferCriteria[] offerCriterias;
     private final float percentage;
 
+
     public static Offer NA = new Offer("NA",0);
 
 
@@ -61,6 +62,10 @@ public  class Offer {
      * @return property value
      */
     public  String getValue(Package aPackage, OfferCriteria offerCriteria) throws InvalidValueException{
+        if(offerCriteria.getValueHandler() != null){
+            LOGGER.info("value handle is available and continuing to use {}",offerCriteria.getValueHandler());
+            return (String) offerCriteria.getValueHandler().getValue(aPackage);
+        }
         String value = "";
         try {
             value =  new ObjectMapper().convertValue(aPackage,Map.class).get(offerCriteria.getProperty()).toString();

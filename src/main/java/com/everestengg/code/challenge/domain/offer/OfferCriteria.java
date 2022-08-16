@@ -1,10 +1,15 @@
 package com.everestengg.code.challenge.domain.offer;
 
 
+import com.everestengg.code.challenge.vo.Package;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.ToString;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * captures offer criteria for configured value and input value
@@ -16,78 +21,37 @@ import lombok.ToString;
 @ToString
 public class OfferCriteria {
 
-    public enum Operator{
-        EQ("=="),
-        NEQ("!="),
-        GT("GT"),
-        GTE("GTE"),
-        LT("LT"),
-        LTE("LTE"),
-        RANGE("RANGE");
-
-
-        private final String operator;
-
-        Operator(String operator) {
-            this.operator = operator;
-        }
-
-        public String getOperator() {
-            return operator;
-        }
-    }
-
     private String property;
 
-    private  Operator operator;
+    private List<String> propertyValues;
 
-    private  String propertyValue;
+    private final ValueHandler valueHandler;
 
 
     public  boolean isMatch(String inputVal){
-        if(isEquals()){
-            return inputVal.equals(propertyValue);
-        }else if(isNotEquals()){
-            return !inputVal.equals(propertyValue);
-        }else if(isGreaterThan()){
-            return Double.valueOf(inputVal).compareTo(Double.valueOf(propertyValue)) > 0;
-        }else if(isLessThan()){
-            return Double.valueOf(inputVal).compareTo(Double.valueOf(propertyValue)) < 0;
-        }else if(isGreaterThanOrEquals()){
-            return Double.valueOf(inputVal).compareTo(Double.valueOf(propertyValue)) >= 0;
-        }else if(isLessThanOrEquals()){
-            return Double.valueOf(inputVal).compareTo(Double.valueOf(propertyValue)) <= 0;
-        }else if(isRange()){
-            String[] values = propertyValue.split("\\|");
-            return Double.valueOf(inputVal).compareTo(Double.valueOf(values[0])) >= 0 &&
-                    Double.valueOf(inputVal).compareTo(Double.valueOf(values[1])) <= 0;
+
+        if(propertyValues.size() == 1){
+            return inputVal.equals(propertyValues.get(0));
+        }else{
+            return Double.valueOf(inputVal).compareTo(Double.valueOf(propertyValues.get(0))) >= 0 &&
+                    Double.valueOf(inputVal).compareTo(Double.valueOf(propertyValues.get(1))) <= 0;
         }
-        return false;
     }
 
-    protected boolean isEquals(){
-        return Operator.EQ.equals(operator);
-    }
-    protected boolean isNotEquals(){
-        return Operator.NEQ.equals(operator);
-    }
-    protected boolean isLessThan(){
-        return Operator.LT.equals(operator);
+    public interface ValueHandler<E,V>{
+        V getValue(E e);
     }
 
-    protected boolean isGreaterThan(){
-        return Operator.GT.equals(operator);
-    }
-    protected boolean isLessThanOrEquals(){
-        return Operator.LTE.equals(operator);
-    }
+    public static final OfferCriteria.ValueHandler<Package,String> distanceValueHandler = aPackage -> String.valueOf(aPackage.getDist());
+    public static final OfferCriteria.ValueHandler<Package,String> weightValueHandler = aPackage -> String.valueOf(aPackage.getWeight());
+    public static final OfferCriteria.ValueHandler<Package,String> categoryValueHandler = aPackage -> String.valueOf(aPackage.getCategory());
 
-    protected boolean isGreaterThanOrEquals(){
-        return Operator.GTE.equals(operator);
-    }
-
-    protected boolean isRange(){
-        return Operator.RANGE.equals(operator);
+    public static Map<String,ValueHandler<Package,String>> getPackageValueHandlerMap(){
+        Map<String,ValueHandler<Package,String>> valueHandlerMapDef = new HashMap<>(3);
+        valueHandlerMapDef.put("dist",OfferCriteria.distanceValueHandler);
+        valueHandlerMapDef.put("weight",OfferCriteria.weightValueHandler);
+        valueHandlerMapDef.put("category",OfferCriteria.categoryValueHandler);
+        return  valueHandlerMapDef;
     }
 
 

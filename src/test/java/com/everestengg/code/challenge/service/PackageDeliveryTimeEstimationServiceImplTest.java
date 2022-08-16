@@ -228,9 +228,6 @@ public class PackageDeliveryTimeEstimationServiceImplTest {
     private List<PackageDeliveryCostAndTimeEstimationInfo> calcEstimatedDeliveryAndPrint(InputPackage[] inputPackages, PackageDeliveryInput packageDeliveryInput) {
         List<PackageDeliveryCostAndTimeEstimationInfo> deliveries = getDeliveryTimeEstimationService()
                 .calculateEstimatedDelivery(inputPackages, packageDeliveryInput, (short)100);
-        for (PackageDeliveryCostAndTimeEstimationInfo packageDeliveryCostAndTimeEstimationInfo : deliveries){
-            System.out.println(packageDeliveryCostAndTimeEstimationInfo);
-        }
         return deliveries;
     }
 

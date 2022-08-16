@@ -16,6 +16,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 
@@ -42,19 +43,20 @@ public class CsvOfferRepositoryTest {
         Assertions.assertEquals(3, result.getResult().size());
         assertOfferIds(result);
 
-        assertOfferCriteria(result, 0, OfferCriteria.Operator.LT, "200", "70|200");
-        assertOfferCriteria(result, 1, OfferCriteria.Operator.RANGE, "50|150", "100|250");
-        assertOfferCriteria(result, 2, OfferCriteria.Operator.RANGE, "50|250", "10|150");
+        assertOfferCriteria(result, 0,"0|200", "70|200");
+        assertOfferCriteria(result, 1,  "50|150", "100|250");
+        assertOfferCriteria(result, 2,  "50|250", "10|150");
     }
 
-    private void assertOfferCriteria(Response<List<Offer>> result, int index, OfferCriteria.Operator lt, String expected, String expected1) {
+    private void assertOfferCriteria(Response<List<Offer>> result, int index,
+                                     String offerCriteria1expected, String offerCriteria2Expected) {
         Assertions.assertEquals("dist", result.getResult().get(index).getOfferCriterias()[0].getProperty());
-        Assertions.assertEquals(lt, result.getResult().get(index).getOfferCriterias()[0].getOperator());
-        Assertions.assertEquals(expected, result.getResult().get(index).getOfferCriterias()[0].getPropertyValue());
+        Assertions.assertEquals(Arrays.asList(offerCriteria1expected.split("\\|")),
+                result.getResult().get(index).getOfferCriterias()[0].getPropertyValues());
 
         Assertions.assertEquals("weight", result.getResult().get(index).getOfferCriterias()[1].getProperty());
-        Assertions.assertEquals(OfferCriteria.Operator.RANGE, result.getResult().get(index).getOfferCriterias()[1].getOperator());
-        Assertions.assertEquals(expected1, result.getResult().get(index).getOfferCriterias()[1].getPropertyValue());
+        Assertions.assertEquals(Arrays.asList(offerCriteria2Expected.split("\\|")),
+                result.getResult().get(index).getOfferCriterias()[1].getPropertyValues());
     }
 
     private void assertOfferIds(Response<List<Offer>> result) {
@@ -64,27 +66,27 @@ public class CsvOfferRepositoryTest {
     }
 
     private void addCsvOfferCriterias(List<CsvOfferCriteria> csvOfferCriteriaList) {
-        csvOfferCriteriaList.add(CsvOfferCriteria.builder().offerCriteriaId(1).operator("LT")
-                                     .property("dist").propertyValue("200").build());
+        csvOfferCriteriaList.add(CsvOfferCriteria.builder().offerCriteriaId(1)
+                                     .property("dist").propertyValue("0|200").build());
 
         csvOfferCriteriaList.add(CsvOfferCriteria
-                                .builder().offerCriteriaId(2).operator("RANGE")
+                                .builder().offerCriteriaId(2)
                                 .property("weight").propertyValue("70|200").build());
 
         csvOfferCriteriaList.add(CsvOfferCriteria
-                .builder().offerCriteriaId(3).operator("RANGE")
+                .builder().offerCriteriaId(3)
                 .property("dist").propertyValue("50|150").build());
 
         csvOfferCriteriaList.add(CsvOfferCriteria
-                .builder().offerCriteriaId(4).operator("RANGE")
+                .builder().offerCriteriaId(4)
                 .property("weight").propertyValue("100|250").build());
 
         csvOfferCriteriaList.add(CsvOfferCriteria
-                .builder().offerCriteriaId(5).operator("RANGE")
+                .builder().offerCriteriaId(5)
                 .property("dist").propertyValue("50|250").build());
 
         csvOfferCriteriaList.add(CsvOfferCriteria
-                .builder().offerCriteriaId(6).operator("RANGE")
+                .builder().offerCriteriaId(6)
                 .property("weight").propertyValue("10|150").build());
     }
 
