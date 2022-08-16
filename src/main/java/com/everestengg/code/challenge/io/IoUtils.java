@@ -99,7 +99,7 @@ public class IoUtils {
             return;
         }
         try {
-            System.out.println("input csv file name for offer and offer criteria mapping inorder, space separated");
+            System.out.println("input complete path with csv file names for offer and offer criteria mapping inorder, space separated");
             String offerFileName = scanner.next();
             String offerCriteriaName = scanner.next();
             new CsvOfferRepository().prepareOffers(offerFileName,offerCriteriaName);

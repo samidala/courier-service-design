@@ -47,12 +47,11 @@ distance should range between `50` to `250`, and weight range between `10` to `1
 
 # Running
 1. Run PackageChargeCalculatorApp class
-
-2. Provide base delivery cost and number of packages
-
-3. enter the package details with space separated and press enter after inputting package ID, weight, distance and offer code
-
-4. After successful run, the app displays each package id, discount and charges to be paid.
+2. Select Y if you would like to load offers else N and continue with next steps
+3. If you selected to load offers from CSV, please provide absolute path of CSV files for offer and offer criteria. Refer Setting up offers from CSV section for CSV definations
+4. Provide base delivery cost and number of packages
+5. enter the package details with space separated and press enter after inputting package ID, weight, distance and offer code
+6. After successful run, the app displays each package id, discount and charges to be paid.
 
 # Package delivery time estimation
 
@@ -78,13 +77,15 @@ distance should range between `50` to `250`, and weight range between `10` to `1
 
 
 # Running
-
-1. Run DeliveryEstimationApp class
-2. Provide base delivery cost and number of packages
-3. enter the package details with space separated and press enter after inputting package ID, weight, distance and offer code
-4. enter no of vehicles, max speed and max carriable weight
-5. After successful run, the app displays each package id, discount, charges to be paid and estimated delivery time.
-6. Enable the debug logs by changing in `log4j2.xml` for to print debug logs.
+1. Run PackageChargeCalculatorApp class
+2. Select Y if you would like to load offers else N and continue with next steps
+3. If you selected to load offers from CSV, please provide absolute path of CSV files for offer and offer criteria. Refer Setting up offers from CSV section for CSV definations
+4. Run DeliveryEstimationApp class
+5. Provide base delivery cost and number of packages
+6. enter the package details with space separated and press enter after inputting package ID, weight, distance and offer code
+7. enter no of vehicles, max speed and max carriable weight
+8. After successful run, the app displays each package id, discount, charges to be paid and estimated delivery time.
+9. Enable the debug logs by changing in `log4j2.xml` for to print debug logs.
 
 
 # Other ways to run
@@ -94,7 +95,7 @@ distance should range between `50` to `250`, and weight range between `10` to `1
 3. `PackageOrderImplTest.testCalcDiscountCategoryAndWeight` simulates support new offer code by category and weight.
 
 
-# Setting up offers from CSV file
+## Setting up offers from CSV file
 
 1. Setting up offers
    1. It has the following properties
