@@ -59,7 +59,7 @@ public class PackageDeliveryTimeEstimationServiceImpl implements PackageDelivery
     public List<PackageDeliveryCostAndTimeEstimationInfo> calculateEstimatedDelivery(InputPackage[] inputPackages,
                                                                                      PackageDeliveryInput packageDeliveryInput,
                                                                                      short baseDeliveryCost) {
-
+        assertNotNull(inputPackages,packageDeliveryInput,baseDeliveryCost);
         validators.forEach( e-> e.validate(packageDeliveryInput));
         PriorityQueue<VehicleAvailability> pq = createPriorityQueue(packageDeliveryInput);
         initPriorityQueue(packageDeliveryInput, pq);
@@ -78,6 +78,18 @@ public class PackageDeliveryTimeEstimationServiceImpl implements PackageDelivery
         LOGGER.debug("after delivery pq {}",pq);
         pq.clear();
         return arrangeAsInInputOrder(inputPackages, packageDeliveryCostAndTimeEstimationInfo);
+    }
+
+    private void assertNotNull(InputPackage[] inputPackages,
+                               PackageDeliveryInput packageDeliveryInput,
+                               short baseDeliveryCost){
+        assert inputPackages != null : "input packages should not be null";
+        assert packageDeliveryInput != null : "package delivery input should not be null";
+        Arrays.stream(inputPackages).forEach( item -> {
+            assert item != null : "package should not be null";
+        });
+        assert baseDeliveryCost >= 0 : "base delivery cost should be between 1 and "+Short.MAX_VALUE;
+
     }
 
     /**

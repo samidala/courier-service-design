@@ -330,6 +330,57 @@ public class PackageDeliveryTimeEstimationServiceImplTest {
     }
 
     @Test
+    void testInputPackagesNull() {
+        PackageDeliveryInput packageDeliveryInput = PackageDeliveryInput.builder().maxCarriableWt((short) 200)
+                .maxSpeed((short) -70).noOfVehicle((short) 2).build();
+        AssertionError thrown = assertThrows(
+                AssertionError.class,
+                () -> {
+                    getDeliveryTimeEstimationService()
+                            .calculateEstimatedDelivery(null, packageDeliveryInput, (short)100);
+                });
+        assertEquals("input packages should not be null", thrown.getMessage());
+    }
+
+    @Test
+    void testPackagesNull() {
+        InputPackage[] inputPackages = new InputPackage[1];
+        PackageDeliveryInput packageDeliveryInput = PackageDeliveryInput.builder().maxCarriableWt((short) 200)
+                .maxSpeed((short) -70).noOfVehicle((short) 2).build();
+        AssertionError thrown = assertThrows(
+                AssertionError.class,
+                () -> {
+                    getDeliveryTimeEstimationService()
+                            .calculateEstimatedDelivery(inputPackages, packageDeliveryInput, (short)100);
+                });
+        assertEquals("package should not be null", thrown.getMessage());
+    }
+
+    @Test
+    void testPackageDeliveryInputNull() {
+        InputPackage[] inputPackages = getDummyInputPackages();
+        AssertionError thrown = assertThrows(
+                AssertionError.class,
+                () -> {
+                    getDeliveryTimeEstimationService()
+                            .calculateEstimatedDelivery(inputPackages, null, (short)100);
+                });
+        assertEquals("package delivery input should not be null", thrown.getMessage());
+    }
+    @Test
+    void testBaseDeliveryCostValueNegative() {
+        InputPackage[] inputPackages = getDummyInputPackages();
+        PackageDeliveryInput packageDeliveryInput = PackageDeliveryInput.builder().maxCarriableWt((short) 200)
+                .maxSpeed((short) 70).noOfVehicle((short) 2).build();
+        AssertionError thrown = assertThrows(
+                AssertionError.class,
+                () -> {
+                    getDeliveryTimeEstimationService()
+                            .calculateEstimatedDelivery(inputPackages, packageDeliveryInput, (short)-100);
+                });
+        assertEquals("base delivery cost should be between 1 and 32767", thrown.getMessage());
+    }
+    @Test
     void testNegativeCarriableMaxWt() {
         InputPackage[] inputPackages = getDummyInputPackages();
         PackageDeliveryInput packageDeliveryInput = PackageDeliveryInput.builder().maxCarriableWt((short) -19)
