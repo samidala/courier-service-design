@@ -1,7 +1,7 @@
 package com.everestengg.code.challenge.domain.offer;
 
 
-import com.everestengg.code.challenge.vo.Package;
+import com.everestengg.code.challenge.vo.courier.Package;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;

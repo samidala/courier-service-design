@@ -1,9 +1,9 @@
 package com.everestengg.code.challenge.service.delivery.cost.estimation;
 
 import com.everestengg.code.challenge.exceptions.InvalidValueException;
-import com.everestengg.code.challenge.model.courier.PackageDeliveryCostEstimateInfo;
+import com.everestengg.code.challenge.vo.courier.PackageDeliveryCostEstimateInfo;
 import com.everestengg.code.challenge.service.offer.OfferServiceImpl;
-import com.everestengg.code.challenge.vo.InputPackage;
+import com.everestengg.code.challenge.vo.courier.CourierRequest;
 import com.everestengg.code.challenge.vo.Response;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -46,18 +46,18 @@ public class PackageDeliveryCostEstimationImpl implements PackageDeliveryCostEst
 
     /**
      *
-     * @param inputPackage packages to be delivered
+     * @param courierRequest packages to be delivered
      * @param baseDeliveryCost base delivery cost
      * @return PackageChargeInformation
      */
-    public Response<PackageDeliveryCostEstimateInfo> calcCost(InputPackage inputPackage, float baseDeliveryCost){
-        assertNotNull(inputPackage);
+    public Response<PackageDeliveryCostEstimateInfo> calcCost(CourierRequest courierRequest, float baseDeliveryCost){
+        assertNotNull(courierRequest);
         isValidBaseDeliveryCost(baseDeliveryCost);
-        inputPackageValidatorList.forEach(e-> e.validate(inputPackage));
-        isValidOfferCode(inputPackage);
-        float discountValueInPercentage = new OfferServiceImpl().getDiscountValue(inputPackage)/100;
-        float totalCost = baseDeliveryCost + (inputPackage.getPackageDetails().getWeight() * getWeightMultiplier())
-                + (inputPackage.getPackageDetails().getDist() * getDistanceMultiplier()) ;
+        inputPackageValidatorList.forEach(e-> e.validate(courierRequest));
+        isValidOfferCode(courierRequest);
+        float discountValueInPercentage = new OfferServiceImpl().getDiscountValue(courierRequest)/100;
+        float totalCost = baseDeliveryCost + (courierRequest.getPackageDetails().getWeight() * getWeightMultiplier())
+                + (courierRequest.getPackageDetails().getDist() * getDistanceMultiplier()) ;
         LOGGER.trace("totalCost {}",totalCost);
         LOGGER.trace("discountValueInPercentage {}",discountValueInPercentage);
         float totalDiscount = (totalCost *discountValueInPercentage);
@@ -66,27 +66,27 @@ public class PackageDeliveryCostEstimationImpl implements PackageDeliveryCostEst
         LOGGER.trace("costAfterDiscount {}",costAfterDiscount);
         return Response.<PackageDeliveryCostEstimateInfo>builder()
                 .errorCode(null)
-                .result(PackageDeliveryCostEstimateInfo.builder().packageId(inputPackage
+                .result(PackageDeliveryCostEstimateInfo.builder().packageId(courierRequest
                                 .getPackageDetails().getPackageId())
                         .totalCost(totalCost)
                         .totalDiscount(totalDiscount).costAfterDiscount(costAfterDiscount).build())
                 .build();
     }
 
-    private void assertNotNull(InputPackage inputPackage) {
-        assert inputPackage != null : "input package should not be null";
-        assert inputPackage.getPackageDetails() != null : "package should not be null";
+    private void assertNotNull(CourierRequest courierRequest) {
+        assert courierRequest != null : "input package should not be null";
+        assert courierRequest.getPackageDetails() != null : "package should not be null";
     }
 
 
     public interface InputPackageValidator{
-        boolean validate(InputPackage inputPackage) throws InvalidValueException;
+        boolean validate(CourierRequest courierRequest) throws InvalidValueException;
     }
 
-    private  boolean isValidPackageId(InputPackage inputPackage) {
-        if(!inputPackage.getPackageDetails().isValidPackageId()){
-            LOGGER.warn("invalid package ID {}",inputPackage.getPackageDetails().getPackageId());
-            throw new InvalidValueException("invalid package ID "+inputPackage.getPackageDetails().getPackageId());
+    private  boolean isValidPackageId(CourierRequest courierRequest) {
+        if(!courierRequest.getPackageDetails().isValidPackageId()){
+            LOGGER.warn("invalid package ID {}", courierRequest.getPackageDetails().getPackageId());
+            throw new InvalidValueException("invalid package ID "+ courierRequest.getPackageDetails().getPackageId());
         }
         return true;
     }
@@ -97,24 +97,24 @@ public class PackageDeliveryCostEstimationImpl implements PackageDeliveryCostEst
         }
         return true;
     }
-    private  boolean isValidDistance(InputPackage inputPackage){
-        if(!inputPackage.getPackageDetails().isValidDistance()){
-            LOGGER.warn("invalid distance {}",inputPackage.getPackageDetails().getDist());
-            throw new InvalidValueException("invalid distance "+inputPackage.getPackageDetails().getDist());
+    private  boolean isValidDistance(CourierRequest courierRequest){
+        if(!courierRequest.getPackageDetails().isValidDistance()){
+            LOGGER.warn("invalid distance {}", courierRequest.getPackageDetails().getDist());
+            throw new InvalidValueException("invalid distance "+ courierRequest.getPackageDetails().getDist());
         }
         return true;
     }
-    private  boolean isValidWeight(InputPackage inputPackage){
-        if(!inputPackage.getPackageDetails().isValidWeight()){
-            LOGGER.warn("invalid weight {}",inputPackage.getPackageDetails().getWeight());
-            throw new InvalidValueException("invalid weight "+inputPackage.getPackageDetails().getWeight());
+    private  boolean isValidWeight(CourierRequest courierRequest){
+        if(!courierRequest.getPackageDetails().isValidWeight()){
+            LOGGER.warn("invalid weight {}", courierRequest.getPackageDetails().getWeight());
+            throw new InvalidValueException("invalid weight "+ courierRequest.getPackageDetails().getWeight());
         }
         return true;
     }
 
-    private void isValidOfferCode(InputPackage inputPackage){
-        if(!inputPackage.isValidOfferCode()){
-            LOGGER.warn("Invalid offer code, continuing with no discount.. code {}", inputPackage.getOfferCode());
+    private void isValidOfferCode(CourierRequest courierRequest){
+        if(!courierRequest.isValidOfferCode()){
+            LOGGER.warn("Invalid offer code, continuing with no discount.. code {}", courierRequest.getOfferCode());
         }
     }
     public int getDistanceMultiplier() {

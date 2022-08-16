@@ -1,10 +1,10 @@
 package com.everestengg.code.challenge.client;
 
-import com.everestengg.code.challenge.model.courier.PackageDeliveryCostEstimateInfo;
+import com.everestengg.code.challenge.vo.courier.PackageDeliveryCostEstimateInfo;
 import com.everestengg.code.challenge.repo.offer.StaticOfferRepository;
 import com.everestengg.code.challenge.service.delivery.cost.estimation.PackageDeliveryCostEstimationServiceFactory;
 import com.everestengg.code.challenge.io.IoUtils;
-import com.everestengg.code.challenge.vo.InputPackage;
+import com.everestengg.code.challenge.vo.courier.CourierRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -21,11 +21,11 @@ public class PackageDeliveryCostEstimationApp {
             System.out.println("Enter base delivery cost and number of packages");
             short baseDeliveryCost = IoUtils.readBaseCost(scanner);
             short noOfPackages = IoUtils.readNoOfPackages(scanner);
-            InputPackage[] inputPackages = new InputPackage[noOfPackages];
+            CourierRequest[] courierRequests = new CourierRequest[noOfPackages];
             // Read packages
-            IoUtils.readPackages(scanner, noOfPackages, inputPackages);
+            IoUtils.readPackages(scanner, noOfPackages, courierRequests);
             //calculate discount for each and print
-            process(baseDeliveryCost, inputPackages);
+            process(baseDeliveryCost, courierRequests);
         }catch (Exception e){
             logger.error("app crashed.. error ",e);
         }
@@ -36,10 +36,10 @@ public class PackageDeliveryCostEstimationApp {
 
 
 
-    private static void process(short baseDeliveryCost, InputPackage[] inputPackages) {
-        for (InputPackage inputPackage : inputPackages){
+    private static void process(short baseDeliveryCost, CourierRequest[] courierRequests) {
+        for (CourierRequest courierRequest : courierRequests){
             PackageDeliveryCostEstimateInfo packageDeliveryCostEstimateInfo = PackageDeliveryCostEstimationServiceFactory
-                    .getPackageDeliveryCostEstimationService(SIMPLE).calcCost(inputPackage, baseDeliveryCost).getResult();
+                    .getPackageDeliveryCostEstimationService(SIMPLE).calcCost(courierRequest, baseDeliveryCost).getResult();
             packageDeliveryCostEstimateInfo.print();
         }
     }

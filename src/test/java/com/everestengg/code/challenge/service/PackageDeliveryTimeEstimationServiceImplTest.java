@@ -2,12 +2,12 @@ package com.everestengg.code.challenge.service;
 
 
 import com.everestengg.code.challenge.exceptions.InvalidValueException;
-import com.everestengg.code.challenge.model.courier.PackageDeliveryCostAndTimeEstimationInfo;
+import com.everestengg.code.challenge.vo.courier.CourierResponse;
 import com.everestengg.code.challenge.repo.offer.StaticOfferRepository;
 import com.everestengg.code.challenge.service.delivery.time.estimation.PackageDeliveryTimeEstimationService;
 import com.everestengg.code.challenge.service.delivery.time.estimation.PackageDeliveryTimeEstimationServiceFactory;
-import com.everestengg.code.challenge.vo.InputPackage;
-import com.everestengg.code.challenge.vo.Package;
+import com.everestengg.code.challenge.vo.courier.CourierRequest;
+import com.everestengg.code.challenge.vo.courier.Package;
 import com.everestengg.code.challenge.vo.VehicleInformation;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -32,13 +32,13 @@ public class PackageDeliveryTimeEstimationServiceImplTest {
     @Test
     void testCalculateEstimatedDeliveryOfDiffWeights(){
 
-        InputPackage[] inputPackages = new InputPackage[5];
+        CourierRequest[] courierRequests = new CourierRequest[5];
         String[] pkgIds = {"PKG1","PKG2","PKG3","PKG4","PKG5"};
         short[] wts = {50,75,175,110,155};
         short[] dists = {30,125,100,60,95};
         String[] offrCodes = {"OFR001","OFFR0008","OFFR003","OFR002","NA"};
         for(int i = 0 ; i < 5; i++){
-            inputPackages[i] = new InputPackage(
+            courierRequests[i] = new CourierRequest(
                     Package.builder().packageId(pkgIds[i])
                             .weight(wts[i]).dist(dists[i]).build(), offrCodes[i]);
 
@@ -46,20 +46,20 @@ public class PackageDeliveryTimeEstimationServiceImplTest {
         VehicleInformation vehicleInformation = VehicleInformation.builder().maxCarriableWt((short) 200)
                 .maxSpeed((short) 70).noOfVehicle((short) 2).build();
 
-        List<PackageDeliveryCostAndTimeEstimationInfo> packageDeliveryCostAndTimeEstimationInfos =
-                calcEstimatedDeliveryAndPrint(inputPackages, vehicleInformation);
+        List<CourierResponse> courierResponses =
+                calcEstimatedDeliveryAndPrint(courierRequests, vehicleInformation);
 
-        assertEquals(5,packageDeliveryCostAndTimeEstimationInfos.size());
+        assertEquals(5, courierResponses.size());
 
         double[] expectedDeliveryTimes = {3.98,1.78,1.42,0.85,4.19};
-        assertValues(pkgIds, packageDeliveryCostAndTimeEstimationInfos, expectedDeliveryTimes);
+        assertValues(pkgIds, courierResponses, expectedDeliveryTimes);
     }
 
     private void assertValues(String[] pkgIds,
-                              List<PackageDeliveryCostAndTimeEstimationInfo> packageDeliveryCostAndTimeEstimationInfos,
+                              List<CourierResponse> courierResponses,
                               double[] expectedDeliveryTimes) {
-        for(int i = 0 ; i < packageDeliveryCostAndTimeEstimationInfos.size(); i++){
-            PackageDeliveryCostAndTimeEstimationInfo item = packageDeliveryCostAndTimeEstimationInfos.get(i);
+        for(int i = 0; i < courierResponses.size(); i++){
+            CourierResponse item = courierResponses.get(i);
             assertEquals(pkgIds[i],item.getPackageId());
             assertEquals(expectedDeliveryTimes[i],item.getEstimatedDeliveryTime());
         }
@@ -71,9 +71,9 @@ public class PackageDeliveryTimeEstimationServiceImplTest {
         short[] wts = {50,50,175,50,27,26};
         short[] dists = {30,125,100,60,95,10};
         String[] offrCodes = {"OFR001","OFFR0008","OFFR003","OFFR002","NA","NA"};
-        InputPackage[] inputPackages = new InputPackage[pkgIds.length];
+        CourierRequest[] courierRequests = new CourierRequest[pkgIds.length];
         for(int i = 0 ; i < pkgIds.length; i++){
-            inputPackages[i] = new InputPackage(
+            courierRequests[i] = new CourierRequest(
                     Package.builder().packageId(pkgIds[i])
                             .weight(wts[i]).dist(dists[i]).build(), offrCodes[i]);
 
@@ -81,10 +81,10 @@ public class PackageDeliveryTimeEstimationServiceImplTest {
         VehicleInformation vehicleInformation = VehicleInformation.builder().maxCarriableWt((short) 200)
                 .maxSpeed((short) 70).noOfVehicle((short) 2).build();
 
-        List<PackageDeliveryCostAndTimeEstimationInfo> packageDeliveryCostAndTimeEstimationInfos =
-                calcEstimatedDeliveryAndPrint(inputPackages, vehicleInformation);
+        List<CourierResponse> courierResponses =
+                calcEstimatedDeliveryAndPrint(courierRequests, vehicleInformation);
         double[] expectedDeliveryTimes = {0.42,1.78,1.42,0.85,1.35,2.98};
-        assertValues(pkgIds, packageDeliveryCostAndTimeEstimationInfos, expectedDeliveryTimes);
+        assertValues(pkgIds, courierResponses, expectedDeliveryTimes);
 
     }
 
@@ -94,9 +94,9 @@ public class PackageDeliveryTimeEstimationServiceImplTest {
         short[] wts = {50,50,175,50,27,200};
         short[] dists = {30,125,100,60,95,10};
         String[] offrCodes = {"OFR001","OFFR0008","OFFR003","OFFR002","NA","NA"};
-        InputPackage[] inputPackages = new InputPackage[pkgIds.length];
+        CourierRequest[] courierRequests = new CourierRequest[pkgIds.length];
         for(int i = 0 ; i < pkgIds.length; i++){
-            inputPackages[i] = new InputPackage(
+            courierRequests[i] = new CourierRequest(
                     Package.builder().packageId(pkgIds[i])
                             .weight(wts[i]).dist(dists[i]).build(), offrCodes[i]);
 
@@ -104,10 +104,10 @@ public class PackageDeliveryTimeEstimationServiceImplTest {
         VehicleInformation vehicleInformation = VehicleInformation.builder().maxCarriableWt((short) 200)
                 .maxSpeed((short) 70).noOfVehicle((short) 2).build();
 
-        List<PackageDeliveryCostAndTimeEstimationInfo> packageDeliveryCostAndTimeEstimationInfos =
-                calcEstimatedDeliveryAndPrint(inputPackages, vehicleInformation);
+        List<CourierResponse> courierResponses =
+                calcEstimatedDeliveryAndPrint(courierRequests, vehicleInformation);
         double[] expectedDeliveryTimes = {0.42,1.78,1.7,0.85,1.35,0.14};
-        assertValues(pkgIds, packageDeliveryCostAndTimeEstimationInfos, expectedDeliveryTimes);
+        assertValues(pkgIds, courierResponses, expectedDeliveryTimes);
 
     }
 
@@ -117,9 +117,9 @@ public class PackageDeliveryTimeEstimationServiceImplTest {
         short[] wts = {50,50,175,50,25,25};
         short[] dists = {30,125,100,60,95,10};
         String[] offrCodes = {"OFR001","OFFR0008","OFFR003","OFFR002","NA","NA"};
-        InputPackage[] inputPackages = new InputPackage[pkgIds.length];
+        CourierRequest[] courierRequests = new CourierRequest[pkgIds.length];
         for(int i = 0 ; i < pkgIds.length; i++){
-            inputPackages[i] = new InputPackage(
+            courierRequests[i] = new CourierRequest(
                     Package.builder().packageId(pkgIds[i])
                             .weight(wts[i]).dist(dists[i]).build(), offrCodes[i]);
 
@@ -127,10 +127,10 @@ public class PackageDeliveryTimeEstimationServiceImplTest {
         VehicleInformation vehicleInformation = VehicleInformation.builder().maxCarriableWt((short) 200)
                 .maxSpeed((short) 70).noOfVehicle((short) 2).build();
 
-        List<PackageDeliveryCostAndTimeEstimationInfo> packageDeliveryCostAndTimeEstimationInfos =
-                calcEstimatedDeliveryAndPrint(inputPackages, vehicleInformation);
+        List<CourierResponse> courierResponses =
+                calcEstimatedDeliveryAndPrint(courierRequests, vehicleInformation);
         double[] expectedDeliveryTimes = {0.42,1.78,1.42,0.85,1.35,0.14};
-        assertValues(pkgIds, packageDeliveryCostAndTimeEstimationInfos, expectedDeliveryTimes);
+        assertValues(pkgIds, courierResponses, expectedDeliveryTimes);
 
     }
 
@@ -140,9 +140,9 @@ public class PackageDeliveryTimeEstimationServiceImplTest {
         short[] wts = {50,50,175,50,25,25,190};
         short[] dists = {30,125,100,60,95,10,21};
         String[] offrCodes = {"OFR001","OFFR0008","OFFR003","OFFR002","NA","NA","NA"};
-        InputPackage[] inputPackages = new InputPackage[pkgIds.length];
+        CourierRequest[] courierRequests = new CourierRequest[pkgIds.length];
         for(int i = 0 ; i < pkgIds.length; i++){
-            inputPackages[i] = new InputPackage(
+            courierRequests[i] = new CourierRequest(
                     Package.builder().packageId(pkgIds[i])
                             .weight(wts[i]).dist(dists[i]).build(), offrCodes[i]);
 
@@ -150,10 +150,10 @@ public class PackageDeliveryTimeEstimationServiceImplTest {
         VehicleInformation vehicleInformation = VehicleInformation.builder().maxCarriableWt((short) 200)
                 .maxSpeed((short) 70).noOfVehicle((short) 2).build();
 
-        List<PackageDeliveryCostAndTimeEstimationInfo> packageDeliveryCostAndTimeEstimationInfos =
-                calcEstimatedDeliveryAndPrint(inputPackages, vehicleInformation);
+        List<CourierResponse> courierResponses =
+                calcEstimatedDeliveryAndPrint(courierRequests, vehicleInformation);
         double[] expectedDeliveryTimes = {0.42,1.78,2.02,0.85,1.35,0.14,0.3};
-        assertValues(pkgIds, packageDeliveryCostAndTimeEstimationInfos, expectedDeliveryTimes);
+        assertValues(pkgIds, courierResponses, expectedDeliveryTimes);
 
     }
 
@@ -163,9 +163,9 @@ public class PackageDeliveryTimeEstimationServiceImplTest {
         short[] wts = {200,200,200,200,200,200,200};
         short[] dists = {30,125,100,60,95,10,21};
         String[] offrCodes = {"OFR001","OFFR0008","OFFR003","OFFR002","NA","NA","NA"};
-        InputPackage[] inputPackages = new InputPackage[pkgIds.length];
+        CourierRequest[] courierRequests = new CourierRequest[pkgIds.length];
         for(int i = 0 ; i < pkgIds.length; i++){
-            inputPackages[i] = new InputPackage(
+            courierRequests[i] = new CourierRequest(
                     Package.builder().packageId(pkgIds[i])
                             .weight(wts[i]).dist(dists[i]).build(), offrCodes[i]);
 
@@ -173,10 +173,10 @@ public class PackageDeliveryTimeEstimationServiceImplTest {
         VehicleInformation vehicleInformation = VehicleInformation.builder().maxCarriableWt((short) 200)
                 .maxSpeed((short) 70).noOfVehicle((short) 2).build();
 
-        List<PackageDeliveryCostAndTimeEstimationInfo> packageDeliveryCostAndTimeEstimationInfos =
-                calcEstimatedDeliveryAndPrint(inputPackages, vehicleInformation);
+        List<CourierResponse> courierResponses =
+                calcEstimatedDeliveryAndPrint(courierRequests, vehicleInformation);
         double[] expectedDeliveryTimes = {0.7,5.6,3.72,1.45,2.47,0.14,0.3};
-        assertValues(pkgIds, packageDeliveryCostAndTimeEstimationInfos, expectedDeliveryTimes);
+        assertValues(pkgIds, courierResponses, expectedDeliveryTimes);
 
     }
 
@@ -186,9 +186,9 @@ public class PackageDeliveryTimeEstimationServiceImplTest {
         short[] wts = {199,200,199,200,200,199,200};
         short[] dists = {30,125,100,60,95,10,21};
         String[] offrCodes = {"OFR001","OFFR0008","OFFR003","OFFR002","NA","NA","NA"};
-        InputPackage[] inputPackages = new InputPackage[pkgIds.length];
+        CourierRequest[] courierRequests = new CourierRequest[pkgIds.length];
         for(int i = 0 ; i < pkgIds.length; i++){
-            inputPackages[i] = new InputPackage(
+            courierRequests[i] = new CourierRequest(
                     Package.builder().packageId(pkgIds[i])
                             .weight(wts[i]).dist(dists[i]).build(), offrCodes[i]);
 
@@ -196,10 +196,10 @@ public class PackageDeliveryTimeEstimationServiceImplTest {
         VehicleInformation vehicleInformation = VehicleInformation.builder().maxCarriableWt((short) 200)
                 .maxSpeed((short) 70).noOfVehicle((short) 2).build();
 
-        List<PackageDeliveryCostAndTimeEstimationInfo> packageDeliveryCostAndTimeEstimationInfos =
-                calcEstimatedDeliveryAndPrint(inputPackages, vehicleInformation);
+        List<CourierResponse> courierResponses =
+                calcEstimatedDeliveryAndPrint(courierRequests, vehicleInformation);
         double[] expectedDeliveryTimes = {4,3.48,5.84,0.85,1.95,3.44,0.3};
-        assertValues(pkgIds, packageDeliveryCostAndTimeEstimationInfos, expectedDeliveryTimes);
+        assertValues(pkgIds, courierResponses, expectedDeliveryTimes);
     }
 
     @Test
@@ -208,9 +208,9 @@ public class PackageDeliveryTimeEstimationServiceImplTest {
         short[] wts = {199,200,199,199,200,1,200};
         short[] dists = {30,125,100,60,95,10,21};
         String[] offrCodes = {"OFR001","OFFR0008","OFFR003","OFFR002","NA","NA","NA"};
-        InputPackage[] inputPackages = new InputPackage[pkgIds.length];
+        CourierRequest[] courierRequests = new CourierRequest[pkgIds.length];
         for(int i = 0 ; i < pkgIds.length; i++){
-            inputPackages[i] = new InputPackage(
+            courierRequests[i] = new CourierRequest(
                     Package.builder().packageId(pkgIds[i])
                             .weight(wts[i]).dist(dists[i]).build(), offrCodes[i]);
 
@@ -218,16 +218,16 @@ public class PackageDeliveryTimeEstimationServiceImplTest {
         VehicleInformation vehicleInformation = VehicleInformation.builder().maxCarriableWt((short) 200)
                 .maxSpeed((short) 70).noOfVehicle((short) 2).build();
 
-        List<PackageDeliveryCostAndTimeEstimationInfo> packageDeliveryCostAndTimeEstimationInfos =
-                calcEstimatedDeliveryAndPrint(inputPackages, vehicleInformation);
+        List<CourierResponse> courierResponses =
+                calcEstimatedDeliveryAndPrint(courierRequests, vehicleInformation);
         double[] expectedDeliveryTimes = {3.72,4.62,1.42,4.99,1.95,0.14,0.3};
-        assertValues(pkgIds, packageDeliveryCostAndTimeEstimationInfos, expectedDeliveryTimes);
+        assertValues(pkgIds, courierResponses, expectedDeliveryTimes);
 
     }
 
-    private List<PackageDeliveryCostAndTimeEstimationInfo> calcEstimatedDeliveryAndPrint(InputPackage[] inputPackages, VehicleInformation vehicleInformation) {
-        List<PackageDeliveryCostAndTimeEstimationInfo> deliveries = getDeliveryTimeEstimationService()
-                .calculateEstimatedDelivery(inputPackages, vehicleInformation, (short)100);
+    private List<CourierResponse> calcEstimatedDeliveryAndPrint(CourierRequest[] courierRequests, VehicleInformation vehicleInformation) {
+        List<CourierResponse> deliveries = getDeliveryTimeEstimationService()
+                .calculateEstimatedDelivery(courierRequests, vehicleInformation, (short)100);
         return deliveries;
     }
 
@@ -237,9 +237,9 @@ public class PackageDeliveryTimeEstimationServiceImplTest {
         short[] wts = {200,200,200,200,200,200,200};
         short[] dists = {30,125,100,60,95,10,21};
         String[] offrCodes = {"OFR001","OFFR0008","OFFR003","OFFR002","NA","NA","NA"};
-        InputPackage[] inputPackages = new InputPackage[pkgIds.length];
+        CourierRequest[] courierRequests = new CourierRequest[pkgIds.length];
         for(int i = 0 ; i < pkgIds.length; i++){
-            inputPackages[i] = new InputPackage(
+            courierRequests[i] = new CourierRequest(
                     Package.builder().packageId(pkgIds[i])
                             .weight(wts[i]).dist(dists[i]).build(), offrCodes[i]);
 
@@ -247,23 +247,23 @@ public class PackageDeliveryTimeEstimationServiceImplTest {
         VehicleInformation vehicleInformation = VehicleInformation.builder().maxCarriableWt((short) 200)
                 .maxSpeed((short) 70).noOfVehicle((short) 10).build();
 
-        List<PackageDeliveryCostAndTimeEstimationInfo> packageDeliveryCostAndTimeEstimationInfos =
-                calcEstimatedDeliveryAndPrint(inputPackages, vehicleInformation);
+        List<CourierResponse> courierResponses =
+                calcEstimatedDeliveryAndPrint(courierRequests, vehicleInformation);
         double[] expectedDeliveryTimes = {0.42,1.78,1.42,0.85,1.35,0.14,0.3};
-        assertValues(pkgIds, packageDeliveryCostAndTimeEstimationInfos, expectedDeliveryTimes);
+        assertValues(pkgIds, courierResponses, expectedDeliveryTimes);
 
     }
 
     @Test
     void testCalculateEstimatedDeliveryOfConsequentWts(){
 
-        InputPackage[] inputPackages = new InputPackage[5];
+        CourierRequest[] courierRequests = new CourierRequest[5];
         String[] pkgIds = {"PKG1","PKG2","PKG3","PKG4","PKG5"};
         short[] wts = {194,195,196,197,198};
         short[] dists = {30,125,100,60,95};
         String[] offrCodes = {"OFR001","OFFR0008","OFFR003","OFR002","NA"};
         for(int i = 0 ; i < 5; i++){
-            inputPackages[i] = new InputPackage(
+            courierRequests[i] = new CourierRequest(
                     Package.builder().packageId(pkgIds[i])
                             .weight(wts[i]).dist(dists[i]).build(), offrCodes[i]);
 
@@ -271,23 +271,23 @@ public class PackageDeliveryTimeEstimationServiceImplTest {
         VehicleInformation vehicleInformation = VehicleInformation.builder().maxCarriableWt((short) 200)
                 .maxSpeed((short) 70).noOfVehicle((short) 2).build();
 
-        List<PackageDeliveryCostAndTimeEstimationInfo> packageDeliveryCostAndTimeEstimationInfos =
-                calcEstimatedDeliveryAndPrint(inputPackages, vehicleInformation);
+        List<CourierResponse> courierResponses =
+                calcEstimatedDeliveryAndPrint(courierRequests, vehicleInformation);
         double[] expectedDeliveryTimes = {4.96,4.48,3.12,0.85,1.35};
-        assertValues(pkgIds, packageDeliveryCostAndTimeEstimationInfos, expectedDeliveryTimes);
+        assertValues(pkgIds, courierResponses, expectedDeliveryTimes);
 
     }
 
     @Test
     void testCalculateEstimatedDeliveryOfConsequentWtsWithDuplicate(){
 
-        InputPackage[] inputPackages = new InputPackage[5];
+        CourierRequest[] courierRequests = new CourierRequest[5];
         String[] pkgIds = {"PKG1","PKG2","PKG3","PKG4","PKG5"};
         short[] wts = {194,195,196,196,198};
         short[] dists = {30,125,100,60,95};
         String[] offrCodes = {"OFR001","OFFR0008","OFFR003","OFR002","NA"};
         for(int i = 0 ; i < 5; i++){
-            inputPackages[i] = new InputPackage(
+            courierRequests[i] = new CourierRequest(
                     Package.builder().packageId(pkgIds[i])
                             .weight(wts[i]).dist(dists[i]).build(), offrCodes[i]);
 
@@ -295,10 +295,10 @@ public class PackageDeliveryTimeEstimationServiceImplTest {
         VehicleInformation vehicleInformation = VehicleInformation.builder().maxCarriableWt((short) 200)
                 .maxSpeed((short) 70).noOfVehicle((short) 2).build();
 
-        List<PackageDeliveryCostAndTimeEstimationInfo> packageDeliveryCostAndTimeEstimationInfos =
-                calcEstimatedDeliveryAndPrint(inputPackages, vehicleInformation);
+        List<CourierResponse> courierResponses =
+                calcEstimatedDeliveryAndPrint(courierRequests, vehicleInformation);
         double[] expectedDeliveryTimes = {4.96,4.48,3.12,0.85,1.35};
-        assertValues(pkgIds, packageDeliveryCostAndTimeEstimationInfos, expectedDeliveryTimes);
+        assertValues(pkgIds, courierResponses, expectedDeliveryTimes);
 
     }
 
@@ -306,13 +306,13 @@ public class PackageDeliveryTimeEstimationServiceImplTest {
     @Test
     void testCalculateEstimatedDeliveryWithWtMoreThanAllowed(){
 
-        InputPackage[] inputPackages = new InputPackage[5];
+        CourierRequest[] courierRequests = new CourierRequest[5];
         String[] pkgIds = {"PKG1","PKG2","PKG3","PKG4","PKG5"};
         short[] wts = {194,195,196,196,220};
         short[] dists = {30,125,100,60,95};
         String[] offrCodes = {"OFR001","OFFR0008","OFFR003","OFR002","NA"};
         for(int i = 0 ; i < 5; i++){
-            inputPackages[i] = new InputPackage(
+            courierRequests[i] = new CourierRequest(
                     Package.builder().packageId(pkgIds[i])
                             .weight(wts[i]).dist(dists[i]).build(), offrCodes[i]);
 
@@ -324,35 +324,35 @@ public class PackageDeliveryTimeEstimationServiceImplTest {
                 InvalidValueException.class,
                 () -> {
                     getDeliveryTimeEstimationService()
-                            .calculateEstimatedDelivery(inputPackages, vehicleInformation, (short)100);
+                            .calculateEstimatedDelivery(courierRequests, vehicleInformation, (short)100);
                 });
         assertEquals("package weight is 220 more than deliverable weight 200", thrown.getMessage());
 
     }
     @Test
     void testNegativeAvailableVehicles() {
-        InputPackage[] inputPackages = getDummyInputPackages();
+        CourierRequest[] courierRequests = getDummyInputPackages();
         VehicleInformation vehicleInformation = VehicleInformation.builder().maxCarriableWt((short) 200)
                 .maxSpeed((short) 70).noOfVehicle((short) -2).build();
         InvalidValueException thrown = assertThrows(
                 InvalidValueException.class,
                 () -> {
                     getDeliveryTimeEstimationService()
-                            .calculateEstimatedDelivery(inputPackages, vehicleInformation, (short)100);
+                            .calculateEstimatedDelivery(courierRequests, vehicleInformation, (short)100);
                 });
         assertEquals("invalid value for number of vehicles -2", thrown.getMessage());
     }
 
     @Test
     void testNegativeMaxSpeed() {
-        InputPackage[] inputPackages = getDummyInputPackages();
+        CourierRequest[] courierRequests = getDummyInputPackages();
         VehicleInformation vehicleInformation = VehicleInformation.builder().maxCarriableWt((short) 200)
                 .maxSpeed((short) -70).noOfVehicle((short) 2).build();
         InvalidValueException thrown = assertThrows(
                 InvalidValueException.class,
                 () -> {
                     getDeliveryTimeEstimationService()
-                            .calculateEstimatedDelivery(inputPackages, vehicleInformation, (short)100);
+                            .calculateEstimatedDelivery(courierRequests, vehicleInformation, (short)100);
                 });
         assertEquals("invalid value for max speed -70", thrown.getMessage());
     }
@@ -372,69 +372,69 @@ public class PackageDeliveryTimeEstimationServiceImplTest {
 
     @Test
     void testPackagesNull() {
-        InputPackage[] inputPackages = new InputPackage[1];
+        CourierRequest[] courierRequests = new CourierRequest[1];
         VehicleInformation vehicleInformation = VehicleInformation.builder().maxCarriableWt((short) 200)
                 .maxSpeed((short) -70).noOfVehicle((short) 2).build();
         AssertionError thrown = assertThrows(
                 AssertionError.class,
                 () -> {
                     getDeliveryTimeEstimationService()
-                            .calculateEstimatedDelivery(inputPackages, vehicleInformation, (short)100);
+                            .calculateEstimatedDelivery(courierRequests, vehicleInformation, (short)100);
                 });
         assertEquals("package should not be null", thrown.getMessage());
     }
 
     @Test
     void testPackageDeliveryInputNull() {
-        InputPackage[] inputPackages = getDummyInputPackages();
+        CourierRequest[] courierRequests = getDummyInputPackages();
         AssertionError thrown = assertThrows(
                 AssertionError.class,
                 () -> {
                     getDeliveryTimeEstimationService()
-                            .calculateEstimatedDelivery(inputPackages, null, (short)100);
+                            .calculateEstimatedDelivery(courierRequests, null, (short)100);
                 });
         assertEquals("package delivery input should not be null", thrown.getMessage());
     }
     @Test
     void testBaseDeliveryCostValueNegative() {
-        InputPackage[] inputPackages = getDummyInputPackages();
+        CourierRequest[] courierRequests = getDummyInputPackages();
         VehicleInformation vehicleInformation = VehicleInformation.builder().maxCarriableWt((short) 200)
                 .maxSpeed((short) 70).noOfVehicle((short) 2).build();
         AssertionError thrown = assertThrows(
                 AssertionError.class,
                 () -> {
                     getDeliveryTimeEstimationService()
-                            .calculateEstimatedDelivery(inputPackages, vehicleInformation, (short)-100);
+                            .calculateEstimatedDelivery(courierRequests, vehicleInformation, (short)-100);
                 });
         assertEquals("base delivery cost should be between 1 and 32767", thrown.getMessage());
     }
     @Test
     void testNegativeCarriableMaxWt() {
-        InputPackage[] inputPackages = getDummyInputPackages();
+        CourierRequest[] courierRequests = getDummyInputPackages();
         VehicleInformation vehicleInformation = VehicleInformation.builder().maxCarriableWt((short) -19)
                 .maxSpeed((short) 70).noOfVehicle((short) 2).build();
         InvalidValueException thrown = assertThrows(
                 InvalidValueException.class,
                 () -> {
                     getDeliveryTimeEstimationService()
-                            .calculateEstimatedDelivery(inputPackages, vehicleInformation, (short)100);
+                            .calculateEstimatedDelivery(courierRequests, vehicleInformation, (short)100);
                 });
         assertEquals("invalid value for max carriable weight -19", thrown.getMessage());
     }
 
-    private InputPackage[] getDummyInputPackages() {
-        InputPackage[] inputPackages = new InputPackage[5];
+    private CourierRequest[] getDummyInputPackages() {
+        CourierRequest[] courierRequests = new CourierRequest[5];
         String[] pkgIds = {"PKG1","PKG2","PKG3","PKG4","PKG5"};
         short[] wts = {194,195,196,196,198};
         short[] dists = {30,125,100,60,95};
         String[] offrCodes = {"OFR001","OFFR0008","OFFR003","OFR002","NA"};
         for(int i = 0 ; i < 5; i++){
-            inputPackages[i] = new InputPackage(
+            courierRequests[i] = new CourierRequest(
                     Package.builder().packageId(pkgIds[i])
                             .weight(wts[i]).dist(dists[i]).build(), offrCodes[i]);
 
         }
-        return inputPackages;
+        return courierRequests;
     }
 
 }

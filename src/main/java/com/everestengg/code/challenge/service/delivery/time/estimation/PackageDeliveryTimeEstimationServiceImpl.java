@@ -1,9 +1,10 @@
 package com.everestengg.code.challenge.service.delivery.time.estimation;
 
 import com.everestengg.code.challenge.exceptions.InvalidValueException;
-import com.everestengg.code.challenge.model.courier.PackageDeliveryCostAndTimeEstimationInfo;
-import com.everestengg.code.challenge.vo.InputPackage;
+import com.everestengg.code.challenge.vo.courier.CourierResponse;
+import com.everestengg.code.challenge.vo.courier.CourierRequest;
 import com.everestengg.code.challenge.vo.VehicleInformation;
+import com.everestengg.code.challenge.vo.courier.Package;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -49,66 +50,66 @@ public class PackageDeliveryTimeEstimationServiceImpl implements PackageDelivery
     List<PackageDeliveryInputValidator> validators = new ArrayList<>();
     /**
      *
-     * @param inputPackages packages to be delivered
+     * @param courierRequests packages to be delivered
      * @param vehicleInformation captures information like number of available vehicles, max speed, carriable weight
      * @param baseDeliveryCost base delivery cost
      * @return
      */
     @Override
-    public List<PackageDeliveryCostAndTimeEstimationInfo> calculateEstimatedDelivery(InputPackage[] inputPackages,
-                                                                                     VehicleInformation vehicleInformation,
-                                                                                     short baseDeliveryCost) {
-        assertNotNull(inputPackages, vehicleInformation,baseDeliveryCost);
+    public List<CourierResponse> calculateEstimatedDelivery(CourierRequest[] courierRequests,
+                                                            VehicleInformation vehicleInformation,
+                                                            short baseDeliveryCost) {
+        assertNotNull(courierRequests, vehicleInformation,baseDeliveryCost);
         validators.forEach( e-> e.validate(vehicleInformation));
-        validatePackageWtsAgainstAllowedWts(inputPackages, vehicleInformation);
+        validatePackageWtsAgainstAllowedWts(courierRequests, vehicleInformation);
         PriorityQueue<VehicleAvailability> pq = createPriorityQueue(vehicleInformation);
         initPriorityQueue(vehicleInformation, pq);
-        InputPackage[] copy = Arrays.copyOf(inputPackages,inputPackages.length);
-        int len = inputPackages.length;
+        CourierRequest[] copy = Arrays.copyOf(courierRequests, courierRequests.length);
+        int len = courierRequests.length;
 
-        List<PackageDeliveryCostAndTimeEstimationInfo> packageDeliveryCostAndTimeEstimationInfo = new ArrayList<>(len);
+        List<CourierResponse> courierResponse = new ArrayList<>(len);
         sortPackageDetails(copy); //sort packages by weight and if wait is same sort by distance
         int remainingPackages = len;
 
         Set<Integer> deliveredPkgIndices = new LinkedHashSet<>(len); //used to hold the visited packages and avoid revisiting
         while (remainingPackages > 0) { //repeat loop until all the packages are delivered
             remainingPackages = calculatePackageDeliveryTimeAndDeliver(vehicleInformation, pq,
-                    copy, packageDeliveryCostAndTimeEstimationInfo, remainingPackages, deliveredPkgIndices);
+                    copy, courierResponse, remainingPackages, deliveredPkgIndices);
         }
         LOGGER.debug("after delivery pq {}",pq);
         pq.clear();
-        return arrangeAsInInputOrder(inputPackages, packageDeliveryCostAndTimeEstimationInfo);
+        return arrangeAsInInputOrder(courierRequests, courierResponse);
     }
 
     /**
      * Validates package weights against max carriable weight
-     * @param inputPackages @{@link com.everestengg.code.challenge.vo.Package} to be delivered
+     * @param courierRequests @{@link Package} to be delivered
      * @param vehicleInformation @{@link VehicleInformation} vehicle information
      * @throws InvalidValueException
      */
-    private void validatePackageWtsAgainstAllowedWts(InputPackage[] inputPackages,
+    private void validatePackageWtsAgainstAllowedWts(CourierRequest[] courierRequests,
                                                      VehicleInformation vehicleInformation) throws InvalidValueException{
-        for(InputPackage inputPackage : inputPackages){
-            if(inputPackage.getPackageDetails().getWeight() > vehicleInformation.getMaxCarriableWt()){
+        for(CourierRequest courierRequest : courierRequests){
+            if(courierRequest.getPackageDetails().getWeight() > vehicleInformation.getMaxCarriableWt()){
                 throw new InvalidValueException(String.format(
                         "package weight is %s more than deliverable weight %s",
-                        inputPackage.getPackageDetails().getWeight(), vehicleInformation.getMaxCarriableWt()));
+                        courierRequest.getPackageDetails().getWeight(), vehicleInformation.getMaxCarriableWt()));
             }
         }
     }
 
     /**
      *
-     * @param inputPackages packages to be delivered
+     * @param courierRequests packages to be delivered
      * @param vehicleInformation vehicles used for delivery
      * @param baseDeliveryCost base delivery cost
      */
-    private void assertNotNull(InputPackage[] inputPackages,
+    private void assertNotNull(CourierRequest[] courierRequests,
                                VehicleInformation vehicleInformation,
                                short baseDeliveryCost){
-        assert inputPackages != null : "input packages should not be null";
+        assert courierRequests != null : "input packages should not be null";
         assert vehicleInformation != null : "package delivery input should not be null";
-        Arrays.stream(inputPackages).forEach( item -> {
+        Arrays.stream(courierRequests).forEach(item -> {
             assert item != null : "package should not be null";
         });
         assert baseDeliveryCost >= 0 : "base delivery cost should be between 1 and "+Short.MAX_VALUE;
@@ -117,30 +118,30 @@ public class PackageDeliveryTimeEstimationServiceImpl implements PackageDelivery
 
     /**
      *
-     * @param inputPackages input packages
-     * @param packageDeliveryCostAndTimeEstimationInfo package delivery and cost information
+     * @param courierRequests input packages
+     * @param courierResponse package delivery and cost information
      * @return
      */
-    private List<PackageDeliveryCostAndTimeEstimationInfo> arrangeAsInInputOrder(InputPackage[] inputPackages,
-                                                                   List<PackageDeliveryCostAndTimeEstimationInfo>
-                                                                           packageDeliveryCostAndTimeEstimationInfo) {
-        Map<String, PackageDeliveryCostAndTimeEstimationInfo> result =  packageDeliveryCostAndTimeEstimationInfo.stream()
-                .collect(Collectors.toMap(PackageDeliveryCostAndTimeEstimationInfo::getPackageId, Function.identity()));
+    private List<CourierResponse> arrangeAsInInputOrder(CourierRequest[] courierRequests,
+                                                        List<CourierResponse>
+                                                                courierResponse) {
+        Map<String, CourierResponse> result =  courierResponse.stream()
+                .collect(Collectors.toMap(CourierResponse::getPackageId, Function.identity()));
 
-        List<PackageDeliveryCostAndTimeEstimationInfo> packageDeliveryCostAndTimeEstimationInfos = new ArrayList<>(inputPackages.length);
-        for(InputPackage inputPackage : inputPackages){
-            packageDeliveryCostAndTimeEstimationInfos.add(result.get(
-                            inputPackage.getPackageDetails().getPackageId()).toBuilder()
-                    .packageId(inputPackage.getPackageDetails().getPackageId()).build());
+        List<CourierResponse> courierResponses = new ArrayList<>(courierRequests.length);
+        for(CourierRequest courierRequest : courierRequests){
+            courierResponses.add(result.get(
+                            courierRequest.getPackageDetails().getPackageId()).toBuilder()
+                    .packageId(courierRequest.getPackageDetails().getPackageId()).build());
 
         }
-        return packageDeliveryCostAndTimeEstimationInfos;
+        return courierResponses;
     }
 
     private int calculatePackageDeliveryTimeAndDeliver(VehicleInformation vehicleInformation,
                                                        PriorityQueue<VehicleAvailability> pq,
-                                                       InputPackage[] copy,
-                                                       List<PackageDeliveryCostAndTimeEstimationInfo> packageDeliveryCostAndTimeEstimationInfo,
+                                                       CourierRequest[] copy,
+                                                       List<CourierResponse> courierResponse,
                                                        int remainingPackages, Set<Integer> deliveredPkgIndices) {
         short availableVehicles = vehicleInformation.getNoOfVehicle();
         double currentTripEstimatedDelivery = 0;
@@ -153,7 +154,7 @@ public class PackageDeliveryTimeEstimationServiceImpl implements PackageDelivery
             currentTripEstimatedDelivery = getCurrentTripEstimatedDelivery(copy, vehicleInformation.getMaxSpeed(),
                     deliverablePackageIds);
             VehicleAvailability vehicleAvailability = pq.poll();
-            packageDeliveryCostAndTimeEstimationInfo.addAll(updatePackageDeliveryDeliveryEstimation(copy,
+            courierResponse.addAll(updatePackageDeliveryDeliveryEstimation(copy,
                     vehicleInformation.getMaxSpeed(), deliverablePackageIds,vehicleAvailability));
             LOGGER.debug("currentTripEstimatedDelivery {} ",currentTripEstimatedDelivery);
             deliveredPkgIndices.addAll(deliverablePackageIds);//update delivered packages indices
@@ -192,10 +193,10 @@ public class PackageDeliveryTimeEstimationServiceImpl implements PackageDelivery
 
     /**
      * sorts packages by weight and then distance in ascending order
-     * @param inputPackages packages to be delivered
+     * @param courierRequests packages to be delivered
      */
-    private  void sortPackageDetails(InputPackage[] inputPackages) {
-        Arrays.sort(inputPackages, 0, inputPackages.length, (o1, o2) -> {
+    private  void sortPackageDetails(CourierRequest[] courierRequests) {
+        Arrays.sort(courierRequests, 0, courierRequests.length, (o1, o2) -> {
             if(o1.getPackageDetails().getWeight() == o2.getPackageDetails().getWeight()){
                 return  o2.getPackageDetails().getDist() - o1.getPackageDetails().getDist();
             }
@@ -206,17 +207,17 @@ public class PackageDeliveryTimeEstimationServiceImpl implements PackageDelivery
 
     /**
      *
-     * @param inputPackages packages to be delivered
+     * @param courierRequests packages to be delivered
      * @param maxSpeed max speed delivery vehicle can travel
      * @param deliverablePackageIds the delivered package indices so that wont be re-proecessed
      * @return estimated delivery of selected packages for the vehicle in context
      */
-    private double getCurrentTripEstimatedDelivery(InputPackage[] inputPackages, short maxSpeed,
-                                                         Set<Integer> deliverablePackageIds) {
+    private double getCurrentTripEstimatedDelivery(CourierRequest[] courierRequests, short maxSpeed,
+                                                   Set<Integer> deliverablePackageIds) {
         double currentTripEstimatedDelivery = 0;
         if(!deliverablePackageIds.isEmpty()){
             //calculate current trip delivery
-            currentTripEstimatedDelivery = estimatedDelivery(inputPackages, deliverablePackageIds, maxSpeed);
+            currentTripEstimatedDelivery = estimatedDelivery(courierRequests, deliverablePackageIds, maxSpeed);
         }
         LOGGER.debug("currentTripEstimatedDelivery {}",currentTripEstimatedDelivery);
         return currentTripEstimatedDelivery;
@@ -224,30 +225,30 @@ public class PackageDeliveryTimeEstimationServiceImpl implements PackageDelivery
 
     /**
      *
-     * @param inputPackages packages to be delivered
+     * @param courierRequests packages to be delivered
      * @param maxSpeed max speed vehicle can travel
      * @param deliverablePkgIndices packages planned for delivery in current trip
-     * @param vehicleAvailability available vehicle for current @{@link InputPackage}'s delivery
+     * @param vehicleAvailability available vehicle for current @{@link CourierRequest}'s delivery
      * @return list of packages to be delivered in current trip
      */
-    private List<PackageDeliveryCostAndTimeEstimationInfo>
-    updatePackageDeliveryDeliveryEstimation(InputPackage[] inputPackages, short maxSpeed,
+    private List<CourierResponse>
+    updatePackageDeliveryDeliveryEstimation(CourierRequest[] courierRequests, short maxSpeed,
                                             Set<Integer> deliverablePkgIndices,
                                             VehicleAvailability vehicleAvailability) {
-        List<PackageDeliveryCostAndTimeEstimationInfo> packageDeliveryCostAndTimeEstimationInfo = new ArrayList<>(deliverablePkgIndices.size());
+        List<CourierResponse> courierResponse = new ArrayList<>(deliverablePkgIndices.size());
         LOGGER.debug("vehicle availability {}",vehicleAvailability);
         for(int index : deliverablePkgIndices){
             double estimatedDeliveryPerPackage = getRoundedValue((vehicleAvailability.getWaitTime()) +
-                    ( (double) inputPackages[index].getPackageDetails().getDist() / maxSpeed));
-            packageDeliveryCostAndTimeEstimationInfo.add(PackageDeliveryCostAndTimeEstimationInfo.builder()
+                    ( (double) courierRequests[index].getPackageDetails().getDist() / maxSpeed));
+            courierResponse.add(CourierResponse.builder()
                     .estimatedDeliveryTime(estimatedDeliveryPerPackage)
-                    .packageId(inputPackages[index].getPackageDetails().getPackageId())
+                    .packageId(courierRequests[index].getPackageDetails().getPackageId())
                     .build());
 
-            LOGGER.debug("vehicle {} delivering {} delivery time {}",vehicleAvailability.getVehicleNo(),inputPackages[index],
+            LOGGER.debug("vehicle {} delivering {} delivery time {}",vehicleAvailability.getVehicleNo(), courierRequests[index],
                     estimatedDeliveryPerPackage);
         }
-        return packageDeliveryCostAndTimeEstimationInfo;
+        return courierResponse;
     }
 
     /**
@@ -261,21 +262,21 @@ public class PackageDeliveryTimeEstimationServiceImpl implements PackageDelivery
 
     /**
      *
-     * @param inputPackages packages to be delivered
+     * @param courierRequests packages to be delivered
      * @param maxWt max weight the vehicle allowed to carry
      * @param deliveredPkgIndices package indices that are already delivered
      * @return set of package indices to be delivered
      */
-    private Set<Integer> deliverPackages(InputPackage[] inputPackages, short maxWt, Set<Integer> deliveredPkgIndices) {
+    private Set<Integer> deliverPackages(CourierRequest[] courierRequests, short maxWt, Set<Integer> deliveredPkgIndices) {
         Set<Integer> deliverablePackageIds = new LinkedHashSet<>();
         short prevWt = Short.MIN_VALUE;
-        int len = inputPackages.length;
+        int len = courierRequests.length;
         for (int i = 0; i < len; i++) {
             //package is not delivered
             if (!isPackageDelivered(deliveredPkgIndices, i)) {
                 //current package indices that can be planned to package with i th index
                 Set<Integer> currIds = new LinkedHashSet<>();
-                short currentWt = getCurrentDeliverablePackagesTotalWt(inputPackages, maxWt, deliveredPkgIndices, i, currIds);
+                short currentWt = getCurrentDeliverablePackagesTotalWt(courierRequests, maxWt, deliveredPkgIndices, i, currIds);
                 LOGGER.trace("currentIds {}", currIds);
                 if (isCurrentAndPrevDelivarablePkgsAreSameSize(deliverablePackageIds, currIds)) { //logic to pick higher weight when there are equal number of packages are present
                     if (currentWt > prevWt) {
@@ -351,23 +352,23 @@ public class PackageDeliveryTimeEstimationServiceImpl implements PackageDelivery
 
     /**
      *
-     * @param inputPackages packages to be delivered
+     * @param courierRequests packages to be delivered
      * @param maxWt max weight the vehicle can carry
      * @param packagesDelivered delivered package indices
      * @param pkgIndex to be included in current trip
      * @param currIds current packages to be delivered
      * @return possible weight for delivery along with @inputPackages[pkgIndex]
      */
-    private short getCurrentDeliverablePackagesTotalWt(InputPackage[] inputPackages, short maxWt,
-                                                              Set<Integer> packagesDelivered, int pkgIndex,
-                                                              Set<Integer> currIds) {
-        int len = inputPackages.length;
-        short currentWt =  inputPackages[pkgIndex].getPackageDetails().getWeight();
+    private short getCurrentDeliverablePackagesTotalWt(CourierRequest[] courierRequests, short maxWt,
+                                                       Set<Integer> packagesDelivered, int pkgIndex,
+                                                       Set<Integer> currIds) {
+        int len = courierRequests.length;
+        short currentWt =  courierRequests[pkgIndex].getPackageDetails().getWeight();
         //is sum of current weight and jth package less than or equal to max allowable weight
         //then consider jth index with ith index
-        for (int j = pkgIndex + 1; j < len && currentWt + inputPackages[j].getPackageDetails().getWeight() <= maxWt; j++) {
+        for (int j = pkgIndex + 1; j < len && currentWt + courierRequests[j].getPackageDetails().getWeight() <= maxWt; j++) {
             if(!isPackageDelivered(packagesDelivered, j)){
-                currentWt += inputPackages[j].getPackageDetails().getWeight();
+                currentWt += courierRequests[j].getPackageDetails().getWeight();
                 currIds.add(pkgIndex);
                 currIds.add(j);
                 //break the loop as it is not possible to add any more packages
@@ -391,18 +392,18 @@ public class PackageDeliveryTimeEstimationServiceImpl implements PackageDelivery
 
     /**
      *
-     * @param inputPackages packages planned for delivery
+     * @param courierRequests packages planned for delivery
      * @param deliveryIds packages choosen for delivery
      * @param maxSpeed max speed vehicle can travel
      * @return estimated delivery
      */
-    private double estimatedDelivery(InputPackage[] inputPackages, Set<Integer> deliveryIds, short maxSpeed){
+    private double estimatedDelivery(CourierRequest[] courierRequests, Set<Integer> deliveryIds, short maxSpeed){
 
         double maxDist = Short.MIN_VALUE;
 
         for(int deliveryId : deliveryIds){
-            if(inputPackages[deliveryId].getPackageDetails().getDist() > maxDist){
-                maxDist = inputPackages[deliveryId].getPackageDetails().getDist();
+            if(courierRequests[deliveryId].getPackageDetails().getDist() > maxDist){
+                maxDist = courierRequests[deliveryId].getPackageDetails().getDist();
             }
         }
         return getRoundedValue((maxDist / maxSpeed)) ;

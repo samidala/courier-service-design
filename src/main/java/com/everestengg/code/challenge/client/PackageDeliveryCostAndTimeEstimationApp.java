@@ -1,9 +1,9 @@
 package com.everestengg.code.challenge.client;
 
 import com.everestengg.code.challenge.io.IoUtils;
-import com.everestengg.code.challenge.model.courier.PackageDeliveryCostAndTimeEstimationInfo;
+import com.everestengg.code.challenge.vo.courier.CourierResponse;
 import com.everestengg.code.challenge.service.delivery.helper.PackageDeliveryCostAndTimeEstimationServiceHelper;
-import com.everestengg.code.challenge.vo.InputPackage;
+import com.everestengg.code.challenge.vo.courier.CourierRequest;
 import com.everestengg.code.challenge.vo.VehicleInformation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,15 +27,15 @@ public class PackageDeliveryCostAndTimeEstimationApp {
             short baseDeliveryCost = IoUtils.readBaseCost(scanner);
             short noOfPackages = IoUtils.readNoOfPackages(scanner);;
 
-            InputPackage[] inputPackages = new InputPackage[noOfPackages];
+            CourierRequest[] courierRequests = new CourierRequest[noOfPackages];
             // Read packages
-            readPackages(scanner, noOfPackages, inputPackages);
+            readPackages(scanner, noOfPackages, courierRequests);
 
             // read delivery information
             VehicleInformation vehicleInformation = readDeliveryInput(scanner);
             //calculate discount for each and print
-            List<PackageDeliveryCostAndTimeEstimationInfo> result = new PackageDeliveryCostAndTimeEstimationServiceHelper()
-                    .calculateEstimatedDelivery(inputPackages, vehicleInformation, baseDeliveryCost);
+            List<CourierResponse> result = new PackageDeliveryCostAndTimeEstimationServiceHelper()
+                    .calculateEstimatedDelivery(courierRequests, vehicleInformation, baseDeliveryCost);
             printDelivery(result);
         }catch (Exception e){
             logger.error("app crashed.. error ",e);
@@ -43,12 +43,12 @@ public class PackageDeliveryCostAndTimeEstimationApp {
 
     }
 
-    private static void readPackages(Scanner scanner, short noOfPackages, InputPackage[] inputPackages) {
-        IoUtils.readPackages(scanner, noOfPackages, inputPackages);
+    private static void readPackages(Scanner scanner, short noOfPackages, CourierRequest[] courierRequests) {
+        IoUtils.readPackages(scanner, noOfPackages, courierRequests);
     }
-    private static void printDelivery(List<PackageDeliveryCostAndTimeEstimationInfo> packageDeliveryCostAndTimeEstimationInfo) {
-        for (PackageDeliveryCostAndTimeEstimationInfo packageDeliveryCostAndTimeEstimationInfo1 : packageDeliveryCostAndTimeEstimationInfo) {
-            System.out.println(packageDeliveryCostAndTimeEstimationInfo1);
+    private static void printDelivery(List<CourierResponse> courierResponse) {
+        for (CourierResponse courierResponse1 : courierResponse) {
+            System.out.println(courierResponse1);
         }
     }
 

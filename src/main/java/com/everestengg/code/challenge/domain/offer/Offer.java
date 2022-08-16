@@ -1,7 +1,7 @@
 package com.everestengg.code.challenge.domain.offer;
 
 import com.everestengg.code.challenge.exceptions.InvalidValueException;
-import com.everestengg.code.challenge.vo.Package;
+import com.everestengg.code.challenge.vo.courier.Package;
 import com.everestengg.code.challenge.service.offer.InmemoryOfferManager;
 import com.everestengg.code.challenge.service.offer.PackageRequestContext;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -42,7 +42,7 @@ public  class Offer {
      */
 
     public float calcDiscount(PackageRequestContext context){
-        Package pkg = context.getInputPackage().getPackageDetails();
+        Package pkg = context.getCourierRequest().getPackageDetails();
         if(offerCriterias == null || offerCriterias.length == 0){
             return percentage;
         }

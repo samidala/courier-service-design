@@ -8,7 +8,7 @@ import com.everestengg.code.challenge.model.csv.CsvOfferCriteria;
 import com.everestengg.code.challenge.domain.offer.Offer;
 import com.everestengg.code.challenge.domain.offer.OfferCriteria;
 import com.everestengg.code.challenge.util.CsvReader;
-import com.everestengg.code.challenge.vo.Package;
+import com.everestengg.code.challenge.vo.courier.Package;
 import com.everestengg.code.challenge.vo.Response;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;

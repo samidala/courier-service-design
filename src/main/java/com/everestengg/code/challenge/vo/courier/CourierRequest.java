@@ -1,4 +1,4 @@
-package com.everestengg.code.challenge.vo;
+package com.everestengg.code.challenge.vo.courier;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -11,7 +11,7 @@ import org.apache.commons.lang.StringUtils;
 @Getter
 @AllArgsConstructor
 @ToString
-public class InputPackage {
+public class CourierRequest {
     private Package packageDetails;
     private String offerCode;
 

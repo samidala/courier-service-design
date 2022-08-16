@@ -2,8 +2,8 @@ package com.everestengg.code.challenge.io;
 
 import com.everestengg.code.challenge.repo.offer.CsvOfferRepository;
 import com.everestengg.code.challenge.util.ValidationUtils;
-import com.everestengg.code.challenge.vo.InputPackage;
-import com.everestengg.code.challenge.vo.Package;
+import com.everestengg.code.challenge.vo.courier.CourierRequest;
+import com.everestengg.code.challenge.vo.courier.Package;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -20,7 +20,7 @@ public class IoUtils {
     private IoUtils(){
 
     }
-    public static void readPackages(Scanner scanner, short noOfPackages, InputPackage[] inputPackages) {
+    public static void readPackages(Scanner scanner, short noOfPackages, CourierRequest[] courierRequests) {
         System.out.println("enter packageId, weight, distance and offer code");
         int i = 1;
         while (i <= noOfPackages){
@@ -39,14 +39,14 @@ public class IoUtils {
                 continue;
             }
             String offerCode = scanner.next();
-            InputPackage inputPackage = new InputPackage(Package.builder()
+            CourierRequest courierRequest = new CourierRequest(Package.builder()
                     .packageId(packageId)
                     .weight(weightReadResult.getValue())
                     .dist(distReadResult.getValue())
                     .build(),
                     offerCode);
-            if(ValidationUtils.isValidPackage(inputPackage)) {
-                inputPackages[i - 1] = inputPackage;
+            if(ValidationUtils.isValidPackage(courierRequest)) {
+                courierRequests[i - 1] = courierRequest;
                 i++;
             }else{
                 System.out.println("re-enter packageId, weight, distance and offer code");

@@ -1,11 +1,11 @@
 package com.everestengg.code.challenge.service;
 
 import com.everestengg.code.challenge.exceptions.InvalidValueException;
-import com.everestengg.code.challenge.model.courier.PackageDeliveryCostEstimateInfo;
+import com.everestengg.code.challenge.vo.courier.PackageDeliveryCostEstimateInfo;
 import com.everestengg.code.challenge.repo.offer.StaticOfferRepository;
 import com.everestengg.code.challenge.service.delivery.cost.estimation.PackageDeliveryCostEstimationImpl;
-import com.everestengg.code.challenge.vo.InputPackage;
-import com.everestengg.code.challenge.vo.Package;
+import com.everestengg.code.challenge.vo.courier.CourierRequest;
+import com.everestengg.code.challenge.vo.courier.Package;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -27,9 +27,9 @@ public class DeliveryCostEstimationImplTest {
         System.out.println(one.compareTo(two));
         PackageDeliveryCostEstimationImpl packageOrderImpl = new PackageDeliveryCostEstimationImpl();
         Package pkg = Package.builder().packageId("P1").weight((short) 5).dist((short) 5).build();
-        InputPackage inputPackage = new InputPackage(pkg, "OFR001");
+        CourierRequest courierRequest = new CourierRequest(pkg, "OFR001");
         PackageDeliveryCostEstimateInfo packageDeliveryCostEstimateInfo = packageOrderImpl
-                .calcCost(inputPackage, 100).getResult();
+                .calcCost(courierRequest, 100).getResult();
         packageDeliveryCostEstimateInfo.print();
         Assertions.assertEquals("P1", packageDeliveryCostEstimateInfo.getPackageId());
         Assertions.assertEquals(0, packageDeliveryCostEstimateInfo.getTotalDiscount());
@@ -40,9 +40,9 @@ public class DeliveryCostEstimationImplTest {
     void testCalcDiscountOfr001Applicable() {
         PackageDeliveryCostEstimationImpl packageOrderImpl = new PackageDeliveryCostEstimationImpl();
         Package pkg = Package.builder().packageId("P1").weight((short) 75).dist((short) 5).build();
-        InputPackage inputPackage = new InputPackage(pkg, "OFR001");
+        CourierRequest courierRequest = new CourierRequest(pkg, "OFR001");
         PackageDeliveryCostEstimateInfo packageDeliveryCostEstimateInfo = packageOrderImpl
-                .calcCost(inputPackage, 100).getResult();
+                .calcCost(courierRequest, 100).getResult();
         packageDeliveryCostEstimateInfo.print();
         Assertions.assertEquals("P1", packageDeliveryCostEstimateInfo.getPackageId());
         //100 + (75 * 10) + (5 * 5) = 875
@@ -54,9 +54,9 @@ public class DeliveryCostEstimationImplTest {
     void testCalcDiscountOfr002() {
         PackageDeliveryCostEstimationImpl packageOrderImpl = new PackageDeliveryCostEstimationImpl();
         Package pkg = Package.builder().packageId("P2").weight((short) 15).dist((short) 5).build();
-        InputPackage inputPackage = new InputPackage(pkg, "OFR002");
+        CourierRequest courierRequest = new CourierRequest(pkg, "OFR002");
         PackageDeliveryCostEstimateInfo packageDeliveryCostEstimateInfo = packageOrderImpl
-                .calcCost(inputPackage, 100).getResult();
+                .calcCost(courierRequest, 100).getResult();
         packageDeliveryCostEstimateInfo.print();
         Assertions.assertEquals("P2", packageDeliveryCostEstimateInfo.getPackageId());
         Assertions.assertEquals(0, packageDeliveryCostEstimateInfo.getTotalDiscount());
@@ -67,9 +67,9 @@ public class DeliveryCostEstimationImplTest {
     void testCalcDiscountOfr002Applicable() {
         PackageDeliveryCostEstimationImpl packageOrderImpl = new PackageDeliveryCostEstimationImpl();
         Package pkg = Package.builder().packageId("P2").weight((short) 110).dist((short) 55).build();
-        InputPackage inputPackage = new InputPackage(pkg, "OFR002");
+        CourierRequest courierRequest = new CourierRequest(pkg, "OFR002");
         PackageDeliveryCostEstimateInfo packageDeliveryCostEstimateInfo = packageOrderImpl
-                .calcCost(inputPackage, 100).getResult();
+                .calcCost(courierRequest, 100).getResult();
         packageDeliveryCostEstimateInfo.print();
         Assertions.assertEquals("P2", packageDeliveryCostEstimateInfo.getPackageId());
         //100 + (110 * 10) + (55 * 5) = 1475 and discount 103.75 (7% of 1475)
@@ -81,9 +81,9 @@ public class DeliveryCostEstimationImplTest {
     void testCalcDiscountOfr003Applicable() {
         PackageDeliveryCostEstimationImpl packageOrderImpl = new PackageDeliveryCostEstimationImpl();
         Package pkg = Package.builder().packageId("P3").weight((short) 10).dist((short) 100).build();
-        InputPackage inputPackage = new InputPackage(pkg, "OFR003");
+        CourierRequest courierRequest = new CourierRequest(pkg, "OFR003");
         PackageDeliveryCostEstimateInfo packageDeliveryCostEstimateInfo = packageOrderImpl
-                .calcCost(inputPackage, 100).getResult();
+                .calcCost(courierRequest, 100).getResult();
         packageDeliveryCostEstimateInfo.print();
         Assertions.assertEquals("P3", packageDeliveryCostEstimateInfo.getPackageId());
         Assertions.assertEquals(35, packageDeliveryCostEstimateInfo.getTotalDiscount());
@@ -94,9 +94,9 @@ public class DeliveryCostEstimationImplTest {
     void testCalcDiscountOfr003NotApplicable() {
         PackageDeliveryCostEstimationImpl packageOrderImpl = new PackageDeliveryCostEstimationImpl();
         Package pkg = Package.builder().packageId("P3").weight((short) 9).dist((short) 100).build();
-        InputPackage inputPackage = new InputPackage(pkg, "OFR003");
+        CourierRequest courierRequest = new CourierRequest(pkg, "OFR003");
         PackageDeliveryCostEstimateInfo packageDeliveryCostEstimateInfo = packageOrderImpl
-                .calcCost(inputPackage, 100).getResult();
+                .calcCost(courierRequest, 100).getResult();
         packageDeliveryCostEstimateInfo.print();
         Assertions.assertEquals("P3", packageDeliveryCostEstimateInfo.getPackageId());
         Assertions.assertEquals(0, packageDeliveryCostEstimateInfo.getTotalDiscount());
@@ -107,9 +107,9 @@ public class DeliveryCostEstimationImplTest {
     void testCalcDiscountInvalidOfferCode() {
         PackageDeliveryCostEstimationImpl packageOrderImpl = new PackageDeliveryCostEstimationImpl();
         Package pkg = Package.builder().packageId("P3").weight((short) 10).dist((short) 100).build();
-        InputPackage inputPackage = new InputPackage(pkg, "OFROO003");
+        CourierRequest courierRequest = new CourierRequest(pkg, "OFROO003");
         PackageDeliveryCostEstimateInfo packageDeliveryCostEstimateInfo = packageOrderImpl
-                .calcCost(inputPackage, 100).getResult();
+                .calcCost(courierRequest, 100).getResult();
         packageDeliveryCostEstimateInfo.print();
         Assertions.assertEquals("P3", packageDeliveryCostEstimateInfo.getPackageId());
         Assertions.assertEquals(0, packageDeliveryCostEstimateInfo.getTotalDiscount());
@@ -123,9 +123,9 @@ public class DeliveryCostEstimationImplTest {
         PackageDeliveryCostEstimationImpl packageOrderImpl = new PackageDeliveryCostEstimationImpl();
         Package pkg = Package.builder().packageId("electronics").category("electronics")
                 .weight((short) 80).dist((short) 100).build();
-        InputPackage inputPackage = new InputPackage(pkg, "OFR004");
+        CourierRequest courierRequest = new CourierRequest(pkg, "OFR004");
         PackageDeliveryCostEstimateInfo packageDeliveryCostEstimateInfo = packageOrderImpl
-                .calcCost(inputPackage, 100).getResult();
+                .calcCost(courierRequest, 100).getResult();
         packageDeliveryCostEstimateInfo.print();
         Assertions.assertEquals("electronics", packageDeliveryCostEstimateInfo.getPackageId());
         Assertions.assertEquals(700, packageDeliveryCostEstimateInfo.getTotalDiscount());
@@ -137,7 +137,7 @@ public class DeliveryCostEstimationImplTest {
 
         PackageDeliveryCostEstimationImpl packageOrderImpl = new PackageDeliveryCostEstimationImpl();
         Package pkg = Package.builder().packageId("P3").weight((short) 10).dist((short) -10).build();
-        InputPackage inputPackage = new InputPackage(pkg, "OFROO003");
+        CourierRequest courierRequest = new CourierRequest(pkg, "OFROO003");
 
         AssertionError thrown = assertThrows(
                 AssertionError.class,
@@ -148,11 +148,11 @@ public class DeliveryCostEstimationImplTest {
     void testNullPackage() {
 
         PackageDeliveryCostEstimationImpl packageOrderImpl = new PackageDeliveryCostEstimationImpl();
-        InputPackage inputPackage = new InputPackage(null, "OFROO003");
+        CourierRequest courierRequest = new CourierRequest(null, "OFROO003");
 
         AssertionError thrown = assertThrows(
                 AssertionError.class,
-                () -> packageOrderImpl.calcCost(inputPackage, 100));
+                () -> packageOrderImpl.calcCost(courierRequest, 100));
         assertEquals("package should not be null", thrown.getMessage());
     }
     @Test
@@ -160,11 +160,11 @@ public class DeliveryCostEstimationImplTest {
 
         PackageDeliveryCostEstimationImpl packageOrderImpl = new PackageDeliveryCostEstimationImpl();
         Package pkg = Package.builder().packageId("P3").weight((short) 10).dist((short) -10).build();
-        InputPackage inputPackage = new InputPackage(pkg, "OFROO003");
+        CourierRequest courierRequest = new CourierRequest(pkg, "OFROO003");
 
         InvalidValueException thrown = assertThrows(
                 InvalidValueException.class,
-                () -> packageOrderImpl.calcCost(inputPackage, 100));
+                () -> packageOrderImpl.calcCost(courierRequest, 100));
         assertEquals("invalid distance -10", thrown.getMessage());
     }
 
@@ -173,12 +173,12 @@ public class DeliveryCostEstimationImplTest {
 
         PackageDeliveryCostEstimationImpl packageOrderImpl = new PackageDeliveryCostEstimationImpl();
         Package pkg = Package.builder().packageId("P3").weight((short) -10).dist((short) 10).build();
-        InputPackage inputPackage = new InputPackage(pkg, "OFROO003");
+        CourierRequest courierRequest = new CourierRequest(pkg, "OFROO003");
 
         InvalidValueException thrown = assertThrows(
                 InvalidValueException.class,
                 () -> {
-                    packageOrderImpl.calcCost(inputPackage, 100);
+                    packageOrderImpl.calcCost(courierRequest, 100);
                 });
         assertEquals("invalid weight -10", thrown.getMessage());
     }
@@ -188,12 +188,12 @@ public class DeliveryCostEstimationImplTest {
 
         PackageDeliveryCostEstimationImpl packageOrderImpl = new PackageDeliveryCostEstimationImpl();
         Package pkg = Package.builder().packageId("").weight((short) 10).dist((short) 10).build();
-        InputPackage inputPackage = new InputPackage(pkg, "OFROO003");
+        CourierRequest courierRequest = new CourierRequest(pkg, "OFROO003");
 
         InvalidValueException thrown = assertThrows(
                 InvalidValueException.class,
                 () -> {
-                    packageOrderImpl.calcCost(inputPackage, 100);
+                    packageOrderImpl.calcCost(courierRequest, 100);
                 });
         assertEquals("invalid package ID ", thrown.getMessage());
     }
@@ -203,12 +203,12 @@ public class DeliveryCostEstimationImplTest {
 
         PackageDeliveryCostEstimationImpl packageOrderImpl = new PackageDeliveryCostEstimationImpl();
         Package pkg = Package.builder().packageId("").weight((short) 10).dist((short) 10).build();
-        InputPackage inputPackage = new InputPackage(pkg, "OFROO003");
+        CourierRequest courierRequest = new CourierRequest(pkg, "OFROO003");
 
         InvalidValueException thrown = assertThrows(
                 InvalidValueException.class,
                 () -> {
-                    packageOrderImpl.calcCost(inputPackage, -100);
+                    packageOrderImpl.calcCost(courierRequest, -100);
                 });
         assertEquals("invalid baseDeliveryCost -100.0", thrown.getMessage());
     }

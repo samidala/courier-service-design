@@ -1,4 +1,4 @@
-package com.everestengg.code.challenge.model.courier;
+package com.everestengg.code.challenge.vo.courier;
 
 import lombok.Builder;
 import lombok.Getter;
@@ -8,7 +8,7 @@ import lombok.Getter;
  */
 @Getter
 @Builder(toBuilder = true)
-public class PackageDeliveryCostAndTimeEstimationInfo {
+public class CourierResponse {
     private PackageDeliveryCostEstimateInfo packageDeliveryCostEstimateInfo;
 
     private String packageId;

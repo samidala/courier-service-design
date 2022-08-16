@@ -1,13 +1,13 @@
 package com.everestengg.code.challenge.service.delivery.helper;
 
-import com.everestengg.code.challenge.model.courier.PackageDeliveryCostAndTimeEstimationInfo;
-import com.everestengg.code.challenge.model.courier.PackageDeliveryCostEstimateInfo;
+import com.everestengg.code.challenge.vo.courier.CourierResponse;
+import com.everestengg.code.challenge.vo.courier.PackageDeliveryCostEstimateInfo;
 import com.everestengg.code.challenge.service.delivery.cost.estimation.PackageDeliveryCostEstimationImpl;
 import com.everestengg.code.challenge.service.delivery.cost.estimation.PackageDeliveryCostEstimationService;
 import com.everestengg.code.challenge.service.delivery.cost.estimation.PackageDeliveryCostEstimationServiceFactory;
 import com.everestengg.code.challenge.service.delivery.time.estimation.PackageDeliveryTimeEstimationService;
 import com.everestengg.code.challenge.service.delivery.time.estimation.PackageDeliveryTimeEstimationServiceFactory;
-import com.everestengg.code.challenge.vo.InputPackage;
+import com.everestengg.code.challenge.vo.courier.CourierRequest;
 import com.everestengg.code.challenge.vo.VehicleInformation;
 
 import java.util.ArrayList;
@@ -21,19 +21,19 @@ import static com.everestengg.code.challenge.service.delivery.cost.estimation.Pa
 
 public class PackageDeliveryCostAndTimeEstimationServiceHelper {
 
-    public List<PackageDeliveryCostAndTimeEstimationInfo> calculateEstimatedDelivery(InputPackage[] inputPackages,
-                                                                                     VehicleInformation vehicleInformation,
-                                                                                     short baseDeliveryCost){
+    public List<CourierResponse> calculateEstimatedDelivery(CourierRequest[] courierRequests,
+                                                            VehicleInformation vehicleInformation,
+                                                            short baseDeliveryCost){
 
         List<PackageDeliveryCostEstimationImpl.InputPackageValidator> validatorList =
                 getPackageDeliveryCostEstimationService().getInputPackageValidatorList();
-        Arrays.stream(inputPackages).forEach(item -> validatorList.forEach(e-> e.validate(item)));
+        Arrays.stream(courierRequests).forEach(item -> validatorList.forEach(e-> e.validate(item)));
 
-        List<PackageDeliveryCostAndTimeEstimationInfo> packageDeliveryCostAndTimeEstimationInfoList =
-                getDeliveryTimeEstimationService().calculateEstimatedDelivery(inputPackages,
+        List<CourierResponse> courierResponseList =
+                getDeliveryTimeEstimationService().calculateEstimatedDelivery(courierRequests,
                         vehicleInformation, baseDeliveryCost);
 
-        return calculatePackageDeliveryCostEstimation(inputPackages,packageDeliveryCostAndTimeEstimationInfoList,
+        return calculatePackageDeliveryCostEstimation(courierRequests, courierResponseList,
                 baseDeliveryCost);
 
     }
@@ -51,27 +51,27 @@ public class PackageDeliveryCostAndTimeEstimationServiceHelper {
 
 
     /**
-     * @param inputPackages                            packages to be delivered
-     * @param packageDeliveryCostAndTimeEstimationInfo calculated @{@link PackageDeliveryCostAndTimeEstimationInfo}
+     * @param courierRequests                            packages to be delivered
+     * @param courierResponse calculated @{@link CourierResponse}
      * @param baseDeliveryCost
-     * @return package delivery order @{@link PackageDeliveryCostAndTimeEstimationInfo}
+     * @return package delivery order @{@link CourierResponse}
      */
-    public List<PackageDeliveryCostAndTimeEstimationInfo> calculatePackageDeliveryCostEstimation(InputPackage[] inputPackages,
-                                                                                                  List<PackageDeliveryCostAndTimeEstimationInfo>
-                                                                                                          packageDeliveryCostAndTimeEstimationInfo,
-                                                                                                  short baseDeliveryCost) {
-        Map<String, PackageDeliveryCostAndTimeEstimationInfo> result =  packageDeliveryCostAndTimeEstimationInfo.stream()
-                .collect(Collectors.toMap(PackageDeliveryCostAndTimeEstimationInfo::getPackageId, Function.identity()));
+    public List<CourierResponse> calculatePackageDeliveryCostEstimation(CourierRequest[] courierRequests,
+                                                                        List<CourierResponse>
+                                                                                courierResponse,
+                                                                        short baseDeliveryCost) {
+        Map<String, CourierResponse> result =  courierResponse.stream()
+                .collect(Collectors.toMap(CourierResponse::getPackageId, Function.identity()));
 
-        List<PackageDeliveryCostAndTimeEstimationInfo> packageDeliveryCostAndTimeEstimationInfos = new ArrayList<>(inputPackages.length);
-        for(InputPackage inputPackage : inputPackages){
+        List<CourierResponse> courierResponses = new ArrayList<>(courierRequests.length);
+        for(CourierRequest courierRequest : courierRequests){
             PackageDeliveryCostEstimateInfo packageDeliveryCostEstimateInfo = getPackageDeliveryCostEstimationService()
-                    .calcCost(inputPackage, baseDeliveryCost).getResult();
-            packageDeliveryCostAndTimeEstimationInfos.add(result.get(
-                            inputPackage.getPackageDetails().getPackageId()).toBuilder()
+                    .calcCost(courierRequest, baseDeliveryCost).getResult();
+            courierResponses.add(result.get(
+                            courierRequest.getPackageDetails().getPackageId()).toBuilder()
                     .packageDeliveryCostEstimateInfo(packageDeliveryCostEstimateInfo).build());
 
         }
-        return packageDeliveryCostAndTimeEstimationInfos;
+        return courierResponses;
     }
 }

@@ -1,4 +1,4 @@
-package com.everestengg.code.challenge.model.courier;
+package com.everestengg.code.challenge.vo.courier;
 
 import lombok.Builder;
 import lombok.Getter;

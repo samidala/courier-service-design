@@ -1,6 +1,6 @@
 package com.everestengg.code.challenge.service.offer;
 
-import com.everestengg.code.challenge.vo.InputPackage;
+import com.everestengg.code.challenge.vo.courier.CourierRequest;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -14,6 +14,6 @@ import lombok.Getter;
 @Builder
 public class PackageRequestContext {
 
-    private InputPackage inputPackage;
+    private CourierRequest courierRequest;
 
 }
