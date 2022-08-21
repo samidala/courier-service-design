@@ -11,10 +11,11 @@
 # Delivery cost client
 # Assumptions: 
 
-1. Considered only positive inputs and no negative cases handled for inputs and hence the app will fail if any wrong inputs provided
-2. The agenda of the project is concentrate on design aspect and write code that can be extendable to different offer codes
-3. If offer code is invalid, no discount will be considered
-4. User has to input all the needed inputs in appropriate datatype
+
+1. The agenda of the project is concentrate on design aspect and write code that can be extendable to different offer codes
+2. If offer code is invalid, no discount will be considered
+3. User has to input all the needed inputs in appropriate datatype
+4. Max speed of vehicle and max carriable weight assumed to be 32767
 
 # Setting up offers
 
@@ -61,10 +62,10 @@ distance should range between `50` to `250`, and weight range between `10` to `1
 
 # Assumptions:
 
-1. Considered only positive inputs and no negative cases handled for inputs and hence the app will fail if any wrong inputs provided
-2. Concentrated on having a feasible solution, I believe the code can be improvised though I did my best to write understandable code.
-3. If offer code is invalid, no discount will be considered
-4. User has to input all the needed inputs in appropriate datatype
+1. Concentrated on having a feasible solution, I believe the code can be improvised though I did my best to write understandable code.
+2. If offer code is invalid, no discount will be considered
+3. User has to input all the needed inputs in appropriate datatype
+4. Max speed of vehicle and max carriable weight assumed to be 32767
 
 # Approach
 1. Sort the packages by weight in ascending and distance in descending order
