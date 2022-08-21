@@ -24,7 +24,7 @@
    2. User can configure offer with code and set of `OfferCriteria`
    3. `OfferCriteria`'s `isMatch` responsible for validating if offer criteria is met
    4. `com.everestengg.code.challenge.model.offer.Offer.calcDiscount` returns configured discount value if all the criteria matches
-   5. `com.everestengg.code.challenge.domain.offer.OfferCriteria.ValueHandler` is used read value from target entity.
+   5. `OfferCriteria.ValueHandler` is used read value from target entity.
    6. The below show sequence diagram
       
       ![PackageDeliveryCostEstimationImpl_calcCost.svg](PackageDeliveryCostEstimationImpl_calcCost.svg)
